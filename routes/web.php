@@ -31,21 +31,21 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/admin/user/roles', ['middleware'=>'IsAdmin', function() {
-    return "something";
-}]);
+//Route::get('/admin/user/roles', ['middleware'=>'IsAdmin', function() {
+//    return "something";
+//}]);
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index']);
-
-Route::get('/auth/check', function(){
-    $user = Auth::user();
-    if(Auth::check()){
-        if($user->isAdmin()){
-            echo "this user is administrator";
-        } else {
-            echo "this user is not administrator";
-        }
-    } else{
-        echo "you are not logged in";
-    }
-});
+//Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index']);
+//
+//Route::get('/auth/check', function(){
+//    $user = Auth::user();
+//    if(Auth::check()){
+//        if($user->isAdmin()){
+//            echo "this user is administrator";
+//        } else {
+//            echo "this user is not administrator";
+//        }
+//    } else{
+//        echo "you are not logged in";
+//    }
+//});

@@ -3,6 +3,12 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 
 export default function Dashboard(props) {
+
+    axios.get("http://localhost:8000/api/users",{}).then(date=>{
+        console.log(date);
+        }
+    )
+
     return (
         <Authenticated
             auth={props.auth}
