@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_locker', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned()->nullable()->index();
-            $table->integer('locker_id')->unsigned()->nullable()->index();
+            $table->boolean('message');
+            $table->integer('user_id');
+            $table->integer('locker_id');
+            $table->integer('event_code');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_locker');
+        Schema::dropIfExists('events');
     }
 };

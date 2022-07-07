@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('errors', function (Blueprint $table) {
-            $table->id('code');
-            $table->string('message');
+        Schema::create('user_gate', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id')->unsigned()->nullable()->index();
+            $table->integer('gate_id')->unsigned()->nullable()->index();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('errors');
+        Schema::dropIfExists('user_gate');
     }
 };

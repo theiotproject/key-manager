@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->integer('tenant_id')->nullable();
             $table->boolean('admin')->default(false);
-//            $table->integer('role_id')->default('2');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

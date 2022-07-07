@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('event_logs', function (Blueprint $table) {
-            $table->id();
-            $table->boolean('result');
-            $table->integer('user_id');
-            $table->integer('locker_id');
-            $table->integer('error_code');
+        Schema::create('event_labels', function (Blueprint $table) {
+            $table->id('code');
+            $table->string('label');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_logs');
+        Schema::dropIfExists('event_labels');
     }
 };
