@@ -52,7 +52,7 @@ class TenantsController extends Controller
 
         $user = Auth::user();
         $user->tenant_id = $tenant->id;
-        $user->role_id = 1;
+        $user->admin = true;
         $user->save();
         return redirect('/tenants');
     }

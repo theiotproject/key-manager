@@ -42,18 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role() {
-        return $this->belongsTo('App\Models\Role');
-    }
-
     public function tenant(){
         return $this->belongsTo('App\Models\Tenant');
     }
 
-    public function isAdmin() {
-        if($this->role->name == 'admin'){
-            return true;
-        }
-        return false;
-    }
 }
