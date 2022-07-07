@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('/users', 'App\Http\Controllers\UsersController');
 
+//Route::resource('/tenants', 'App\Http\Controllers\TenantsController');
+
 //
 //Route::get('/admin', function(){
 //    $user = User::find(1);
