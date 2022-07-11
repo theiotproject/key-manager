@@ -4,6 +4,8 @@ use App\Http\Controllers\GateController;
 use App\Models\Gate;
 use App\Models\Team;
 use App\Models\User;
+use App\Http\Controllers\EventController;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,3 +48,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('/gate', GateController::class);
 
 //Route::get('/user/{id}/gates', [GateController::class, 'show']);
+
+
+Route::post('/events', [EventController::class, 'store']);
+
+Route::get('/events/{id}', function($id) {
+    $event = Event::find($id);
+    return $event;
+});
+
+Route::post('/events', [EventController::class, 'store']);
+
+Route::get('/events/{id}', function($id) {
+    $event = Event::find($id);
+    return $event;
+});
