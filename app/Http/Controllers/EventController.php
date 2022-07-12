@@ -20,7 +20,7 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show.vue the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -61,7 +61,7 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show.vue the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

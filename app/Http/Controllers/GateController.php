@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GateResource;
 use App\Models\Gate;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,51 +13,53 @@ class GateController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        //
+        $gates = Gate::orderBy('id')->get();
+        return GateResource::collection($gates);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show.vue the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create()
     {
-        //
+        return Inertia::render('/gates/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return GateResource
      */
     public function store(Request $request)
     {
         $data = $request->all();
 
-        $event = Gate::create($data);
+        $gate = Gate::create($data);
 
-        return $event;
+        return new GateResource($gate);
+//        return redirect('/dashboard');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Inertia\Response
+     * @return GateResource
      */
-    public function show($id)
+    public function show(Gate $gate)
     {
-        return Inertia::render('Gates/Show', ['gates'=> User::find($id)->gates]);
+        return new GateResource($gate);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show.vue the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

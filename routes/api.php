@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GateController;
+use App\Http\Resources\GateResource;
 use App\Models\Gate;
 use App\Models\Team;
 use App\Models\User;
@@ -24,19 +25,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('/team/{id}/gates', function($id) {
-//    $gates = Team::find($id)->gates;
-//    foreach($gates as $gate){
-//        echo $gate . " ";
-//    }
-//});
-//
-//Route::get('/user/{id}/gates', function($id){
-//    $user= User::find($id);
-//    foreach($user->gates as $gate){
-//        echo $gate . " ";
-//    }
-//});
+Route::get('/team/{id}/gates', function($id) {
+    $gates = Team::find($id)->gates;
+    return GateResource::collection($gates);
+});
+
+Route::get('/team', function() {
+    $gates = Team::all();
+    return $gates;
+});
+
+Route::get('/user/{id}/gates', function($id){
+    $gates= User::find($id)->gates;
+    return GateResource::collection($gates);
+});
 //
 //Route::get('/gate/{id}/users', function($id){
 //    $gate = Gate::find($id);

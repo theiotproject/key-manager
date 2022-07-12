@@ -35,3 +35,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('gates/create', function() {
+    return Inertia::render('gates/Create');
+})->name('gates.create');
