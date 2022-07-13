@@ -65,8 +65,8 @@ Route::get('/user/{id}/teams/gates', function($id) {
 });
 
 //Route::get('/user/{id}/gates', function($id){
-//    $gates= User::find($id)->gates;
-//    return GateResource::collection($gates);
+//    $Gates= User::find($id)->Gates;
+//    return GateResource::collection($Gates);
 //});
 
 Route::post('/sanctum/token', function (Request $request) {

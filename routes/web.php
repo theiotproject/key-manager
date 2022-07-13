@@ -37,7 +37,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('gates/create', function() {
-        return Inertia::render('gates/Create');
+        return Inertia::render('Gates/Create');
     })->name('gates.create');
 
     Route::resource('badge', BadgeController::class);

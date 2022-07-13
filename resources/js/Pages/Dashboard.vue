@@ -18,8 +18,8 @@ import { Link } from '@inertiajs/inertia-vue3';
 </template>
 
 <script>
-import GateShow from './gates/Show.vue';
-import CreateGateForm from "./gates/Partials/CreateGateForm.vue";
+import GateShow from './Gates/Show.vue';
+import CreateGateForm from "./Gates/Partials/CreateGateForm.vue";
 
 export default {
     components: {

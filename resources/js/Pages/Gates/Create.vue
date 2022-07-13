@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import CreateGateForm from '@/Pages/gates/Partials/CreateGateForm.vue';
+import CreateGateForm from '@/Pages/Gates/Partials/CreateGateForm.vue';
 </script>
 
 <template>
