@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import { Link } from '@inertiajs/inertia-vue3';
 </script>
 
 <template>
@@ -10,11 +11,8 @@ import AppLayout from '@/Layouts/AppLayout.vue';
             </h2>
         </template>
 
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12 relative">
-                    <button v-if="component==='GateShow'" @click="toggle()" class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded right-24 top-32 absolute">
-                        Create New Gate
-                    </button>
-                    <component :is="component" v-bind:attrs="this.$attrs" />
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
+                    <GateShow v-bind:attrs="attrs" />
             </div>
     </AppLayout>
 </template>
@@ -30,7 +28,8 @@ export default {
     },
     data (){
         return {
-            component:"GateShow"
+            component:"GateShow",
+            attrs: this.$attrs
         }
     },
     methods: {

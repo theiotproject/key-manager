@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\EventController;
 use App\Models\Event;
 use Illuminate\Foundation\Application;
@@ -34,8 +35,12 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('gates/create', function() {
+        return Inertia::render('gates/Create');
+    })->name('gates.create');
+
+    Route::resource('badge', BadgeController::class);
 });
 
-Route::get('gates/create', function() {
-    return Inertia::render('gates/Create');
-})->name('gates.create');
+

@@ -76,7 +76,7 @@ export default {
             const data = {serial_number: this.form.serial_number, name: this.form.name, team_id: this.attrs.user.current_team.id}
             axios.post("/api/gate", data)
                 .then(response => this.dataId = response.data.id);
-            this.$inertia.get('dashboard');
+            this.$inertia.get('../dashboard');
         }
     }
 }

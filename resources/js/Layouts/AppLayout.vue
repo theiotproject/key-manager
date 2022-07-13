@@ -53,6 +53,11 @@ const logout = () => {
                                     Dashboard
                                 </JetNavLink>
                             </div>
+<!--                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">-->
+<!--                                <JetNavLink :href="route('badge.index')" :active="route().current('badge.index')">-->
+<!--                                    Badges-->
+<!--                                </JetNavLink>-->
+<!--                            </div>-->
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

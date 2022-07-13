@@ -62,4 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function gates(){
         return $this->belongsToMany(Gate::class);
     }
+
+    public function teams() {
+        return $this->belongsToMany(Team::class);
+    }
 }

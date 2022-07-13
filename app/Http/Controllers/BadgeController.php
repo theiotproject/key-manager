@@ -2,63 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GateResource;
-use App\Models\Gate;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class GateController extends Controller
+class BadgeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $gates = Gate::orderBy('id')->get();
-        return GateResource::collection($gates);
+//        $badges = Badge::all();
+        return Inertia::render('Badges/Show');
     }
 
     /**
-     * Show.vue.vue the form for creating a new resource.
+     * Show.vue the form for creating a new resource.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return GateResource
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-
-        $gate = Gate::create($data);
-
-        return new GateResource($gate);
-//        return redirect('/dashboard');
+        //
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return GateResource
+     * @return \Illuminate\Http\Response
      */
-    public function show(Gate $gate)
+    public function show($id)
     {
-        return new GateResource($gate);
+        //
     }
 
     /**
-     * Show.vue.vue the form for editing the specified resource.
+     * Show.vue the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
