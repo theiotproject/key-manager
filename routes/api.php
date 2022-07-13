@@ -28,46 +28,35 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::group(['middleware' => ['auth:sanctum']], function(){
-//
-//});
+Route::group(['middleware' => ['auth:sanctum']], function(){
+
+    Route::resource('/gate', GateController::class);
+
+    Route::get('/team/{id}/gates', function($id) {
+        $gates = Team::find($id)->gates;
+        return GateResource::collection($gates);
+    });
+
+    Route::get('/user/{id}/teams', function($id){
+        $userTeams= Team::where('user_id', $id)->get();
+        $teams = User::find($id)->teams->merge($userTeams);
+        return $teams;
+    });
+
+    Route::get('/user/{id}/teams/gates', function($id) {
+        $userTeams= Team::where('user_id', $id)->get();
+        $teams = User::find($id)->teams->merge($userTeams);
+        $result = array();
+        foreach($teams as $team){
+            $gates = Gate::where('team_id', $team->id)->get();
+            array_push($result, $gates);
+        }
+        return $result;
+    });
+});
 
 //Public routes
 Route::resource('/event', EventController::class);
-
-Route::get('/team', function() {
-    $gates = Team::all();
-    return $gates;
-});
-
-Route::resource('/gate', GateController::class);
-
-Route::get('/team/{id}/gates', function($id) {
-    $gates = Team::find($id)->gates;
-    return GateResource::collection($gates);
-});
-
-Route::get('/user/{id}/teams', function($id){
-    $userTeams= Team::where('user_id', $id)->get();
-    $teams = User::find($id)->teams->merge($userTeams);
-    return $teams;
-});
-
-Route::get('/user/{id}/teams/gates', function($id) {
-    $userTeams= Team::where('user_id', $id)->get();
-    $teams = User::find($id)->teams->merge($userTeams);
-    $result = array();
-    foreach($teams as $team){
-        $gates = Gate::where('team_id', $team->id)->get();
-        array_push($result, $gates);
-    }
-    return $result;
-});
-
-//Route::get('/user/{id}/gates', function($id){
-//    $Gates= User::find($id)->Gates;
-//    return GateResource::collection($Gates);
-//});
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
@@ -79,9 +68,10 @@ Route::post('/sanctum/token', function (Request $request) {
     $user = User::where('email', $request->email)->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
+//        throw ValidationException::withMessages([
+//            'email' => ['The provided credentials are incorrect.'],
+//        ]);
+        return ['message'=> "The provided credentials are incorrect."];
     }
 
     return $user->createToken($request->device_name)->plainTextToken;

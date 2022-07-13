@@ -20,12 +20,15 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.transform(data => ({
-        ...data,
-        remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
-        onFinish: () => form.reset('password'),
+    axios.get('/sanctum/csrf-cookie').then(response => {
+        form.transform(data => ({
+            ...data,
+            remember: form.remember ? 'on' : '',
+        })).post(route('login'), {
+            onFinish: () => form.reset('password'),
+        });
     });
+
 };
 </script>
 
