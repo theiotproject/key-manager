@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/inertia-vue3';
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
         <h2 class="m-7 py-2 text-gray-900 font-bold text-xl mb-2">Your gates</h2>
-        <Link :href="route('gates.create')" class="m-7 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <Link v-if="permission" :href="route('gates.create')" :data="{team_id: attrs}" class="m-7 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Create New Gate
         </Link>
     </div>
@@ -60,6 +60,7 @@ export default {
     data() {
         return {
             gates: {},
+            permission: 0
         }
     },
     methods: {
@@ -68,10 +69,18 @@ export default {
                 .then((response)=>{
                     this.gates = response.data.data
                 })
+        },
+        getPermission(){
+            axios.get(`/api/permission/${this.attrs.user.current_team_id}`)
+                .then((response)=>{
+                    this.permission = response.data;
+                    console.log(this.permission);
+                })
         }
     },
     created() {
         this.getGate()
+        this.getPermission();
     }
 }
 </script>

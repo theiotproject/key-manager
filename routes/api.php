@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Controllers\EventController;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
@@ -29,6 +30,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
+
+    Route::get('/permission/{team_id}', function($team_id){
+        $user = Auth::user();
+        $team = Team::find($team_id);
+        return $user->hasTeamPermission($team, 'everything');
+    });
 
     Route::resource('/gate', GateController::class);
 
@@ -60,7 +67,7 @@ Route::resource('/event', EventController::class);
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
-        'email' => 'required|email',
+        'email' => 'required',
         'password' => 'required',
         'device_name' => 'required',
     ]);
@@ -68,12 +75,10 @@ Route::post('/sanctum/token', function (Request $request) {
     $user = User::where('email', $request->email)->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
-//        throw ValidationException::withMessages([
-//            'email' => ['The provided credentials are incorrect.'],
-//        ]);
         return ['message'=> "The provided credentials are incorrect."];
     }
 
     return $user->createToken($request->device_name)->plainTextToken;
 });
+
 

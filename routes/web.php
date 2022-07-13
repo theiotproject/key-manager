@@ -3,7 +3,9 @@
 use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\EventController;
 use App\Models\Event;
+use App\Models\Team;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,5 +44,4 @@ Route::middleware([
 
     Route::resource('badge', BadgeController::class);
 });
-
 
