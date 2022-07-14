@@ -30,9 +30,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
-
+//sprawdzanie czy uzytkownik jest administratorem w {team_id}
     Route::get('/permission/{team_id}', function($team_id){
         $user = Auth::user();
+        // $user = $request->user();
         $team = Team::find($team_id);
         return $user->hasTeamPermission($team, 'everything');
     });
@@ -44,6 +45,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         return GateResource::collection($gates);
     });
 
+    //Wszystkie teamy do których nalezy uzytkownik
     Route::get('/user/{id}/teams', function($id){
         $userTeams= Team::where('user_id', $id)->get();
         $teams = User::find($id)->teams->merge($userTeams);
