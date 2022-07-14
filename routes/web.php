@@ -38,10 +38,18 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('gates/create', function() {
-        return Inertia::render('Gates/Create');
-    })->name('gates.create');
+
 
     Route::resource('badge', BadgeController::class);
+});
+
+Route::middleware([
+    'isAdmin'
+])->group(function () {
+
+    Route::get('gates/create', function() {
+        return Inertia::render('Gates/Create');
+    })->name('gates.create')->middleware('isAdmin');
+
 });
 

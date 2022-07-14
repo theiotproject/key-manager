@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Auth;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -65,5 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function teams() {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function isAdmin(){
+        $team = Team::find($this->current_team_id);
+        $user = Auth::user();
+        return $user->hasTeamPermission($team, 'everything');
     }
 }
