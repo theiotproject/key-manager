@@ -180,7 +180,4 @@ export default {
 a {
     font-size: 1rem;
 }
-a:active {
-    color: red;
-}
 </style>
