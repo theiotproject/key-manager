@@ -13,13 +13,30 @@ defineProps({
 </script>
 
 <template>
-    <HomeHeader
-        v-bind:canLogin="$props.canLogin"
-        v-bind:canRegister="$props.canRegister"
-    />
-    <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-        <component :is="currentView" />
-    </div>
+    <header class="sticky top-0 z-50 shadow-lg">
+        <HomeHeader
+            class="bg-white"
+            v-bind:canLogin="$props.canLogin"
+            v-bind:canRegister="$props.canRegister"
+        />
+    </header>
+    <span id="home"></span>
+    <main class="relative">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+            <section class="vh-100">
+                <HomeMain />
+            </section>
+            <span id="about"></span>
+            <section class="vh-100 bg-white">
+                <About />
+            </section>
+            <span id="contact"></span>
+            <section class="vh-100" id="contact">
+                <Contact />
+            </section>
+        </div>
+    </main>
+    <footer></footer>
 </template>
 
 <script>
@@ -28,26 +45,10 @@ export default {
     created() {
         document.body.style.backgroundColor = "#f7f7f7";
     },
-    data() {
-        return {
-            currentPath: window.location.hash,
-        };
-    },
-    computed: {
-        currentView() {
-            return routes[this.currentPath.slice(1) || "/"] || NotFound;
-        },
-    },
-    mounted() {
-        window.addEventListener("hashchange", () => {
-            this.currentPath = window.location.hash;
-        });
-    },
-};
-
-const routes = {
-    "/": HomeMain,
-    "/about": About,
-    "/contact": Contact,
 };
 </script>
+<style>
+.bg-white {
+    background-color: #f7f7f7;
+}
+</style>

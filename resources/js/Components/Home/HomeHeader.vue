@@ -4,18 +4,17 @@ import { ref } from "vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
-
 <template>
     <Head title="Welcome" />
     <nav
-        class="m-5 bg-white border-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
+        class="m-5 mt-0 bg-white border-200 px-2 sm:px-4 py-1.5 rounded dark:bg-gray-800"
     >
         <div
             class="container flex flex-wrap justify-between items-center mx-auto"
         >
             <img
-                src="../../../../public/images/qwarelogotransparent.png"
-                class="ml-3 mr-3 h-6 sm:h-9"
+                src="../../../../public/images/key_manager_logo.svg"
+                class="ml-3 mr-3 h-6 sm:h-9 scale-125"
                 alt="Qware logo"
             />
             <div class="flex md:order-2">
@@ -123,8 +122,8 @@ const showingNavigationDropdown = ref(false);
                     </div>
                     <li>
                         <a
-                            :class="{ active: routeName === '*/' }"
-                            href="#/"
+                            v-smooth-scroll
+                            href="#home"
                             class="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0"
                             aria-current="page"
                             >Home</a
@@ -132,20 +131,16 @@ const showingNavigationDropdown = ref(false);
                     </li>
                     <li>
                         <a
-                            :class="{
-                                active: routeName === '#/about',
-                            }"
-                            href="#/about"
+                            v-smooth-scroll
+                            href="#about"
                             class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                             >About</a
                         >
                     </li>
                     <li>
                         <a
-                            :class="{
-                                active: routeName === '#/contact',
-                            }"
-                            href="#/contact"
+                            v-smooth-scroll
+                            href="#contact"
                             class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                             >Contact Us</a
                         >
@@ -156,8 +151,6 @@ const showingNavigationDropdown = ref(false);
     </nav>
 </template>
 <script>
-import { useRouter } from "vue-router";
-
 export default {
     name: "HomeHeader",
     props: ["canLogin", "canRegister"],
@@ -178,6 +171,6 @@ export default {
     cursor: pointer;
 }
 a {
-    font-size: 18px;
+    font-size: 1rem;
 }
 </style>
