@@ -38,6 +38,13 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         return $user->hasTeamPermission($team, 'everything');
     });
 
+    Route::get('/sanctum/permission/{team_id}', function(Request $request, $team_id){
+        // $user = Auth::user();
+        $user = $request->user();
+        $team = Team::find($team_id);
+        return $user->hasTeamPermission($team, 'everything');
+    });
+
     Route::resource('/gate', GateController::class);
 
     Route::get('/team/{id}/gates', function($id) {
