@@ -1,17 +1,14 @@
-<script setup>
-import { Head, Link } from "@inertiajs/inertia-vue3";
-</script>
-
 <template>
     <div class="mt-20 sm:rounded-lg">
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="p-6">
                 <img
-                    src="../../../../public/images/aboutlogo.jpg"
+                    src="../../../../public/images/manwithlock.jpg"
                     alt="Key with Phone"
+                    class="scale-110"
                 />
             </div>
-            <div class="p-6">
+            <div class="order-first md:order-last p-6">
                 <div class="description">
                     <h2>The Key Manager Project</h2>
                     <p>

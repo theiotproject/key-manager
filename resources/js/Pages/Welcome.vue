@@ -3,6 +3,7 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
 import HomeMain from "../Components/Home/HomeMain.vue";
 import About from "../Components/Home/About.vue";
 import Contact from "../Components/Home/Contact.vue";
+import Footer from "../Components/Footer.vue";
 
 defineProps({
     canLogin: Boolean,
@@ -36,7 +37,7 @@ defineProps({
             </section>
         </div>
     </main>
-    <footer></footer>
+    <Footer />
 </template>
 
 <script>

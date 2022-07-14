@@ -3,7 +3,7 @@ import { Head, Link } from "@inertiajs/inertia-vue3";
 </script>
 
 <template>
-    <div class="mt-32 sm:rounded-lg">
+    <div class="mt-10 md:mt-20 lg:mt-32 sm:rounded-lg">
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="p-6">
                 <div class="description">
