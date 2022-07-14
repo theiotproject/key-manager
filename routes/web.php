@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\BadgeController;
+use App\Http\Controllers\GateController;
+use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\EventController;
 use App\Models\Event;
 use App\Models\Team;
@@ -35,21 +36,22 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        // return Inertia::render('Dashboard');
+        return redirect('/gates');
     })->name('dashboard');
 
-
-
-    Route::resource('badge', BadgeController::class);
+    Route::resource('virtualKey', VirtualKeyController::class);
+    Route::resource('gate', GateController::class);
+    Route::get('/gates', function() {
+        return Inertia::render('Gates/Show');
+    })->name('gates');
 });
 
 Route::middleware([
     'isAdmin'
 ])->group(function () {
-
     Route::get('gates/create', function() {
         return Inertia::render('Gates/Create');
     })->name('gates.create')->middleware('isAdmin');
-
 });
 

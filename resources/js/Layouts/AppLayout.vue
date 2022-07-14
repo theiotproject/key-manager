@@ -57,19 +57,30 @@ const logout = () => {
               </div>
 
               <!-- Navigation Links -->
-              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+              <!-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <JetNavLink
                   :href="route('dashboard')"
                   :active="route().current('dashboard')"
                 >
                   Dashboard
                 </JetNavLink>
+              </div> -->
+              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <JetNavLink
+                  :href="route('gates')"
+                  :active="route().current('gates')"
+                >
+                  Gates
+                </JetNavLink>
               </div>
-              <!--                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">-->
-              <!--                                <JetNavLink :href="route('badge.index')" :active="route().current('badge.index')">-->
-              <!--                                    Badges-->
-              <!--                                </JetNavLink>-->
-              <!--                            </div>-->
+              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <JetNavLink
+                  :href="route('virtualKey.index')"
+                  :active="route().current('virtualKey.index')"
+                >
+                  Virtual Keys
+                </JetNavLink>
+              </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">

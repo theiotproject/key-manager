@@ -46,7 +46,6 @@ class GateController extends Controller
         $gate = Gate::create($data);
 
         return new GateResource($gate);
-//        return redirect('/dashboard');
     }
 
     /**
@@ -92,5 +91,13 @@ class GateController extends Controller
     public function destroy($id)
     {
         //
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Inertia\Response
+     */
+    public function redirect(){
+        return Inertia::render('VirtualKeys/Show');
     }
 }

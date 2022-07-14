@@ -1,18 +1,21 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
 </script>
+
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gates</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        Virtual Keys
+      </h2>
     </template>
+
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <div class="flex justify-between">
             <h2 class="m-7 py-2 text-gray-900 font-bold text-xl mb-2">
-              Your gates
+              Your Virtual Keys
             </h2>
             <Link
               v-if="permission"
@@ -39,8 +42,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                   <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                       <tr>
-                        <th scope="col" class="px-6 py-3">Serial Number</th>
                         <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3"></th>
 
                         <th scope="col" class="px-60 py-3">
                           <span class="sr-only">Edit</span>
@@ -62,7 +65,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                             whitespace-nowrap
                           "
                         >
-                          {{ gate.serial_number }}
+                          {{ key.serial_number }}
                         </td>
                         <td
                           class="
@@ -73,7 +76,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                             whitespace-nowrap
                           "
                         >
-                          {{ gate.name }}
+                          {{ key.name }}
                         </td>
                         <td class="px-10 py-4 text-right">
                           <a
@@ -94,35 +97,4 @@ import { Link } from "@inertiajs/inertia-vue3";
     </div>
   </AppLayout>
 </template>
-<script>
-export default {
-  name: "GateShow",
-  data() {
-    return {
-      gates: {},
-      permission: 0,
-      attrs: this.$attrs,
-    };
-  },
-  methods: {
-    getGate() {
-      axios
-        .get(`/api/team/${this.attrs.user.current_team_id}/gates`)
-        .then((response) => {
-          this.gates = response.data.data;
-        });
-    },
-    getPermission() {
-      axios
-        .get(`/api/permission/${this.attrs.user.current_team_id}`)
-        .then((response) => {
-          this.permission = response.data;
-        });
-    },
-  },
-  created() {
-    this.getGate();
-    this.getPermission();
-  },
-};
-</script>
+

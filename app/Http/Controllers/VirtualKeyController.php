@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class BadgeController extends Controller
+class VirtualKeyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,12 +14,11 @@ class BadgeController extends Controller
      */
     public function index()
     {
-//        $badges = Badge::all();
-        return Inertia::render('Badges/Show');
+        return Inertia::render('VirtualKeys/Show');
     }
 
     /**
-     * Show.vue the form for creating a new resource.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -51,7 +50,7 @@ class BadgeController extends Controller
     }
 
     /**
-     * Show.vue the form for editing the specified resource.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
