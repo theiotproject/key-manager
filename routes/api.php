@@ -1,20 +1,11 @@
 <?php
 
-
-use App\Models\Gate;
-use App\Models\Team;
-use App\Models\User;
-use App\Models\Event;
 use Illuminate\Http\Request;
-use App\Http\Resources\GateResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EventController;
-use Illuminate\Validation\ValidationException;
 
 /*
 |--------------------------------------------------------------------------
