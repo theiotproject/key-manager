@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GateResource;
 use App\Models\Gate;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,7 +18,7 @@ class GateController extends Controller
      */
     public function index()
     {
-        if(!auth()->user()->tokenCan('gates-list')){
+        if (!auth()->user()->tokenCan('gates-list')) {
             abort(403, 'Unauthorized');
         }
         $gates = Gate::orderBy('id')->get();
@@ -97,7 +98,26 @@ class GateController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function redirect(){
-        return Inertia::render('VirtualKeys/Show');
+
+    public function indexGatesByTeamId($teamId)
+    {
+        return Team::find($teamId)->gates;
+    }
+
+    public function indexGatesByTeamIdResource($teamId)
+    {
+        return GateResource::collection(Team::find($teamId)->gates);
+    }
+
+    public function indexGatesByUserTeam($userId)
+    {
+        $userTeams = Team::where('user_id', $userId)->get();
+        $teams = User::find($userId)->teams->merge($userTeams);
+        $result = array();
+        foreach ($teams as $team) {
+            $gates = Gate::where('team_id', $team->id)->get();
+            array_push($result, $gates);
+        }
+        return $result;
     }
 }

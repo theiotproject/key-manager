@@ -36,13 +36,12 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        // return Inertia::render('Dashboard');
-        return redirect('/gates');
+        return Inertia::render('Dashboard');
     })->name('dashboard');
 
     Route::resource('virtualKey', VirtualKeyController::class);
     Route::resource('gate', GateController::class);
-    Route::get('/gates', function() {
+    Route::get('/gates', function () {
         return Inertia::render('Gates/Show');
     })->name('gates');
 });
@@ -50,8 +49,7 @@ Route::middleware([
 Route::middleware([
     'isAdmin'
 ])->group(function () {
-    Route::get('gates/create', function() {
+    Route::get('gates/create', function () {
         return Inertia::render('Gates/Create');
     })->name('gates.create')->middleware('isAdmin');
 });
-

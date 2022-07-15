@@ -114,7 +114,7 @@ export default {
     },
     getPermission() {
       axios
-        .get(`/api/permission/${this.attrs.user.current_team_id}`)
+        .get(`/api/auth/permission/teamId/${this.attrs.user.current_team_id}`)
         .then((response) => {
           this.permission = response.data;
         });

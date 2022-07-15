@@ -1,16 +1,19 @@
 <?php
 
-use App\Http\Controllers\GateController;
-use App\Http\Resources\GateResource;
+
 use App\Models\Gate;
 use App\Models\Team;
 use App\Models\User;
-use App\Http\Controllers\EventController;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Resources\GateResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GateController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\EventController;
 use Illuminate\Validation\ValidationException;
 
 /*
@@ -30,68 +33,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    //sprawdzanie czy uzytkownik jest administratorem w {team_id}
-    Route::get('/permission/{team_id}', function ($team_id) {
-        $user = Auth::user();
-        // $user = $request->user();
-        $team = Team::find($team_id);
-        return $user->hasTeamPermission($team, 'everything');
-    });
-
-    Route::get('/sanctum/permission/teamId/{team_id}', function (Request $request, $team_id) {
-        // $user = Auth::user();
-        $user = $request->user();
-        $team = Team::find($team_id);
-        return $user->hasTeamPermission($team, 'everything');
-    });
+    Route::get('/auth/permission/teamId/{team_id}', [AuthController::class, 'getAuthUserPermissionByTeamId']);
+    Route::get('/auth/permission/teamId/{team_id}/request', [AuthController::class, 'getRequestUserPermissionByTeamId']);
 
     Route::resource('/gate', GateController::class);
-    Route::get('/gate/teamId/{id}', ['GateController::class', 'gatesByTeamId']);
+    Route::get('/gate/teamId/{team_id}', [GateController::class, 'indexGatesByTeamId']);
+    Route::get('/gate/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
+    Route::get('/gate/userId/{user_id}/teams', [GateController::class, 'indexGatesByUserTeam']);
 
-    Route::get('/gate/teamId/{id}/resource', function ($id) {
-        $gates = Team::find($id)->gates;
-        return GateResource::collection($gates);
-    });
-
-    Route::get('/gate/teamId/{id}', function ($id) {
-        $gates = Team::find($id)->gates;
-        return $gates;
-    });
-
-    //Wszystkie teamy do których nalezy uzytkownik
-    Route::get('/team/userId/{id}', function ($id) {
-        $userTeams = Team::where('user_id', $id)->get();
-        $teams = User::find($id)->teams->merge($userTeams);
-        return $teams;
-    });
-
-    Route::get('/gate/userId/{id}/teams', function ($id) {
-        $userTeams = Team::where('user_id', $id)->get();
-        $teams = User::find($id)->teams->merge($userTeams);
-        $result = array();
-        foreach ($teams as $team) {
-            $gates = Gate::where('team_id', $team->id)->get();
-            array_push($result, $gates);
-        }
-        return $result;
-    });
+    Route::get('/team/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
 });
 
 //Public routes
 Route::resource('/event', EventController::class);
-
-Route::post('/sanctum/token', function (Request $request) {
-    $request->validate([
-        'email' => 'required',
-        'password' => 'required',
-        'device_name' => 'required',
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return ['message' => "The provided credentials are incorrect."];
-    }
-
-    return $user->createToken($request->device_name)->plainTextToken;
-});
+Route::post('/auth/token', [AuthController::class, 'getToken']);
