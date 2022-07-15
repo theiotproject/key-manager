@@ -107,14 +107,14 @@ export default {
   methods: {
     getGate() {
       axios
-        .get(`/api/team/${this.attrs.user.current_team_id}/gates`)
+        .get(`/api/gate/teamId/${this.attrs.user.current_team_id}/resource`)
         .then((response) => {
           this.gates = response.data.data;
         });
     },
     getPermission() {
       axios
-        .get(`/api/permission/${this.attrs.user.current_team_id}`)
+        .get(`/api/auth/permission/teamId/${this.attrs.user.current_team_id}`)
         .then((response) => {
           this.permission = response.data;
         });
