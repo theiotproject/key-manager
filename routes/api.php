@@ -29,16 +29,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['auth:sanctum']], function(){
-//sprawdzanie czy uzytkownik jest administratorem w {team_id}
-    Route::get('/permission/{team_id}', function($team_id){
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    //sprawdzanie czy uzytkownik jest administratorem w {team_id}
+    Route::get('/permission/{team_id}', function ($team_id) {
         $user = Auth::user();
         // $user = $request->user();
         $team = Team::find($team_id);
         return $user->hasTeamPermission($team, 'everything');
     });
 
-    Route::get('/sanctum/permission/{team_id}', function(Request $request, $team_id){
+    Route::get('/sanctum/permission/teamId/{team_id}', function (Request $request, $team_id) {
         // $user = Auth::user();
         $user = $request->user();
         $team = Team::find($team_id);
@@ -46,24 +46,30 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     });
 
     Route::resource('/gate', GateController::class);
+    Route::get('/gate/teamId/{id}', ['GateController::class', 'gatesByTeamId']);
 
-    Route::get('/team/{id}/gates', function($id) {
+    Route::get('/gate/teamId/{id}/resource', function ($id) {
         $gates = Team::find($id)->gates;
         return GateResource::collection($gates);
     });
 
+    Route::get('/gate/teamId/{id}', function ($id) {
+        $gates = Team::find($id)->gates;
+        return $gates;
+    });
+
     //Wszystkie teamy do których nalezy uzytkownik
-    Route::get('/user/{id}/teams', function($id){
-        $userTeams= Team::where('user_id', $id)->get();
+    Route::get('/team/userId/{id}', function ($id) {
+        $userTeams = Team::where('user_id', $id)->get();
         $teams = User::find($id)->teams->merge($userTeams);
         return $teams;
     });
 
-    Route::get('/user/{id}/teams/gates', function($id) {
-        $userTeams= Team::where('user_id', $id)->get();
+    Route::get('/gate/userId/{id}/teams', function ($id) {
+        $userTeams = Team::where('user_id', $id)->get();
         $teams = User::find($id)->teams->merge($userTeams);
         $result = array();
-        foreach($teams as $team){
+        foreach ($teams as $team) {
             $gates = Gate::where('team_id', $team->id)->get();
             array_push($result, $gates);
         }
@@ -83,11 +89,9 @@ Route::post('/sanctum/token', function (Request $request) {
 
     $user = User::where('email', $request->email)->first();
 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        return ['message'=> "The provided credentials are incorrect."];
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return ['message' => "The provided credentials are incorrect."];
     }
 
     return $user->createToken($request->device_name)->plainTextToken;
 });
-
-

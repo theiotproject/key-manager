@@ -107,7 +107,7 @@ export default {
   methods: {
     getGate() {
       axios
-        .get(`/api/team/${this.attrs.user.current_team_id}/gates`)
+        .get(`/api/gate/teamId/${this.attrs.user.current_team_id}/resource`)
         .then((response) => {
           this.gates = response.data.data;
         });
