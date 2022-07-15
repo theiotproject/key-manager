@@ -16,6 +16,14 @@ class GateController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
+
+         /**
+     * @OA\Get(
+     *     path="/api/gate",
+     *     @OA\Response(response="200", description="Display a listing of Gates")
+     * )
+     */
+
     public function index()
     {
         if (!auth()->user()->tokenCan('gates-list')) {
