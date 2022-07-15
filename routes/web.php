@@ -55,5 +55,13 @@ Route::middleware([
     })->name('gates.create')->middleware('isAdmin');
 });
 
+Route::middleware([
+    'isAdmin'
+])->group(function () {
+    Route::get('virtualKeys/create', function () {
+        return Inertia::render('VirtualKeys/Create');
+    })->name('virtualKey.create')->middleware('isAdmin');
+});
+
 Route::resource('projects', ProjectsController::class);
 

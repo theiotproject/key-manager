@@ -18,11 +18,12 @@ class VirtualKeyController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->tokenCan('virtualKeys-list')) {
-            abort(403, 'Unauthorized');
-        }
-        $virtualKeys = VirtualKey::orderBy('id')->get();
-        return VirtualKeyResource::collection($virtualKeys);
+        // if (!auth()->user()->tokenCan('virtualKeys-list')) {
+        //     abort(403, 'Unauthorized');
+        // }
+        // $virtualKeys = VirtualKey::orderBy('id')->get();
+        // return VirtualKeyResource::collection($virtualKeys);
+        return Inertia::render('VirtualKeys/Show');
     }
 
     /**
