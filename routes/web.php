@@ -9,6 +9,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ProjectsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,3 +54,6 @@ Route::middleware([
         return Inertia::render('Gates/Create');
     })->name('gates.create')->middleware('isAdmin');
 });
+
+Route::resource('projects', ProjectsController::class);
+

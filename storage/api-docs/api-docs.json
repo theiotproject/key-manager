@@ -1,0 +1,42 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My First API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/event": {
+            "get": {
+                "operationId": "6fa31d85849291aac08efc8932808acf",
+                "responses": {
+                    "200": {
+                        "description": "Display a listing of projects."
+                    }
+                }
+            }
+        },
+        "/api/gate": {
+            "get": {
+                "operationId": "01c8d31a3ee132fe73704b09e8d6adac",
+                "responses": {
+                    "200": {
+                        "description": "Display a listing of Gates"
+                    }
+                }
+            }
+        },
+        "/projects": {
+            "get": {
+                "operationId": "e3dfa947954e394a726a0d4795bc03f2",
+                "responses": {
+                    "200": {
+                        "description": "Display a listing of projects."
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

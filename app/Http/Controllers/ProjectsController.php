@@ -2,25 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use Illuminate\Http\Request;
 
-use function Psy\debug;
 
-class EventController extends Controller
+class ProjectsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    /**
+     * @OA\Get(
+     *     path="/projects",
+     *     @OA\Response(response="200", description="Display a listing of projects.")
+     * )
+     */
+
     public function index()
     {
         //
     }
 
     /**
-     * Show.vue.vue the form for creating a new resource.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -35,26 +42,9 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-  /**
-     * @OA\Get(
-     *     path="/event",
-     *     @OA\Response(response="200", description="Display a listing of projects.")
-     * )
-     */
-
     public function store(Request $request)
     {
-        $data = $request->all();
-
-        // $event = new Event;
-        // $event->message = $data>message;
-        // $post->save();
-        // return redirect('/posts');
-
-       $event = Event::create($data);
-
-        return $event;
+        //
     }
 
     /**
@@ -65,12 +55,11 @@ class EventController extends Controller
      */
     public function show($id)
     {
-        $event = Event::find($id);
-        return $event;
+        //
     }
 
     /**
-     * Show.vue.vue the form for editing the specified resource.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
