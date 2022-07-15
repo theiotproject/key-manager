@@ -98,3 +98,37 @@ import AppLayout from "@/Layouts/AppLayout.vue";
   </AppLayout>
 </template>
 
+<script>
+export default {
+  name: "VirtualGateShow",
+  data() {
+    return {
+      virtualKeys: {},
+      permission: 0,
+      attrs: this.$attrs,
+    };
+  },
+  methods: {
+    // getGate() {
+    //   axios
+    //     .get(
+    //       `/api/virtualKey/teamId/${this.attrs.user.current_team_id}/resource`
+    //     )
+    //     .then((response) => {
+    //       this.gates = response.data.data;
+    //     });
+    // },
+    getPermission() {
+      axios
+        .get(`/api/auth/permission/teamId/${this.attrs.user.current_team_id}`)
+        .then((response) => {
+          this.permission = response.data;
+        });
+    },
+  },
+  created() {
+    this.getGate();
+    this.getPermission();
+  },
+};
+</script>

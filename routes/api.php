@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\VirtualKeyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/gate/teamId/{team_id}', [GateController::class, 'indexGatesByTeamId']);
     Route::get('/gate/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
     Route::get('/gate/userId/{user_id}/teams', [GateController::class, 'indexGatesByUserTeam']);
+
+    Route::resource('/virtualKey', VirtualKeyController::class);
+    Route::get('/gate/virtualKey/{team_id}', [GateController::class, 'indexVirtualKeysByTeamId']);
+    Route::get('/gate/virtualKey/{team_id}/resource', [GateController::class, 'indexVirtualKeysByTeamIdResource']);
 
     Route::get('/team/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
 });
