@@ -26,11 +26,7 @@ class GateController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->tokenCan('gates-list')) {
-            abort(403, 'Unauthorized');
-        }
-        $gates = Gate::orderBy('id')->get();
-        return Inertia::render('Gates/Show', ['gates' => GateResource::collection($gates)]);
+        return Inertia::render('Gates/Show');
     }
 
     /**

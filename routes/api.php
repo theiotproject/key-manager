@@ -35,3 +35,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 //Public routes
 Route::resource('/events', EventController::class);
 Route::post('/auth/token', [AuthController::class, 'getToken']);
+
+Route::post('/user/virtualKey/', function (Request $request) {
+    // $result = array();
+    // foreach ($request->data as $virtualKey) {
+    //     array_push($result, $virtualKey->userId);
+    // }
+    return $request->data[0]->id;
+});

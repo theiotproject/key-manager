@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import axios from "axios";
 </script>
 
 <template>
@@ -41,8 +42,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                   <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                       <tr>
-                        <th scope="col" class="px-6 py-3">Name</th>
-                        <th scope="col" class="px-6 py-3"></th>
+                        <th scope="col" class="px-6 py-3">Active From</th>
+                        <th scope="col" class="px-6 py-3">Active To</th>
+                        <th scope="col" class="px-6 py-3">User</th>
 
                         <th scope="col" class="px-60 py-3">
                           <span class="sr-only">Edit</span>
@@ -52,8 +54,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                     <tbody>
                       <tr
                         class="bg-white border-b"
-                        v-for="gate in gates"
-                        :key="gate.id"
+                        v-for="virtualKey in virtualKeys"
+                        :key="virtualKey.id"
                       >
                         <td
                           class="
@@ -64,7 +66,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                             whitespace-nowrap
                           "
                         >
-                          {{ key.serial_number }}
+                          {{ virtualKey.activeFrom }}
                         </td>
                         <td
                           class="
@@ -75,7 +77,18 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                             whitespace-nowrap
                           "
                         >
-                          {{ key.name }}
+                          {{ virtualKey.activeTo }}
+                        </td>
+                        <td
+                          class="
+                            px-6
+                            py-4
+                            font-medium
+                            text-gray-900
+                            whitespace-nowrap
+                          "
+                        >
+                          {{ virtualKey.userId }}
                         </td>
                         <td class="px-10 py-4 text-right">
                           <a
@@ -100,6 +113,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 <script>
 export default {
   name: "VirtualGateShow",
+  props: {
+    virtualKeys: {},
+  },
   data() {
     return {
       virtualKeys: {},
@@ -108,15 +124,13 @@ export default {
     };
   },
   methods: {
-    // getGate() {
-    //   axios
-    //     .get(
-    //       `/api/virtualKey/teamId/${this.attrs.user.current_team_id}/resource`
-    //     )
-    //     .then((response) => {
-    //       this.gates = response.data.data;
-    //     });
-    // },
+    getVirtualKeys() {
+      axios
+        .get(`/virtualKeys/teamId/${this.attrs.user.current_team_id}/resource`)
+        .then((response) => {
+          this.virtualKeys = response.data.data;
+        });
+    },
     getPermission() {
       axios
         .get(`/auth/permission/teamId/${this.attrs.user.current_team_id}`)
@@ -124,10 +138,20 @@ export default {
           this.permission = response.data;
         });
     },
+    // getUsers() {
+    //   axios
+    //     .post(`/user/virtualKey/`, {
+    //       headers: { VirtualKeys: $this.virtualKeys },
+    //     })
+    //     .then((response) => {
+    //       this.users = response.data;
+    //     });
+    // },
   },
   created() {
-    // this.getGate();
+    this.getVirtualKeys();
     this.getPermission();
+    // this.getUsers();
   },
 };
 </script>

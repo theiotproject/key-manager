@@ -19,11 +19,7 @@ class VirtualKeyController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->tokenCan('virtualKeys-list')) {
-            abort(403, 'Unauthorized');
-        }
-        $virtualKeys = VirtualKey::orderBy('id')->get();
-        return Inertia::render('VirtualKeys/Show', ['data' => VirtualKeyResource::collection($virtualKeys)]);
+        return Inertia::render('VirtualKeys/Show');
     }
 
     /**
@@ -99,13 +95,27 @@ class VirtualKeyController extends Controller
         //
     }
 
-    // public function indexVirtualKeysByTeamId($teamId)
-    // {
-    //     return Team::find($teamId)->virtualKeys;
-    // }
+    public function indexVirtualKeysByTeamId($teamId)
+    {
+        $gates = Team::find($teamId)->gates;
+        $virtualKeys = array();
+        foreach ($gates as $gate) {
+            foreach ($gate->virtualKeys as $virtualKey) {
+                array_push($virtualKeys, $virtualKey);
+            }
+        }
+        return $virtualKeys;
+    }
 
-    // public function indexVirtualKeysByTeamIdResource($teamId)
-    // {
-    //     return GateResource::collection(Team::find($teamId)->virtualKeys);
-    // }
+    public function indexVirtualKeysByTeamIdResource($teamId)
+    {
+        $gates = Team::find($teamId)->gates;
+        $virtualKeys = array();
+        foreach ($gates as $gate) {
+            foreach ($gate->virtualKeys as $virtualKey) {
+                array_push($virtualKeys, $virtualKey);
+            }
+        }
+        return VirtualKeyResource::collection($virtualKeys);
+    }
 }

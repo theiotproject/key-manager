@@ -1,12 +1,14 @@
 <?php
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use PhpParser\Node\Expr\AssignOp\Plus;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GateController;
-use App\Http\Controllers\VirtualKeyController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\VirtualKeyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +51,9 @@ Route::group(['middleware' => 'isAdmin'], function () {
 });
 
 Route::resource('projects', ProjectsController::class);
+
+
+
+Route::post('/user/virtualKey/', function (Request $request) {
+    return dd($request);
+});

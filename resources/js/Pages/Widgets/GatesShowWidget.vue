@@ -99,7 +99,7 @@ export default {
     };
   },
   methods: {
-    getGate() {
+    getGates() {
       axios
         .get(`/gates/teamId/${this.attrs.user.current_team_id}/resource`)
         .then((response) => {
@@ -115,7 +115,7 @@ export default {
     },
   },
   created() {
-    this.getGate();
+    this.getGates();
     this.getPermission();
   },
 };

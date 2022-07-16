@@ -42,7 +42,8 @@ class Team extends JetstreamTeam
         'deleted' => TeamDeleted::class,
     ];
 
-    public function gates() {
+    public function gates()
+    {
         return $this->hasMany(Gate::class);
     }
 }
