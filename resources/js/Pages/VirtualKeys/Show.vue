@@ -20,7 +20,6 @@ import AppLayout from "@/Layouts/AppLayout.vue";
             <Link
               v-if="permission"
               :href="route('gates.create')"
-              :data="{ team_id: attrs }"
               class="
                 m-7
                 bg-blue-500

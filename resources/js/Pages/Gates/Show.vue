@@ -17,7 +17,6 @@ import { Link } from "@inertiajs/inertia-vue3";
             <Link
               v-if="permission"
               :href="route('gates.create')"
-              :data="{ team_id: attrs }"
               class="
                 m-7
                 bg-blue-500
@@ -107,7 +106,7 @@ export default {
   methods: {
     getGate() {
       axios
-        .get(`/api/gate/teamId/${this.attrs.user.current_team_id}/resource`)
+        .get(`/api/gates/teamId/${this.attrs.user.current_team_id}/resource`)
         .then((response) => {
           this.gates = response.data.data;
         });

@@ -60,15 +60,23 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    public function gates(){
+    public function gates()
+    {
         return $this->belongsToMany(Gate::class);
     }
 
-    public function teams() {
+    public function teams()
+    {
         return $this->belongsToMany(Team::class);
     }
 
-    public function isAdmin(){
+    public function virtualKeys()
+    {
+        return $this->belongsToMany(VirtualKey::class);
+    }
+
+    public function isAdmin()
+    {
         $team = Team::find($this->current_team_id);
         $user = Auth::user();
         return $user->hasTeamPermission($team, 'everything');

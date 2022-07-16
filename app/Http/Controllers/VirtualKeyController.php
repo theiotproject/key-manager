@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GateResource;
+use App\Models\Gate;
+use App\Models\Team;
 use Inertia\Inertia;
 use App\Models\VirtualKey;
 use Illuminate\Http\Request;
+use App\Http\Resources\GateResource;
 use App\Http\Resources\VirtualKeyResource;
-use App\Models\Team;
 
 class VirtualKeyController extends Controller
 {
@@ -18,11 +19,12 @@ class VirtualKeyController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->tokenCan('virtualKeys-list')) {
-            abort(403, 'Unauthorized');
-        }
-        $virtualKeys = VirtualKey::orderBy('id')->get();
-        return VirtualKeyResource::collection($virtualKeys);
+        // if (!auth()->user()->tokenCan('virtualKeys-list')) {
+        //     ab   ort(403, 'Unauthorized');
+        // }
+        // $virtualKeys = VirtualKey::orderBy('id')->get();
+        // return VirtualKeyResource::collection($virtualKeys);
+        return "dziala";
     }
 
     /**
@@ -43,7 +45,14 @@ class VirtualKeyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $virtualKey = VirtualKey::create([
+            'user_id' => $request->userId,
+            'active_from' => $request->activeFrom,
+            'active_to' => $request->activeTo
+        ]);
+        $gate = Gate::find($request->gateId);
+        $virtualKey->gates()->attach($gate);
+        return 'success';
     }
 
     /**

@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('virtual_keys', function (Blueprint $table) {
+        Schema::create('gate_virtual_key', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->date('active_from');
-            $table->date('active_to');
+            $table->integer('gate_id');
+            $table->integer('virtual_key_id');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('virtual_keys');
+        Schema::dropIfExists('gate_virtual_key');
     }
 };
