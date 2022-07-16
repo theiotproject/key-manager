@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('gate_virtual_key', function (Blueprint $table) {
             $table->id();
-            $table->integer('gate_id');
-            $table->integer('virtual_key_id');
+            $table->foreignId('gate_id')->constrained();
+            $table->foreignId('virtual_key_id')->constrained();
             $table->timestamps();
         });
     }

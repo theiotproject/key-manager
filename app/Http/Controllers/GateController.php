@@ -30,7 +30,7 @@ class GateController extends Controller
             abort(403, 'Unauthorized');
         }
         $gates = Gate::orderBy('id')->get();
-        return GateResource::collection($gates);
+        return Inertia::render('Gates/Show', ['gates' => GateResource::collection($gates)]);
     }
 
     /**
@@ -40,6 +40,7 @@ class GateController extends Controller
      */
     public function create()
     {
+        return Inertia::render('Gates/Create');
     }
 
     /**

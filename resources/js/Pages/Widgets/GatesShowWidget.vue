@@ -12,8 +12,7 @@ import { Link } from "@inertiajs/inertia-vue3";
             Your gates
           </h2>
           <Link
-            v-if="permission"
-            :href="route('gates')"
+            :href="route('gates.index')"
             class="
               m-7
               bg-blue-500
@@ -102,14 +101,14 @@ export default {
   methods: {
     getGate() {
       axios
-        .get(`/api/gates/teamId/${this.attrs.user.current_team_id}/resource`)
+        .get(`/gates/teamId/${this.attrs.user.current_team_id}/resource`)
         .then((response) => {
           this.gates = response.data.data;
         });
     },
     getPermission() {
       axios
-        .get(`/api/auth/permission/teamId/${this.attrs.user.current_team_id}`)
+        .get(`/auth/permission/teamId/${this.attrs.user.current_team_id}`)
         .then((response) => {
           this.permission = response.data;
         });

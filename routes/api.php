@@ -25,26 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/auth/permission/teamId/{team_id}', [AuthController::class, 'getAuthUserPermissionByTeamId']);
     Route::get('/auth/permission/teamId/{team_id}/request', [AuthController::class, 'getRequestUserPermissionByTeamId']);
-
-    Route::resource('/gates', GateController::class);
-    Route::group(['prefix' => 'gates'], function () {
-        Route::get('/teamId/{team_id}', [GateController::class, 'indexGatesByTeamId']);
-        Route::get('/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
-        Route::get('/userId/{user_id}/teams', [GateController::class, 'indexGatesByUserTeam']);
-    });
-
-    Route::resource('/virtualKeys', VirtualKeyController::class);
-    Route::group(['prefix' => 'virtualKeys'], function () {
-        Route::get('/teamId/{team_id}', [VirtualKeyController::class, 'indexVirtualKeysByTeamId']);
-        Route::get('/teamId/{team_id}/resource', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdResource']);
-    });
-
+    Route::get('gates/teamId/{team_id}', [GateController::class, 'indexGatesByTeamId']);
+    Route::get('gates/userId/{user_id}/teams', [GateController::class, 'indexGatesByUserTeam']);
+    Route::get('virtualKeys/teamId/{team_id}', [VirtualKeyController::class, 'indexVirtualKeysByTeamId']);
     Route::get('/teams/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
 });
-
-
 
 //Public routes
 Route::resource('/events', EventController::class);

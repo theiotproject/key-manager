@@ -49,7 +49,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                     <tbody>
                       <tr
                         class="bg-white border-b"
-                        v-for="gate in gates"
+                        v-for="gate in gates.data"
                         :key="gate.id"
                       >
                         <td
@@ -96,31 +96,25 @@ import { Link } from "@inertiajs/inertia-vue3";
 <script>
 export default {
   name: "GateShow",
+  props: {
+    gates: {},
+  },
   data() {
     return {
-      gates: {},
       permission: 0,
       attrs: this.$attrs,
     };
   },
   methods: {
-    getGate() {
-      axios
-        .get(`/api/gates/teamId/${this.attrs.user.current_team_id}/resource`)
-        .then((response) => {
-          this.gates = response.data.data;
-        });
-    },
     getPermission() {
       axios
-        .get(`/api/auth/permission/teamId/${this.attrs.user.current_team_id}`)
+        .get(`/auth/permission/teamId/${this.attrs.user.current_team_id}`)
         .then((response) => {
           this.permission = response.data;
         });
     },
   },
   created() {
-    this.getGate();
     this.getPermission();
   },
 };
