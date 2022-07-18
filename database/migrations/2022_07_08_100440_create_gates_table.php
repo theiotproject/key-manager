@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('serial_number');
-            $table->integer('team_id');
+            $table->foreignId('team_id')->constrained();
             $table->timestamps();
         });
     }

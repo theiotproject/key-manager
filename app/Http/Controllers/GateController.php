@@ -17,7 +17,7 @@ class GateController extends Controller
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
 
-         /**
+    /**
      * @OA\Get(
      *     path="/api/gate",
      *     @OA\Response(response="200", description="Display a listing of Gates")
@@ -26,11 +26,7 @@ class GateController extends Controller
 
     public function index()
     {
-        if (!auth()->user()->tokenCan('gates-list')) {
-            abort(403, 'Unauthorized');
-        }
-        $gates = Gate::orderBy('id')->get();
-        return GateResource::collection($gates);
+        return Inertia::render('Gates/Show');
     }
 
     /**
@@ -40,6 +36,7 @@ class GateController extends Controller
      */
     public function create()
     {
+        return Inertia::render('Gates/Create');
     }
 
     /**

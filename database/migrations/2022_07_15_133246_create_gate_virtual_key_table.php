@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gate_user', function (Blueprint $table) {
+        Schema::create('gate_virtual_key', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
             $table->foreignId('gate_id')->constrained();
+            $table->foreignId('virtual_key_id')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gate_user');
+        Schema::dropIfExists('gate_virtual_key');
     }
 };

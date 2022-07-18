@@ -67,16 +67,16 @@ const logout = () => {
               </div> -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <JetNavLink
-                  :href="route('gates')"
-                  :active="route().current('gates')"
+                  :href="route('gates.index')"
+                  :active="route().current('gates.index')"
                 >
                   Gates
                 </JetNavLink>
               </div>
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <JetNavLink
-                  :href="route('virtualKey.index')"
-                  :active="route().current('virtualKey.index')"
+                  :href="route('virtualKeys.index')"
+                  :active="route().current('virtualKeys.index')"
                 >
                   Virtual Keys
                 </JetNavLink>

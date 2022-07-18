@@ -13,7 +13,13 @@ class Gate extends Model
         'name', 'serial_number', 'team_id'
     ];
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany(User::class);
+    }
+
+    public function virtualKeys()
+    {
+        return $this->belongsToMany(VirtualKey::class);
     }
 }

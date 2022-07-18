@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Auth;
-use App\Models\Team;
 
 class isAdmin
 {
@@ -18,9 +17,9 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::user()->isAdmin() == true){
-            return $next($request);
+        if (!Auth::user()->isAdmin() == true) {
+            abort(403);
         }
-        return back()->with('error', 'Only Admin can access this page');
+        return $next($request);
     }
 }

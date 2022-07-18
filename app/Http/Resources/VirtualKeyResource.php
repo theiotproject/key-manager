@@ -16,8 +16,11 @@ class VirtualKeyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'updated_at' => $this->updated_at,
-            'created_at' => $this->created_at
+            'userId' => $this->user_id,
+            'activeFrom' => $this->active_from,
+            'activeTo' => $this->active_to,
+            'updatedAt' => $this->updated_at,
+            'createdAt' => $this->created_at
         ];
     }
 }
