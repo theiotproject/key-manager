@@ -139,9 +139,10 @@ class VirtualKeyController extends Controller
 
     public function generateCode(Request $request, $teamId)
     {
-        $mytime = Carbon::now();
-        $mytime->toDateTimeString();
+        // $mytime = Carbon::now();
+        // $mytime->toDateTimeString();
         $randomString = strtoupper(Str::random(10));
-        return $mytime . '/' . $randomString;
+        // return $mytime . '/' . $randomString;
+        return $randomString;
     }
 }
