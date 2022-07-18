@@ -75,7 +75,7 @@ export default {
         team_id: this.attrs.user.current_team.id,
       };
       axios
-        .post("/api/gates", data)
+        .post("/gates", data)
         .then((response) => (this.dataId = response.data.id));
       this.$inertia.get("../dashboard");
     },

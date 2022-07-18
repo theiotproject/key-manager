@@ -17,7 +17,7 @@ class VirtualKey extends Model
 
     public function user()
     {
-        return $this->belongsTo(Use2r::class);
+        return $this->belongsTo(User::class);
     }
 
     public function gates()

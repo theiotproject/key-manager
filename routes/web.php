@@ -43,7 +43,7 @@ Route::middleware([
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/gates', GateController::class);
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
-    Route::get('virtualKeys/teamId/{team_id}/resource', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdResource']);
+    Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
 });
 
 Route::group(['middleware' => 'isAdmin'], function () {
@@ -51,9 +51,3 @@ Route::group(['middleware' => 'isAdmin'], function () {
 });
 
 Route::resource('projects', ProjectsController::class);
-
-
-
-Route::post('/user/virtualKey/', function (Request $request) {
-    return dd($request);
-});

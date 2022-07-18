@@ -42,11 +42,12 @@ import axios from "axios";
                   <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                       <tr>
+                        <th scope="col" class="px-6 py-3">User</th>
+                        <th scope="col" class="px-6 py-3">E-mail</th>
                         <th scope="col" class="px-6 py-3">Active From</th>
                         <th scope="col" class="px-6 py-3">Active To</th>
-                        <th scope="col" class="px-6 py-3">User</th>
 
-                        <th scope="col" class="px-60 py-3">
+                        <th scope="col" class="px-30 py-3">
                           <span class="sr-only">Edit</span>
                         </th>
                       </tr>
@@ -64,9 +65,16 @@ import axios from "axios";
                             font-medium
                             text-gray-900
                             whitespace-nowrap
+                            flex
+                            items-center
                           "
                         >
-                          {{ virtualKey.activeFrom }}
+                          <img
+                            class="h-8 w-8 rounded-full object-cover mr-3"
+                            :src="virtualKey.user.profile_photo_url"
+                            :alt="virtualKey.user.name"
+                          />
+                          {{ virtualKey.user.name }}
                         </td>
                         <td
                           class="
@@ -77,7 +85,7 @@ import axios from "axios";
                             whitespace-nowrap
                           "
                         >
-                          {{ virtualKey.activeTo }}
+                          {{ virtualKey.user.email }}
                         </td>
                         <td
                           class="
@@ -88,13 +96,24 @@ import axios from "axios";
                             whitespace-nowrap
                           "
                         >
-                          {{ virtualKey.userId }}
+                          {{ virtualKey.active_from }}
+                        </td>
+                        <td
+                          class="
+                            px-6
+                            py-4
+                            font-medium
+                            text-gray-900
+                            whitespace-nowrap
+                          "
+                        >
+                          {{ virtualKey.active_to }}
                         </td>
                         <td class="px-10 py-4 text-right">
                           <a
                             href="#"
                             class="font-medium text-blue-600 hover:underline"
-                            >Edit</a
+                            >Show Gates</a
                           >
                         </td>
                       </tr>
@@ -126,9 +145,12 @@ export default {
   methods: {
     getVirtualKeys() {
       axios
-        .get(`/virtualKeys/teamId/${this.attrs.user.current_team_id}/resource`)
+        .get(
+          `/virtualKeys/teamId/${this.attrs.user.current_team_id}/users/gates`
+        )
         .then((response) => {
-          this.virtualKeys = response.data.data;
+          this.virtualKeys = response.data;
+          console.log(this.virtualKeys);
         });
     },
     getPermission() {
@@ -138,20 +160,10 @@ export default {
           this.permission = response.data;
         });
     },
-    // getUsers() {
-    //   axios
-    //     .post(`/user/virtualKey/`, {
-    //       headers: { VirtualKeys: $this.virtualKeys },
-    //     })
-    //     .then((response) => {
-    //       this.users = response.data;
-    //     });
-    // },
   },
   created() {
     this.getVirtualKeys();
     this.getPermission();
-    // this.getUsers();
   },
 };
 </script>
