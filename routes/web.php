@@ -50,6 +50,14 @@ Route::group(['middleware' => 'isAdmin'], function () {
     Route::get('/gates/create', [GateController::class, 'create'])->name('gates.create');
 });
 
+Route::middleware([
+    'isAdmin'
+])->group(function () {
+    Route::get('virtualKeys/create', function () {
+        return Inertia::render('VirtualKeys/Create');
+    })->name('virtualKey.create')->middleware('isAdmin');
+});
+
 Route::resource('projects', ProjectsController::class);
 
 
