@@ -40,4 +40,10 @@ class AuthController extends Controller
         $team = Team::find($teamId);
         return $user->hasTeamPermission($team, 'everything');
     }
+
+    public function indexUsersByTeamId($teamId)
+    {
+        $users = Team::find($teamId)->users;
+        return $users;
+    }
 }

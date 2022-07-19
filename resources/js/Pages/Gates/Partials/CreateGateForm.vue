@@ -32,6 +32,14 @@ import JetLabel from "@/Jetstream/Label.vue";
           class="block w-full mt-1"
           autofocus
         />
+        <JetLabel for="magic_code" value="Magic code" class="mt-5" />
+        <JetInput
+          id="magic_code"
+          v-model="form.magicCode"
+          type="text"
+          class="block w-full mt-1"
+          autofocus
+        />
         <JetLabel for="name" value="Name" class="mt-5" />
         <JetInput
           id="name"
@@ -62,22 +70,38 @@ export default {
     return {
       form: {
         serial_number: "",
+        magic_code: "",
         name: "",
         team_id: 0,
       },
     };
   },
   methods: {
+    validForm(serial_number, regex) {
+      if (regex == "guid") {
+        var guidRegex =
+          /(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}/;
+        return guidRegex.test(data);
+      } else {
+        var serialNumberRegex = /[A-Z0-9]{10}/;
+        return serialNumberRegex.test(data);
+      }
+    },
     submitForm() {
-      const data = {
-        serial_number: this.form.serial_number,
-        name: this.form.name,
-        team_id: this.attrs.user.current_team.id,
-      };
-      axios
-        .post("/gates", data)
-        .then((response) => (this.dataId = response.data.id));
-      this.$inertia.get("../dashboard");
+      if (/[A-Z0-9]{10}/.test(this.form.serial_number, "serialNumber")) {
+        const data = {
+          serial_number: this.form.serial_number,
+          magic_code: this.form.magic_code,
+          name: this.form.name,
+          team_id: this.attrs.user.current_team.id,
+        };
+        axios
+          .post("/gates", data)
+          .then((response) => (this.dataId = response.data.id));
+        this.$inertia.get("../dashboard");
+      } else {
+        error;
+      }
     },
   },
 };

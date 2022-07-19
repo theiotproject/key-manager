@@ -1,7 +1,10 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import GatesShowWidget from "../Pages/Widgets/GatesShowWidget.vue";
+import GatesWidget from "./Widgets/GatesWidget.vue";
+import VirtualKeysWidget from "./Widgets/VirtualKeysWidget.vue";
+import UsersWidget from "./Widgets/UsersWidget.vue";
+import EventsWidget from "./Widgets/EventsWidget.vue";
 import HomeHeader from "../Components/Home/HomeHeader.vue";
 </script>
 
@@ -12,9 +15,32 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
         Dashboard
       </h2>
     </template>
-
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
-      <GatesShowWidget v-bind:attrs="attrs" />
+    <div class="py-12">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div
+          class="grid grid-rows-w gap-x-5 gap-y-5"
+          style="grid-template-columns: repeat(2, 1fr) 0.8fr"
+        >
+          <GatesWidget
+            class="max-h-80 overflow-scroll"
+            v-bind:attrs="attrs"
+            style="grid-area: 1 / 1 / 2 / 2"
+          />
+          <UsersWidget
+            class="max-h-80 overflow-scroll"
+            v-bind:attrs="attrs"
+            style="grid-area: 1 / 2 / 2 / 3"
+          />
+          <VirtualKeysWidget
+            v-bind:attrs="attrs"
+            style="grid-area: 2 / 1 / 3 / 3"
+          />
+          <EventsWidget
+            v-bind:attrs="attrs"
+            style="grid-area: 1 / 3 / 3 / 4; fr: 0.5"
+          />
+        </div>
+      </div>
     </div>
   </AppLayout>
 </template>
