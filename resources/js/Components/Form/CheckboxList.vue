@@ -3,13 +3,14 @@ import JetLabel from "@/Jetstream/Label.vue";
 </script>
 
 <template>
-    <JetLabel for="days" value="Days" />
+    <JetLabel value="Days" />
     <ul
-        class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex-wrap sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg sm:flex-wrap sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white"
     >
         <li
-            v-for="day in days"
-            class="w-auto border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600"
+            v-for="(day, index) in days"
+            :key="index"
+            class="w-auto sm:w-32 border rounded-lg m-0.5 border-gray-200 sm:border-r dark:border-gray-600"
         >
             <div class="flex items-center pl-3">
                 <input
