@@ -130,11 +130,11 @@ class VirtualKeyController extends Controller
         foreach ($gates as $gate) {
             foreach ($gate->virtualKeys as $virtualKey) {
                 if ($virtualKey->user_id == $request->user()->id) {
-                    array_push($virtualKeys, $virtualKey);
+                    array_push($virtualKeys, $virtualKey->makeHidden('pivot'));
                 }
             }
         }
-        return $virtualKeys[0];
+        return $virtualKeys;
     }
 
     public function generateCode(Request $request, $teamId)
