@@ -6,10 +6,24 @@ import { Link } from "@inertiajs/inertia-vue3";
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
-      <h2 class="m-7 py-2 text-gray-900 font-bold text-xl mb-2">
-        Your Virtual Keys
+      <h2
+        class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 ml-2"
+          viewBox="0 0 20 20"
+          fill="#FFA500"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <p class="ml-3">Virtual Keys</p>
       </h2>
-      <Link
+      <!-- <Link
         :href="route('gates.index')"
         class="
           m-7
@@ -23,21 +37,21 @@ import { Link } from "@inertiajs/inertia-vue3";
         "
       >
         Go to virtual keys page
-      </Link>
+      </Link> -->
     </div>
-    <div class="py-5">
+    <div class="pb-5">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
                 <tr>
-                  <th scope="col" class="px-6 py-3">User</th>
+                  <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
                   <th scope="col" class="px-6 py-3">E-mail</th>
                   <th scope="col" class="px-6 py-3">Active From</th>
                   <th scope="col" class="px-6 py-3">Active To</th>
 
-                  <th scope="col" class="px-30 py-3">
+                  <th scope="col" class="px-30 py-3 rounded-r-lg">
                     <span class="sr-only">Edit</span>
                   </th>
                 </tr>

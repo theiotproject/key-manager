@@ -6,7 +6,23 @@ import { Link } from "@inertiajs/inertia-vue3";
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
-      <h2 class="m-7 py-2 text-gray-900 font-bold text-xl mb-2">Events</h2>
+      <h2
+        class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 ml-2"
+          viewBox="0 0 20 20"
+          fill="#FFA500"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <p class="ml-3">Events</p>
+      </h2>
       <!-- <Link
         :href="route('gates.index')"
         class="
@@ -23,15 +39,15 @@ import { Link } from "@inertiajs/inertia-vue3";
       Go to events
       </Link> -->
     </div>
-    <div class="py-5">
+    <div class="pb-5">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
                 <tr>
-                  <th scope="col" class="px-6 py-3">Serial Number</th>
-                  <th scope="col" class="px-6 py-3">Name</th>
+                  <th scope="col" class="px-6 py-3 rounded-l-lg">Date</th>
+                  <th scope="col" class="px-6 py-3 rounded-r-lg">Message</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,30 +75,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                     message 1
                   </td>
                 </tr>
-                <tr class="bg-white border-b">
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    event 2
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    message 2
-                  </td>
-                </tr>
+
                 <!-- <tr
                   class="bg-white border-b"
                   v-for="event in events"

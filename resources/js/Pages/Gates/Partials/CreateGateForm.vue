@@ -50,13 +50,13 @@ import JetLabel from "@/Jetstream/Label.vue";
             class="block w-full mt-1"
             autofocus
           />
-          <div @click="switchVisibility" class="m-5">
+          <div @click="switchVisibility" class="m-5 cursor-pointer">
             <svg
               v-if="form.passwordFieldType == 'password'"
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
               viewBox="0 0 20 20"
-              fill="currentColor"
+              fill="#374151"
             >
               <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
               <path
@@ -70,7 +70,7 @@ import JetLabel from "@/Jetstream/Label.vue";
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
               viewBox="0 0 20 20"
-              fill="currentColor"
+              fill="#374151"
             >
               <path
                 fill-rule="evenodd"
