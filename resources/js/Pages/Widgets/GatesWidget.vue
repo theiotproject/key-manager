@@ -37,21 +37,7 @@ import { Link } from "@inertiajs/inertia-vue3";
           />
         </svg>
       </div> -->
-      <!-- <Link
-        :href="route('gates.index')"
-        class="
-          m-7
-          bg-blue-500
-          hover:bg-blue-700
-          text-white
-          font-bold
-          py-2
-          px-4
-          rounded
-        "
-      >
-        Go to gates page
-      </Link> -->
+
     </div>
     <div class="pb-5">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -101,6 +87,21 @@ import { Link } from "@inertiajs/inertia-vue3";
                 </tr>
               </tbody>
             </table>
+<!--              <Link-->
+<!--                :href="route('gates.index')"-->
+<!--                class="-->
+<!--                        m-10-->
+<!--                        bg-blue-500-->
+<!--                        hover:bg-blue-700-->
+<!--                        text-white-->
+<!--                        font-bold-->
+<!--                        py-2-->
+<!--                        px-4-->
+<!--                        relative-->
+<!--                        right-0-->
+<!--                        rounded">-->
+<!--    Show more-->
+<!--  </Link>-->
           </div>
         </div>
       </div>

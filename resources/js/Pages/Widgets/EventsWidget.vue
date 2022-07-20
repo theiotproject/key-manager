@@ -51,31 +51,116 @@ import { Link } from "@inertiajs/inertia-vue3";
                 </tr>
               </thead>
               <tbody>
-                <tr class="bg-white border-b">
+                <tr class="bg-white border-b text-green-700">
                   <td
                     class="
                       px-6
                       py-4
                       font-medium
-                      text-gray-900
                       whitespace-nowrap
                     "
                   >
-                    event 1
+                    07/19 19:28:00
                   </td>
                   <td
                     class="
                       px-6
                       py-4
                       font-medium
-                      text-gray-900
                       whitespace-nowrap
                     "
                   >
-                    message 1
+                    Authorized
                   </td>
                 </tr>
-
+                <tr class="bg-white border-b text-red-700">
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        07/19 20:23:54
+                    </td>
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        Access denied
+                    </td>
+                </tr>
+                <tr class="bg-white border-b text-green-700">
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        07/19 22:12:54
+                    </td>
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        Authorized
+                    </td>
+                </tr>
+                <tr class="bg-white border-b text-green-700">
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        07/19 21:23:32
+                    </td>
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        Authorized
+                    </td>
+                </tr>
+                <tr class="bg-white border-b text-red-700">
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        07/19 20:23:54
+                    </td>
+                    <td
+                        class="
+                      px-6
+                      py-4
+                      font-medium
+                      whitespace-nowrap
+                    "
+                    >
+                        Access denied
+                    </td>
+                </tr>
                 <!-- <tr
                   class="bg-white border-b"
                   v-for="event in events"
