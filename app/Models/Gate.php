@@ -10,7 +10,7 @@ class Gate extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'serial_number', 'team_id'
+        'name', 'serial_number', 'magic_code', 'team_id'
     ];
 
     public function users()

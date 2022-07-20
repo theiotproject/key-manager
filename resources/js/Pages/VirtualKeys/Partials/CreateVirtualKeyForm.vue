@@ -9,25 +9,24 @@ import DialogModal from "../../../../../vendor/laravel/jetstream/stubs/inertia/r
 </script>
 
 <template>
-    <JetFormSection v-on:submit.prevent="submitForm">
-        <template #title> Virtual Key Details </template>
+  <JetFormSection v-on:submit.prevent="submitForm">
+    <template #title> Virtual Key Details </template>
 
-        <template #description>
-            Create a new Virtual Key for users by selecting the Gates, and the
-            time period
-        </template>
+    <template #description>
+      Create a new Virtual Key for users by selecting the Gates, and the time
+      period
+    </template>
 
-        <template #form>
-            <div class="col-span-6">
-                <JetLabel value="Team" />
+    <template #form>
+      <div class="col-span-6">
+        <JetLabel value="Team" />
 
-                <div class="flex items-center mt-2">
-                    <div class="leading-tight">
-                        <div>{{ $page.props.user.current_team.name }}</div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="flex items-center mt-2">
+          <div class="leading-tight">
+            <div>{{ $page.props.user.current_team.name }}</div>
+          </div>
+        </div>
+      </div>
             <div class="col-span-6 sm:col-span-full">
                 <div>
                     <CheckboxList />
@@ -44,57 +43,44 @@ import DialogModal from "../../../../../vendor/laravel/jetstream/stubs/inertia/r
                 </div>
             </div>
         </template>
-
-        <template #actions>
-            <JetButton
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Create
-            </JetButton>
-        </template>
-    </JetFormSection>
+    <template #actions>
+      <JetButton
+        :class="{ 'opacity-25': form.processing }"
+        :disabled="form.processing"
+      >
+        Create
+      </JetButton>
+    </template>
+  </JetFormSection>
 </template>
 <script>
 export default {
-    name: "CreateGateForm",
-    props: ["attrs"],
-    data: function () {
-        return {
-            form: {
-                serial_number: "",
-                name: "",
-                team_id: 0,
-                // selection: {
-                //     day_from: "0",
-                //     day_to: "4",
-                // },
-                // picker: {
-                //     time_from: {
-                //         HH: "07",
-                //         mm: "30",
-                //     },
-                //     time_to: {
-                //         HH: "16",
-                //         mm: "00",
-                //     },
-                // },
-            },
-        };
+
+  name: "CreateGateForm",
+  props: ["attrs"],
+  data: function () {
+    return {
+      form: {
+        serial_number: "",
+        name: "",
+        team_id: 0,
+      },
+    };
+  },
+  methods: {
+    submitForm() {
+      const data = {
+        serial_number: this.form.serial_number,
+        name: this.form.name,
+        team_id: this.attrs.user.current_team.id,
+      };
+      axios
+        .post("/api/gate", data)
+        .then((response) => (this.dataId = response.data.id));
+      this.$inertia.get("../dashboard");
+
     },
-    methods: {
-        submitForm() {
-            const data = {
-                serial_number: this.form.serial_number,
-                name: this.form.name,
-                team_id: this.attrs.user.current_team.id,
-            };
-            axios
-                .post("/api/gate", data)
-                .then((response) => (this.dataId = response.data.id));
-            this.$inertia.get("../dashboard");
-        },
-    },
+  },
 };
 </script>
 <style>

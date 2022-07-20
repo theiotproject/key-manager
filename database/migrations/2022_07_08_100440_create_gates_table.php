@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('serial_number');
+            $table->string('magic_code');
             $table->foreignId('team_id')->constrained();
             $table->timestamps();
         });

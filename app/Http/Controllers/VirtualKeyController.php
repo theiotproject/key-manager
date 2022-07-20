@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Gate;
 use App\Models\Team;
 use Inertia\Inertia;
 use App\Models\VirtualKey;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
 use App\Http\Resources\VirtualKeyResource;
@@ -107,15 +109,40 @@ class VirtualKeyController extends Controller
         return $virtualKeys;
     }
 
-    public function indexVirtualKeysByTeamIdResource($teamId)
+    public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
     {
         $gates = Team::find($teamId)->gates;
         $virtualKeys = array();
         foreach ($gates as $gate) {
             foreach ($gate->virtualKeys as $virtualKey) {
+                $virtualKey->user;
+                $virtualKey->gates;
                 array_push($virtualKeys, $virtualKey);
             }
         }
-        return VirtualKeyResource::collection($virtualKeys);
+        return $virtualKeys;
+    }
+
+    public function indexByTeamIdForLoggedUser(Request $request, $teamId)
+    {
+        $gates = Team::find($teamId)->gates;
+        $virtualKeys = array();
+        foreach ($gates as $gate) {
+            foreach ($gate->virtualKeys as $virtualKey) {
+                if ($virtualKey->user_id == $request->user()->id) {
+                    array_push($virtualKeys, $virtualKey->makeHidden('pivot'));
+                }
+            }
+        }
+        return $virtualKeys;
+    }
+
+    public function generateCode(Request $request, $teamId)
+    {
+        // $mytime = Carbon::now();
+        // $mytime->toDateTimeString();
+        $randomString = strtoupper(Str::random(10));
+        // return $mytime . '/' . $randomString;
+        return $randomString;
     }
 }
