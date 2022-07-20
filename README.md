@@ -11,6 +11,29 @@
 <p align="center">Created in Laravel + Vue.js</p>
 
 
+<p align="center">
+  <a href="https://badge.fury.io/js/electron-markdownify">
+    <img src="https://badge.fury.io/js/electron-markdownify.svg"
+         alt="Gitter">
+  </a>
+  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
+  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
+      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
+  </a>
+  <a href="theiotproject.com">
+    <img src="https://img.shields.io/badge/visit-blog-blue">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#about">About> •
+  <a href="#requirements">Requirements</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#testing">Testing</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
+</p>
+
 
 ## About
 
@@ -21,7 +44,7 @@ Package | Version
 [Node](https://nodejs.org/en/) | V14.19.1+
 [Npm](https://nodejs.org/en/)  | V6.14.16+ 
 [Composer](https://getcomposer.org/)  | V2.2.6+
-[Php](https://www.php.net/)  | V8.0.17+
+[Php](https://www.php.net/)  | V8.0.2+
 [Mysql](https://www.mysql.com/)  |V 8.0.27+
 
 ## Installation
