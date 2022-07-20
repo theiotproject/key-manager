@@ -9,24 +9,24 @@
 
 <p align="center">Website application that makes managing & administrating your virtual QR Code keys easier.</p>
 <p align="center">Created in Laravel + Vue.js</p>
-
+<p align="center">:star: Star us on GitHub — it motivates us a lot!</p>
 
 <p align="center">
-  <a href="https://badge.fury.io/js/electron-markdownify">
-    <img src="https://badge.fury.io/js/electron-markdownify.svg"
-         alt="Gitter">
+  <a href="">
+    <img src="https://img.shields.io/github/commit-activity/w/theiotproject/key-manager">
   </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
-  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
-      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
+ 
+  <a href="">
+      <img src="https://img.shields.io/tokei/lines/github/theiotproject/key-manager">
   </a>
-  <a href="theiotproject.com">
-    <img src="https://img.shields.io/badge/visit-blog-blue">
+  <a href="https://theiotproject.com/">
+    <img src="https://img.shields.io/badge/visit-blog-green">
   </a>
+     <a href=""><img src="https://img.shields.io/github/stars/theiotproject/key-manager?style=social"></a>
 </p>
 
 <p align="center">
-  <a href="#about">About> •
+  <a href="#about">About</a> •
   <a href="#requirements">Requirements</a> •
   <a href="#installation">Installation</a> •
   <a href="#testing">Testing</a> •
@@ -36,6 +36,18 @@
 
 
 ## About
+
+### Landing Page
+
+> ![WelcomeCutMac](https://user-images.githubusercontent.com/58706334/180001129-d750bfee-a10a-4747-934b-2bde2e725977.png)
+
+
+
+### Dashboard
+
+> <img width="1200" alt="dashboardScreenshot" src="https://user-images.githubusercontent.com/58706334/180000578-36602d08-9d15-413d-86df-45f2190b52ec.png">
+
+
 
 ## Requirements
 
