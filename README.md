@@ -8,6 +8,7 @@
 </h1>
 
 <p align="center">Website application that makes managing & administrating your virtual QR Code keys easier.</p>
+<p align="center"><a href="https://keymanager.theiotproject.com/">Check it out</a></p>
 <p align="center">Created in Laravel + Vue.js</p>
 <p align="center">:star: Star us on GitHub — it motivates us a lot!</p>
 
@@ -37,17 +38,38 @@
 
 ## About
 
-### Landing Page
 
-> ![WelcomeCutMac](https://user-images.githubusercontent.com/58706334/180001129-d750bfee-a10a-4747-934b-2bde2e725977.png)
+> Landing Page
+
+> <img width="600" alt="dashboardScreenshot" src="https://user-images.githubusercontent.com/58706334/180001129-d750bfee-a10a-4747-934b-2bde2e725977.png">
+
+## Features
+
+#### E-mail
+- Registration with e-mail verification
+- Sending e-mail invitations to the team
+- Option to reset password via e-mail
+
+> Registration Page
+
+> <img width="600" alt="dashboardScreenshot" src="https://user-images.githubusercontent.com/58706334/180012452-4f766732-d173-4b06-9289-d6c0619e8ce7.png">
 
 
 
-### Dashboard
+#### Managing
+- Creating and Configuring Teams
+- Assigning Gates to Team
+- Adding Virtual Keys to open Gates 
 
-> <img width="1200" alt="dashboardScreenshot" src="https://user-images.githubusercontent.com/58706334/180000578-36602d08-9d15-413d-86df-45f2190b52ec.png">
+> Dashboard
 
+> <img width="600" alt="dashboardScreenshot" src="https://user-images.githubusercontent.com/58706334/180000578-36602d08-9d15-413d-86df-45f2190b52ec.png">
 
+#### Profile
+- Update Profile Informations
+- Add Avatar
+- Update Password
+- Enable Two Factor Authentication
 
 ## Requirements
 
