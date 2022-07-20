@@ -102,25 +102,24 @@ Here is how you can run the project locally:
     composer install
     ```
 
-1. Generate key 
-    ```sh
-    php artisan key:generate
-    ```
-
 1. install front-end dependencies
     ```sh
     npm install && npm run dev
     ```
+
+1. Copy .env.example file to .env file
+    ```sh
+    cp .env.example .env
+    ```
+1. Configure .env with your data
+
+1. Configure mailhog <- Check <a href="https://github.com/mailhog/MailHog">here</a> how
 
 1. Run migration
     ```
     php artisan migrate
     ```
     
-1. Run seeder
-    ```
-    php artisan db:seed
-    ```
 1. Run server 
     ```sh
     php artisan serve
@@ -129,13 +128,6 @@ Here is how you can run the project locally:
 1. Visit `localhost:8000` in your favorite browser.     
 
     > Make sure to follow your Laravel local Development Environment.
-
-### Environment Variables
-
-1. Copy .env.example file to .env file
-    ```sh
-    cp .env.example .env
-    ```
 
 ## Testing
 Will be addedd in the future...
