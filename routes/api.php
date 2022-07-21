@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/teams/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
     Route::get('/virtualKeys/teamId/{team_id}/token', [VirtualKeyController::class, 'indexByTeamIdForLoggedUser']);
     Route::get('/virtualKeys/code/{team_id}', [VirtualKeyController::class, 'generateCode']); // do zmienienia na key_id
+    Route::resource('/virtualKeys', VirtualKeyController::class);
 });
 
 //Public routes
@@ -37,3 +38,5 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 //        }
 //    }
 //});
+
+
