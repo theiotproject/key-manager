@@ -42,7 +42,7 @@ import { Link } from "@inertiajs/inertia-vue3";
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-
+                    <th scope="col" class="px-6 py-3">Label</th>
                   <th scope="col" class="px-30 py-3 rounded-r-lg">
                     <span class="sr-only">Edit</span>
                   </th>
@@ -78,6 +78,16 @@ import { Link } from "@inertiajs/inertia-vue3";
                           </div>
                       </div>
                   </td>
+                    <td v-if="index <=2" class="
+                      lg:px-3
+                      md:px-0
+                      py-4
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap">
+
+                        {{virtualKey.label}}
+                    </td>
                   <td v-if="index <=2" class="px-10 py-4 text-right">
                     <a
                       href="#"

@@ -126,8 +126,10 @@ class VirtualKeyController extends Controller
             foreach ($gate->virtualKeys as $virtualKey) {
                 $virtualKey->user;
                 $virtualKey->gates;
-                array_push($virtualKeys, $virtualKey);
             }
+        }
+        foreach ($gate->virtualKeys as $virtualKey) {
+            array_push($virtualKeys, $virtualKey);
         }
         return $virtualKeys;
     }
