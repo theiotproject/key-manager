@@ -69,7 +69,7 @@ import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
                                     v-model="form.checkedGates"
                                     v-bind:id="index"
                                     type="checkbox"
-                                    :value="gate.id"
+                                    :value="gate"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 d"
                                 />
                                 <label
@@ -99,7 +99,7 @@ import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
                                     v-model="form.checkedUsers"
                                     v-bind:id="index"
                                     type="checkbox"
-                                    :value="user.id"
+                                    :value="user"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
                                 />
                                 <label
@@ -155,12 +155,41 @@ export default {
             this.form.checkedDays.forEach((day) => {
                 str += this.daysLetter[day];
             });
+
+            let users = [];
+
+            this.form.checkedUsers.forEach((user) => {
+                let label = user.name + "'s Virtual Key opens ";
+
+                this.form.checkedGates.forEach((gate, index) => {
+                    if (this.form.checkedGates.length - 1 == index) {
+                        label += gate.name;
+                    } else {
+                        label += gate.name + ", ";
+                    }
+                });
+
+                // label += " in "
+                // this.form.checkedDays.forEach((day,index) => {
+                //     if (this.form.checkedDays.length() - 1 == index) {
+                //         label +=  + " ";
+                //     } else {
+                //         label += gate.name + ", ";
+                //     }
+                // })
+
+                let newUser = {
+                    id: user.id,
+                    label: label,
+                };
+                users.push(newUser);
+            });
+
             const data = {
-                users: this.form.checkedUsers,
-                gates: this.form.checkedGates,
+                users: users,
+                gates: this.form.checkedGates.id,
                 validDays: str,
             };
-            console.log(data);
             axios.post("/virtualKeys", data).then();
             this.$inertia.get("../dashboard");
         },
