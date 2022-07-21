@@ -2,85 +2,189 @@
 import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
-import CheckboxList from "../../../Components/Form/CheckboxList.vue";
-import GatesList from "../../../Components/Form/GatesList.vue";
-import UsersList from "../../../Components/Form/UsersList.vue";
-import DialogModal from "../../../../../vendor/laravel/jetstream/stubs/inertia/resources/js/Jetstream/DialogModal.vue";
+import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
 </script>
 
 <template>
-  <JetFormSection v-on:submit.prevent="submitForm">
-    <template #title> Virtual Key Details </template>
+    <JetFormSection v-on:submit.prevent="submitForm">
+        <template #title> Virtual Key Details </template>
 
-    <template #description>
-      Create a new Virtual Key for users by selecting the Gates, and the time
-      period
-    </template>
+        <template #description>
+            Create a new Virtual Key for users by selecting the Gates, and the
+            time period
+        </template>
 
-    <template #form>
-      <div class="col-span-6">
-        <JetLabel value="Team" />
+        <template #form>
+            <div class="col-span-6">
+                <JetLabel value="Team" />
 
-        <div class="flex items-center mt-2">
-          <div class="leading-tight">
-            <div>{{ $page.props.user.current_team.name }}</div>
-          </div>
-        </div>
-      </div>
+                <div class="flex items-center mt-2">
+                    <div class="leading-tight">
+                        <div>{{ $page.props.user.current_team.name }}</div>
+                    </div>
+                </div>
+            </div>
             <div class="col-span-6 sm:col-span-full">
                 <div>
-                    <CheckboxList />
+                    <JetLabel value="Days" class="mb-3" />
+                    <ul
+                        class="items-center w-full font-medium text-gray-900 bg-white rounded-lg sm:flex-wrap sm:flex"
+                    >
+                        <li
+                            v-for="(day, index) in days"
+                            :key="index"
+                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r"
+                        >
+                            <div class="flex items-center pl-3">
+                                <input
+                                    v-model="form.checkedDays"
+                                    v-bind:id="index"
+                                    type="checkbox"
+                                    :value="index"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label
+                                    v-bind:id="index"
+                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900"
+                                >
+                                    {{ day }}
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
                 <hr class="mt-5 mb-5" />
 
                 <div>
-                    <UsersList />
+                    <JetLabel for="gates" value="Gates" class="mb-3" />
+                    <ul
+                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        aria-labelledby="dropdownSearchButton"
+                    >
+                        <li v-for="(gate, index) in gates" :key="index">
+                            <div
+                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                            >
+                                <input
+                                    v-model="form.checkedGates"
+                                    v-bind:id="index"
+                                    type="checkbox"
+                                    :value="gate.id"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 d"
+                                />
+                                <label
+                                    for="{{index}}"
+                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
+                                    >{{ gate.name }}</label
+                                >
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+
                 <hr class="mt-5 mb-5" />
 
                 <div>
-                    <GatesList />
+                    <JetLabel for="users" value="Users" />
+                    <SearchBar />
+                    <ul
+                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        aria-labelledby="dropdownSearchButton"
+                    >
+                        <li v-for="(user, index) in users" :key="index">
+                            <div
+                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                            >
+                                <input
+                                    v-model="form.checkedUsers"
+                                    v-bind:id="index"
+                                    type="checkbox"
+                                    :value="user.id"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label
+                                    for="{{index}}"
+                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
+                                    >{{ user.name }}</label
+                                >
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </template>
-    <template #actions>
-      <JetButton
-        :class="{ 'opacity-25': form.processing }"
-        :disabled="form.processing"
-      >
-        Create
-      </JetButton>
-    </template>
-  </JetFormSection>
+        <template #actions>
+            <JetButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
+                Create
+            </JetButton>
+        </template>
+    </JetFormSection>
 </template>
 <script>
 export default {
-
-  name: "CreateGateForm",
-  props: ["attrs"],
-  data: function () {
-    return {
-      form: {
-        serial_number: "",
-        name: "",
-        team_id: 0,
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      const data = {
-        serial_number: this.form.serial_number,
-        name: this.form.name,
-        team_id: this.attrs.user.current_team.id,
-      };
-      axios
-        .post("/api/gate", data)
-        .then((response) => (this.dataId = response.data.id));
-      this.$inertia.get("../dashboard");
-
+    name: "CreateVirtualKeyForm",
+    props: ["attrs"],
+    data: function () {
+        return {
+            form: {
+                label: "",
+                checkedDays: [0, 1, 2, 3, 4],
+                checkedUsers: [],
+                checkedGates: [],
+            },
+            users: {},
+            gates: {},
+            days: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ],
+            daysLetter: ["M", "T", "W", "R", "F", "S", "U"],
+        };
     },
-  },
+    methods: {
+        submitForm() {
+            let str = "";
+            this.form.checkedDays.forEach((day) => {
+                str += this.daysLetter[day];
+            });
+            const data = {
+                users: this.form.checkedUsers,
+                gates: this.form.checkedGates,
+                validDays: str,
+            };
+            console.log(data);
+            axios.post("/virtualKeys", data).then();
+            this.$inertia.get("../dashboard");
+        },
+        getUsers() {
+            axios
+                .get(`/auth/users/${this.attrs.user.current_team_id}`)
+                .then((response) => {
+                    this.users = response.data;
+                });
+        },
+        getGates() {
+            axios
+                .get(
+                    `/gates/teamId/${this.attrs.user.current_team_id}/resource`
+                )
+                .then((response) => {
+                    this.gates = response.data.data;
+                });
+        },
+    },
+    created() {
+        this.getUsers();
+        this.getGates();
+    },
 };
 </script>
 <style>
