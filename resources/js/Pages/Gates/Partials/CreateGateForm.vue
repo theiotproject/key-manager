@@ -106,7 +106,7 @@ export default {
       form: {
         passwordFieldType: "password",
         serial_number: "",
-        magic_code: "",
+        magic_code: this.generateGuid(),
         name: "",
         errors: {
           name: "",
@@ -130,6 +130,11 @@ export default {
       }
       return true;
     },
+      generateGuid(){
+          return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+              (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+          );
+      },
     submitForm() {
       if (this.validForm(this.form.serial_number, this.form.magic_code)) {
         const data = {

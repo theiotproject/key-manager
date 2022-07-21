@@ -46,8 +46,8 @@ class VirtualKeyController extends Controller
         $virtualKeys = array();
         foreach($users as $user){
             $virtualKey = new VirtualKey();
-            $virtualKey->label = 'nazwa';
-            $virtualKey->user_id = $user;
+            $virtualKey->label = $user['label'];
+            $virtualKey->user_id = $user['id'];
             $virtualKey->valid_days = $request->validDays;
             $virtualKey->save();
             array_push($virtualKeys, $virtualKey);
@@ -60,19 +60,6 @@ class VirtualKeyController extends Controller
             }
         }
     }
-
-
-
-//        foreach($request->user as $user){
-//            $virtualKey = VirtualKey::create([
-//                'user_id' => $request->userId,
-//                'valid_days' =>
-//            ]);
-//            $gate = Gate::find($request->gateId);
-//            $virtualKey->gates()->attach($gate);
-//        }
-//        return 'success';
-//    }
 
     /**
      * Display the specified resource.

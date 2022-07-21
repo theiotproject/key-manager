@@ -18,113 +18,84 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="flex justify-between">
                         <h2
-                            class="m-7 py-2 text-gray-900 font-bold text-xl mb-2"
+                            class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"
                         >
-                            Your Virtual Keys
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 ml-2"
+                                viewBox="0 0 20 20"
+                                fill="#FFA500"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            <p class="ml-3">Virtual Keys</p>
                         </h2>
                         <Link
                             v-if="permission"
                             :href="route('virtualKey.create')"
-                            class="m-7 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                         >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
                             Create New Virtual Key
                         </Link>
                     </div>
-                    <div class="py-5">
+                    <div class="pb-5">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden sm:rounded-lg">
-                                <div
-                                    class="relative overflow-x-auto shadow-md sm:rounded-lg"
-                                >
-                                    <table
-                                        table
-                                        class="w-full text-sm text-left text-gray-500"
-                                    >
-                                        <thead
-                                            class="text-xs text-gray-700 uppercase bg-gray-200"
-                                        >
-                                            <tr>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-3"
-                                                >
-                                                    User
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-3"
-                                                >
-                                                    E-mail
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-3"
-                                                >
-                                                    Active From
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-3"
-                                                >
-                                                    Active To
-                                                </th>
+                                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                    <table class="w-full text-sm text-left text-gray-500">
+                                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
 
-                                                <th
-                                                    scope="col"
-                                                    class="px-30 py-3"
-                                                >
-                                                    <span class="sr-only"
-                                                        >Edit</span
-                                                    >
-                                                </th>
-                                            </tr>
+                                            <th scope="col" class="px-30 py-3 rounded-r-lg">
+                                                <span class="sr-only">Edit</span>
+                                            </th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                class="bg-white border-b"
-                                                v-for="virtualKey in virtualKeys"
-                                                :key="virtualKey.id"
+                                        <tr
+                                            class="bg-white border-b"
+                                            v-for="virtualKey in virtualKeys"
+                                            :key="virtualKey.id"
+                                        >
+                                            <td
+                                                class="
+                      lg:px-3
+                      md:px-0
+                      py-4
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap
+                    "
                                             >
-                                                <td
-                                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center"
-                                                >
+                                                <div class="flex
+                      items-center">
                                                     <img
                                                         class="h-8 w-8 rounded-full object-cover mr-3"
-                                                        :src="
-                                                            virtualKey.user
-                                                                .profile_photo_url
-                                                        "
-                                                        :alt="
-                                                            virtualKey.user.name
-                                                        "
+                                                        :src="virtualKey.user.profile_photo_url"
+                                                        :alt="virtualKey.user.name"
                                                     />
-                                                    {{ virtualKey.user.name }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                                    <div>
+                                                        {{ virtualKey.user.name }}
+                                                        <p class="text-gray-400 text-xs">{{ virtualKey.user.email }}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td  class="px-10 py-4 text-right">
+                                                <a
+                                                    href="#"
+                                                    class="font-medium text-blue-600 hover:underline"
+                                                >Show Gates</a
                                                 >
-                                                    {{ virtualKey.user.email }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ virtualKey.active_from }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ virtualKey.active_to }}
-                                                </td>
-                                                <td
-                                                    class="px-10 py-4 text-right"
-                                                >
-                                                    <a
-                                                        href="#"
-                                                        class="font-medium text-blue-600 hover:underline"
-                                                        >Show Gates</a
-                                                    >
-                                                </td>
-                                            </tr>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

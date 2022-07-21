@@ -22,22 +22,27 @@ import { Link } from "@inertiajs/inertia-vue3";
           />
         </svg>
         <p class="ml-3">Gates</p>
-      </h2>
-      <!-- <div class="mr-10 mt-8">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-8 w-8"
-          viewBox="0 0 20 20"
-          fill="#374151"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      </div> -->
 
+      </h2>
+        <Link
+            v-if="permission"
+            :href="route('gates.create')"
+            class="
+                mr-10
+                mt-4
+                text-gray-600
+                hover:text-black
+                rounded
+                flex
+                items-center
+                gap-2
+              "
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Create New Gate
+        </Link>
     </div>
     <div class="pb-5">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
