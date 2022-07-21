@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('label');
             $table->foreignId('user_id')->constrained();
-            $table->int('valid_days');
+            $table->string('valid_days');
             $table->timestamps();
         });
     }

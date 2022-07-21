@@ -12,7 +12,7 @@ class VirtualKey extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'active_from', 'active_to'
+        'label', 'user_id', 'valid_days'
     ];
 
     public function user()

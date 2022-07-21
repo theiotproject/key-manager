@@ -38,20 +38,28 @@ class VirtualKeyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return false|string
      */
     public function store(Request $request)
     {
-
-//        $result = array();
-//        foreach($data as $key=>$value){
-//            array_push($result, array(
-//                'user_id' => $value['userId'],
-//                'valid_days' => $value['validDays'],
-//                'user_id' => $value['userId'],
-//                'user_id' => $value['userId'],
-//            ))
+        $users = $request->users;
+        $virtualKeys = array();
+        foreach($users as $user){
+            $virtualKey = new VirtualKey();
+            $virtualKey->label = 'nazwa';
+            $virtualKey->user_id = $user;
+            $virtualKey->valid_days = $request->validDays;
+            $virtualKey->save();
+            array_push($virtualKeys, $virtualKey);
         }
+
+        foreach($virtualKeys as $virtualKey){
+            foreach($request->gates as $gateId){
+                $gate = Gate::find($gateId);
+                $virtualKey->gates()->attach($gate);
+            }
+        }
+    }
 
 
 
