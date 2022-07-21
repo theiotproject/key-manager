@@ -21,6 +21,9 @@ import CreateVirtualKeyForm from "./Partials/CreateVirtualKeyForm.vue";
 
 <script>
 export default {
+    name: "Create",
+    props: ["attrs"],
+
     data() {
         return {
             attrs: this.$attrs,

@@ -25,7 +25,6 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                         <Link
                             v-if="permission"
                             :href="route('virtualKey.create')"
-                            :data="{ team_id: attrs }"
                             class="m-7 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                         >
                             Create New Virtual Key
