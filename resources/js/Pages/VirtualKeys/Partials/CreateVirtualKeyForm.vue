@@ -157,11 +157,13 @@ export default {
             });
 
             let users = [];
+            let gates = [];
 
             this.form.checkedUsers.forEach((user) => {
                 let label = user.name + "'s Virtual Key opens ";
 
                 this.form.checkedGates.forEach((gate, index) => {
+                    gates.push(gate.id);
                     if (this.form.checkedGates.length - 1 == index) {
                         label += gate.name;
                     } else {
@@ -187,9 +189,10 @@ export default {
 
             const data = {
                 users: users,
-                gates: this.form.checkedGates.id,
+                gates: gates,
                 validDays: str,
             };
+            console.log(data);
             axios.post("/virtualKeys", data).then();
             this.$inertia.get("../dashboard");
         },
