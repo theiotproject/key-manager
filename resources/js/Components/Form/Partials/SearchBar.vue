@@ -6,7 +6,7 @@
                 class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
             >
                 <svg
-                    class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    class="w-5 h-5 text-gray-500"
                     aria-hidden="true"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -22,7 +22,7 @@
             <input
                 type="text"
                 id="input-group-search"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
                 placeholder="Search user"
             />
         </div>
