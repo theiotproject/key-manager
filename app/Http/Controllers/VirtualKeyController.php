@@ -42,15 +42,29 @@ class VirtualKeyController extends Controller
      */
     public function store(Request $request)
     {
-        $virtualKey = VirtualKey::create([
-            'user_id' => $request->userId,
-            'active_from' => $request->activeFrom,
-            'active_to' => $request->activeTo
-        ]);
-        $gate = Gate::find($request->gateId);
-        $virtualKey->gates()->attach($gate);
-        return 'success';
-    }
+
+//        $result = array();
+//        foreach($data as $key=>$value){
+//            array_push($result, array(
+//                'user_id' => $value['userId'],
+//                'valid_days' => $value['validDays'],
+//                'user_id' => $value['userId'],
+//                'user_id' => $value['userId'],
+//            ))
+        }
+
+
+
+//        foreach($request->user as $user){
+//            $virtualKey = VirtualKey::create([
+//                'user_id' => $request->userId,
+//                'valid_days' =>
+//            ]);
+//            $gate = Gate::find($request->gateId);
+//            $virtualKey->gates()->attach($gate);
+//        }
+//        return 'success';
+//    }
 
     /**
      * Display the specified resource.

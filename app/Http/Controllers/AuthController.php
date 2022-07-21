@@ -44,6 +44,10 @@ class AuthController extends Controller
     public function indexUsersByTeamId($teamId)
     {
         $users = Team::find($teamId)->users;
+        $ownerId = Team::find($teamId)->user_id;
+        $owner = User::find($ownerId);
+        $users->add($owner);
+        $owner->setAttribute('membership', ['role'=>'owner']);
         return $users;
     }
 }

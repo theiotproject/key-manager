@@ -52,30 +52,20 @@ import { Link } from "@inertiajs/inertia-vue3";
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
                 <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">Serial Number</th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">Name</th>
+                  <th scope="col" class="px-6 py-3 rounded l-lg rounded-r-lg">Name</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   class="border-b"
-                  v-for="gate in gates"
+                  v-for="(gate,index) in gates"
                   :key="gate.id"
                 >
                   <td
+                     v-if="index <= 3"
                     class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    {{ gate.serial_number }}
-                  </td>
-                  <td
-                    class="
-                      px-6
+                      lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       text-gray-900
@@ -87,23 +77,21 @@ import { Link } from "@inertiajs/inertia-vue3";
                 </tr>
               </tbody>
             </table>
-<!--              <Link-->
-<!--                :href="route('gates.index')"-->
-<!--                class="-->
-<!--                        m-10-->
-<!--                        bg-blue-500-->
-<!--                        hover:bg-blue-700-->
-<!--                        text-white-->
-<!--                        font-bold-->
-<!--                        py-2-->
-<!--                        px-4-->
-<!--                        relative-->
-<!--                        right-0-->
-<!--                        rounded">-->
-<!--    Show more-->
-<!--  </Link>-->
           </div>
+
         </div>
+          <div class="mt-5 w-full flex justify-center" v-if="gates.length > 4">
+          <Link
+              :href="route('gates.index')"
+              class="
+                        text-gray-600
+                        hover:text-black
+                        py-2
+                        px-4
+                        rounded">
+              Show more
+          </Link>
+          </div>
       </div>
     </div>
   </div>

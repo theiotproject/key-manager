@@ -47,9 +47,6 @@ import { Link } from "@inertiajs/inertia-vue3";
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-                  <th scope="col" class="px-6 py-3">E-mail</th>
-                  <th scope="col" class="px-6 py-3">Active From</th>
-                  <th scope="col" class="px-6 py-3">Active To</th>
 
                   <th scope="col" class="px-30 py-3 rounded-r-lg">
                     <span class="sr-only">Edit</span>
@@ -59,61 +56,34 @@ import { Link } from "@inertiajs/inertia-vue3";
               <tbody>
                 <tr
                   class="bg-white border-b"
-                  v-for="virtualKey in virtualKeys"
+                  v-for="(virtualKey,index) in virtualKeys"
                   :key="virtualKey.id"
                 >
                   <td
+                      v-if="index <=2"
                     class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                      flex
-                      items-center
-                    "
-                  >
-                    <img
-                      class="h-8 w-8 rounded-full object-cover mr-3"
-                      :src="virtualKey.user.profile_photo_url"
-                      :alt="virtualKey.user.name"
-                    />
-                    {{ virtualKey.user.name }}
-                  </td>
-                  <td
-                    class="
-                      px-6
+                      lg:px-3
+                      md:px-0
                       py-4
                       font-medium
                       text-gray-900
                       whitespace-nowrap
                     "
                   >
-                    {{ virtualKey.user.email }}
+                      <div class="flex
+                      items-center">
+                          <img
+                              class="h-8 w-8 rounded-full object-cover mr-3"
+                              :src="virtualKey.user.profile_photo_url"
+                              :alt="virtualKey.user.name"
+                          />
+                          <div>
+                              {{ virtualKey.user.name }}
+                              <p class="text-gray-400 text-xs">{{ virtualKey.user.email }}</p>
+                          </div>
+                      </div>
                   </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    {{ virtualKey.active_from }}
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    {{ virtualKey.active_to }}
-                  </td>
-                  <td class="px-10 py-4 text-right">
+                  <td v-if="index <=2" class="px-10 py-4 text-right">
                     <a
                       href="#"
                       class="font-medium text-blue-600 hover:underline"
@@ -125,6 +95,18 @@ import { Link } from "@inertiajs/inertia-vue3";
             </table>
           </div>
         </div>
+          <div class="mt-5 w-full flex justify-center" v-if="virtualKeys.length > 3">
+              <Link
+                  :href="route('gates.index')"
+                  class="
+                        text-gray-600
+                        hover:text-black
+                        py-2
+                        px-4
+                        rounded">
+                  Show more
+              </Link>
+          </div>
       </div>
     </div>
   </div>

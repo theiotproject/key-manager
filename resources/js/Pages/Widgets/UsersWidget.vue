@@ -45,49 +45,71 @@ import { Link } from "@inertiajs/inertia-vue3";
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded-l-lg">Name</th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">Email</th>
+                  <th scope="col" class="px-6 py-3 rounded-r-lg">Role</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   class="bg-white border-b"
-                  v-for="user in users"
+                  v-for="(user,index) in users"
                   :key="user.id"
                 >
                   <td
-                    class="
-                      px-6
+                  v-if="index <= 2"
+                  class="
+                      lg:px-3
+                      md:px-0
                       py-4
                       font-medium
                       text-gray-900
                       whitespace-nowrap
-                      flex
-                      items-center
                     "
                   >
+                      <div class="flex
+                      items-center">
                     <img
                       class="h-8 w-8 rounded-full object-cover mr-3"
                       :src="user.profile_photo_url"
                       :alt="user.name"
                     />
-                    {{ user.name }}
+                          <div>
+                              {{ user.name }}
+                              <p class="text-gray-400 text-xs">{{ user.email }}</p>
+                          </div>
+                    </div>
                   </td>
-                  <td
-                    class="
-                      px-6
+                    <td
+                        v-if="index <= 2"
+                        class="
+                      lg:px-3
+                      md:px-0
                       py-4
                       font-medium
                       text-gray-900
                       whitespace-nowrap
                     "
-                  >
-                    {{ user.email }}
-                  </td>
+                    >
+                        <p v-if="user.membership.role=='owner'" class="font-bold">Owner</p>
+                        <p v-if="user.membership.role=='admin'" class="font-bold">Administrator</p>
+                        <p v-if="user.membership.role=='user'">Member</p>
+                    </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
+          <div class="mt-5 w-full flex justify-center" v-if="users.length > 3">
+              <Link
+
+                  class="
+                        text-gray-600
+                        hover:text-black
+                        py-2
+                        px-4
+                        rounded">
+                  Show more
+              </Link>
+          </div>
       </div>
     </div>
   </div>
@@ -98,8 +120,8 @@ export default {
   props: ["attrs"],
   data() {
     return {
-      users: {},
-      attrs: this.attrs,
+        users: {},
+        attrs: this.attrs,
     };
   },
   methods: {

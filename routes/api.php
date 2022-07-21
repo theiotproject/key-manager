@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -26,3 +27,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 //Public routes
 Route::resource('/events', EventController::class);
 Route::post('/auth/token', [AuthController::class, 'getToken']);
+
+
+//Route::get('/role/userId/{userId}/teamId/{teamId}', function($userId, $teamId) {
+//    $user = User::find($userId);
+//    foreach($user->teams as $team) {
+//        if ($team->id == $teamId) {
+//            return $team->pivot->role;
+//        }
+//    }
+//});

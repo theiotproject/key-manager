@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('virtual_keys', function (Blueprint $table) {
             $table->id();
+            $table->string('label');
             $table->foreignId('user_id')->constrained();
-            $table->date('active_from');
-            $table->date('active_to');
+            $table->int('valid_days');
             $table->timestamps();
         });
     }

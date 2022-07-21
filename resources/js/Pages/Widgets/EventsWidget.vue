@@ -54,7 +54,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                 <tr class="bg-white border-b text-green-700">
                   <td
                     class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -64,7 +65,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                   </td>
                   <td
                     class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -76,7 +78,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                 <tr class="bg-white border-b text-red-700">
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -86,7 +89,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                     </td>
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -98,7 +102,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                 <tr class="bg-white border-b text-green-700">
                     <td
                         class="
-                      px-6
+                      lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -108,7 +113,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                     </td>
                     <td
                         class="
-                      px-6
+                      lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -120,7 +126,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                 <tr class="bg-white border-b text-green-700">
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -130,7 +137,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                     </td>
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -142,7 +150,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                 <tr class="bg-white border-b text-red-700">
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -152,7 +161,8 @@ import { Link } from "@inertiajs/inertia-vue3";
                     </td>
                     <td
                         class="
-                      px-6
+                                            lg:px-6
+                      md:px-3
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -160,7 +170,9 @@ import { Link } from "@inertiajs/inertia-vue3";
                     >
                         Access denied
                     </td>
+
                 </tr>
+
                 <!-- <tr
                   class="bg-white border-b"
                   v-for="event in events"
