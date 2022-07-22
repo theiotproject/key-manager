@@ -11,6 +11,7 @@ use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\SendEmailController;
 use App\Mail\SendMail;
 
+
 //Protected Routes
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

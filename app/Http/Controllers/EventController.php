@@ -14,9 +14,13 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
     public function index()
     {
-        //
+        $events = Event::find(1);
+        return $events;
     }
 
     /**
@@ -36,12 +40,10 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-  /**
-     * @OA\Get(
-     *     path="/event",
-     *     @OA\Response(response="200", description="Display a listing of projects.")
-     * )
-     */
+
+
+
+
 
     public function store(Request $request)
     {

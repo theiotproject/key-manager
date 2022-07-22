@@ -19,9 +19,24 @@ class GateController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/gate",
-     *     @OA\Response(response="200", description="Display a listing of Gates")
-     * )
+     *      path="/api/gates",
+     *      operationId="getGatesList",
+     *      tags={"Gates"},
+     *      summary="Get list of gates",
+     *      description="Returns list of gates",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
 
     public function index()
