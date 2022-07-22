@@ -18,7 +18,7 @@
   </a>
  
   <a href="">
-      <img src="https://img.shields.io/tokei/lines/github/theiotproject/key-manager">
+      <img src="https://img.shields.io/tokei/lines/github/theiotproject/key-manager?style=plastic>
   </a>
   <a href="https://theiotproject.com/">
     <img src="https://img.shields.io/badge/visit-blog-green">
