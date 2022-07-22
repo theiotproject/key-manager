@@ -59,4 +59,4 @@ Route::middleware([
     })->name('virtualKey.create')->middleware('isAdmin');
 });
 
-Route::resource('projects', ProjectsController::class);
+

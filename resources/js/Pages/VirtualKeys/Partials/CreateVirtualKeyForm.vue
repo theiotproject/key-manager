@@ -160,7 +160,7 @@ export default {
             let gates = [];
 
             this.form.checkedUsers.forEach((user) => {
-                let label = user.name + "'s Virtual Key opens ";
+                let label = "Key opens ";
 
                 this.form.checkedGates.forEach((gate, index) => {
                     gates.push(gate.id);
