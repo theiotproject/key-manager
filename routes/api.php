@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/auth/permission/teamId/{team_id}/request', [AuthController::class, 'getRequestUserPermissionByTeamId']);
     Route::get('gates/teamId/{team_id}', [GateController::class, 'indexGatesByTeamId']);
     Route::get('gates/userId/{user_id}/teams', [GateController::class, 'indexGatesByUserTeam']);
+    Route::get('/gates/virtualKeyId/{virtualKeyId}', [GateController::class, 'indexGatesByVirtualKey']);
     Route::get('/virtualKeys/teamId/{team_id}', [VirtualKeyController::class, 'indexVirtualKeysByTeamId']);
     Route::get('/teams/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
     Route::get('/virtualKeys/teamId/{team_id}/token', [VirtualKeyController::class, 'indexByTeamIdForLoggedUser']);
@@ -44,3 +45,4 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
+
