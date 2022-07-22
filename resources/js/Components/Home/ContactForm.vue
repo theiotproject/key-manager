@@ -39,6 +39,10 @@ export default {
                 });
             // this.$inertia.get("../dashboard");
             this.submitted = true;
+            this.name = "";
+            this.email.value = "";
+            this.message.text = "";
+            alert("Thanks for contacting us!");
         },
         // validate by type and value
         validate: function (type, value) {
