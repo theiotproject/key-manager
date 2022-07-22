@@ -1,4 +1,6 @@
 <script>
+import axios from "axios";
+
 var emailRegExp =
     /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 export default {
@@ -10,11 +12,8 @@ export default {
                 value: "",
                 valid: true,
             },
-            // features: ["Reactivity", "Encapsulation", "Data Binding"],
             selection: {
-                member: "0",
-                // framework: "",
-                // features: [],
+                type: "Technical Support",
             },
             message: {
                 text: ``,
@@ -26,6 +25,20 @@ export default {
     methods: {
         // submit form handler
         submit: function () {
+            let data = {
+                name: this.name,
+                email: this.email.value,
+                subject: this.selection.type,
+                message: this.message.text,
+            };
+            console.log(data);
+            axios
+                .post("/api/sendemail/send", data)
+                .then()
+                .catch((err) => {
+                    console.log(err);
+                });
+            // this.$inertia.get("../dashboard");
             this.submitted = true;
         },
         // validate by type and value
@@ -80,11 +93,15 @@ export default {
                 <div>
                     <h4>Type of your question</h4>
                     <p class="select">
-                        <select class="budget" v-model="selection.member">
-                            <option value="0">Asking about services</option>
-                            <option value="1">Technical Support</option>
-                            <option value="2">Crash report</option>
-                            <option value="3">Other</option>
+                        <select class="budget" v-model="selection.type">
+                            <option value="Asking about services">
+                                Asking about services
+                            </option>
+                            <option value="Technical Support">
+                                Technical Support
+                            </option>
+                            <option value="Crash report">Crash report</option>
+                            <option value="Other">Other</option>
                         </select>
                     </p>
                 </div>
