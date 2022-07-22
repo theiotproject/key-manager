@@ -53,10 +53,7 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                                         <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
                                         <tr>
                                             <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-                                            <th scope="col" class="px-6 py-3">Label</th>
-                                            <th scope="col" class="px-30 py-3 rounded-r-lg">
-                                                <span class="sr-only">Edit</span>
-                                            </th>
+                                            <th scope="col" class="lg:px-3 md:px-0 rounded-r-lg">Label</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -98,13 +95,6 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                       whitespace-nowrap">
 
                                                 {{virtualKey.label}}
-                                            </td>
-                                            <td  class="px-10 py-4 text-right">
-                                                <a
-                                                    href="#"
-                                                    class="font-medium text-blue-600 hover:underline"
-                                                >Show Gates</a
-                                                >
                                             </td>
                                         </tr>
                                         </tbody>
