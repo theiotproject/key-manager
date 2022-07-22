@@ -108,44 +108,34 @@ class VirtualKeyController extends Controller
 
     public function indexVirtualKeysByTeamId($teamId)
     {
-        $gates = Team::find($teamId)->gates;
-        $virtualKeys = array();
-        foreach ($gates as $gate) {
-            foreach ($gate->virtualKeys as $virtualKey) {
-                array_push($virtualKeys, $virtualKey);
-            }
-        }
+        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
+
         return $virtualKeys;
     }
 
     public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
     {
-        $gates = Team::find($teamId)->gates;
-        $virtualKeys = array();
-        foreach ($gates as $gate) {
-            foreach ($gate->virtualKeys as $virtualKey) {
-                $virtualKey->user;
-                $virtualKey->gates;
-            }
+        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
+
+        foreach ($virtualKeys as $virtualKey) {
+            $virtualKey->user;
+            $virtualKey->gates;
         }
-        foreach ($gate->virtualKeys as $virtualKey) {
-            array_push($virtualKeys, $virtualKey);
-        }
+
         return $virtualKeys;
     }
 
     public function indexByTeamIdForLoggedUser(Request $request, $teamId)
     {
-        $gates = Team::find($teamId)->gates;
-        $virtualKeys = array();
-        foreach ($gates as $gate) {
-            foreach ($gate->virtualKeys as $virtualKey) {
-                if ($virtualKey->user_id == $request->user()->id) {
-                    array_push($virtualKeys, $virtualKey->makeHidden('pivot'));
-                }
-            }
-        }
-        return $virtualKeys;
+        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
+
+        return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
     public function generateCode(Request $request, $teamId)
