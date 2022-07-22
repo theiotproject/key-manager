@@ -125,4 +125,11 @@ class GateController extends Controller
         }
         return $result;
     }
+
+    public function indexGatesByVirtualKey($virtualKeyId){
+        $gates = Gate::whereHas('virtualKeys', function($q) use ($virtualKeyId){
+            $q->where('virtual_key_id', $virtualKeyId);
+        })->get();
+        return $gates;
+    }
 }
