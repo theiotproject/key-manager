@@ -40,8 +40,8 @@ class SendEmailController extends Controller
              ), function($message) use ($request)
                {
                   $message->subject($request->subject);
-                  $message->from($request->email);
-                  $message->to('meet.us@theiotproject.com');
+                //   $message->from('contact@theiotproject.com');
+                  $message->to('contact@theiotproject.com');
                });
 
     }

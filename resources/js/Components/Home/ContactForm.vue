@@ -31,12 +31,11 @@ export default {
                 subject: this.selection.type,
                 message: this.message.text,
             };
-            console.log(data);
             axios
                 .post("/api/sendemail/send", data)
                 .then()
                 .catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                 });
             // this.$inertia.get("../dashboard");
             this.submitted = true;
