@@ -1,40 +1,276 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Key Manager API",
+        "title": "My First API",
         "version": "0.1"
     },
     "paths": {
-        "/event": {
+        "/api/gates": {
             "get": {
-                "operationId": "6fa31d85849291aac08efc8932808acf",
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Get list of gates",
+                "description": "Returns list of gates",
+                "operationId": "getGatesList",
                 "responses": {
                     "200": {
-                        "description": "Display a listing of projects."
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }
         },
-        "/api/gate": {
+        "/api/events": {
             "get": {
-                "operationId": "01c8d31a3ee132fe73704b09e8d6adac",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get list of events",
+                "description": "Returns list of events",
+                "operationId": "getEventsList",
                 "responses": {
                     "200": {
-                        "description": "Display a listing of Gates"
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Post event",
+                "description": "Creates event",
+                "operationId": "postEvent",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "message": "Event Log 1"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }
         },
-        "/projects": {
+        "/api/events/{id}": {
             "get": {
-                "operationId": "e3dfa947954e394a726a0d4795bc03f2",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get Event",
+                "description": "Returns single event",
+                "operationId": "getEvent",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Event",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Display a listing of projects."
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }
         }
     },
-    "security": [[]]
+    "components": {
+        "schemas": {
+            "Event": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            },
+            "Gate": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "serial_number": {
+                        "type": "string"
+                    },
+                    "magic_code": {
+                        "type": "string"
+                    },
+                    "team_id": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            },
+            "Team": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "personal_team": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "two_factor_secret": {
+                        "type": "string"
+                    },
+                    "two_factor_recovery_codes": {
+                        "type": "string"
+                    },
+                    "two_factor_confirmed_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "remember_token": {
+                        "type": "string"
+                    },
+                    "current_team_id": {
+                        "type": "integer"
+                    },
+                    "profile_photo_path": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            },
+            "VirtualKey": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "valid_days": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "security": [
+        []
+    ]
 }
