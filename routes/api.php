@@ -8,6 +8,8 @@ use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\VirtualKeyController;
+use App\Http\Controllers\SendEmailController;
+use App\Mail\SendMail;
 
 //Protected Routes
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -39,4 +41,5 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 //    }
 //});
 
-
+Route::post('/sendemail/send', [SendEmailController::class, 'send']);
+// Route::post('/sendemail2/send', [SendMail::class, 'send']);

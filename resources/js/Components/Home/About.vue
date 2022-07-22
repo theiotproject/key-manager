@@ -12,9 +12,10 @@
                 <div class="description">
                     <h2>The Key Manager Project</h2>
                     <p>
-                        Dedicated website & mobile application, works out of the
-                        box and is easy to manage. It’s the most convenient tool
-                        you’ve been craving
+                        Our goal is to replace a regular key by a system which
+                        will open a lock by reading a QR code out of our
+                        smartphone. System is based on raspberry, literally
+                        pulled out of the company trash.
                     </p>
                     <a
                         href="http://theiotproject.com/"
