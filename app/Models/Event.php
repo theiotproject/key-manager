@@ -9,4 +9,5 @@ class Event extends Model
 {
     use HasFactory;
     protected $fillable = ['id', 'message'];
+    public $incrementing = false;
 }
