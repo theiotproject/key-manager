@@ -7,6 +7,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import VueSmoothScroll from "v-smooth-scroll";
+import VueGtag from "vue-gtag";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||
@@ -22,6 +23,9 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(VueGtag, {
+                config: { id: "G-FGFW0JR6DV" },
+            })
             .use(ZiggyVue, Ziggy)
             .use(VueSmoothScroll)
             .mount(el);
