@@ -9,5 +9,5 @@ class KeyUsage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['virtual_key_id', 'access_granted', 'message'];
+    protected $fillable = ['id', 'virtual_key_id', 'access_granted', 'message'];
 }
