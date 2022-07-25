@@ -5,27 +5,6 @@
         "version": "0.1"
     },
     "paths": {
-        "/api/gates": {
-            "get": {
-                "tags": [
-                    "Gates"
-                ],
-                "summary": "Get list of gates",
-                "description": "Returns list of gates",
-                "operationId": "getGatesList",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                }
-            }
-        },
         "/api/events": {
             "get": {
                 "tags": [
@@ -102,6 +81,121 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/gates/teamId/{id}": {
+            "get": {
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Get list of gates from Team",
+                "description": "Returns list of gates of Team",
+                "operationId": "getGatesTeamList",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/gates/{id}": {
+            "get": {
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Get Gate",
+                "description": "Returns single gate",
+                "operationId": "getGate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Gate",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/gates": {
+            "post": {
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Post gate",
+                "description": "Creates gate",
+                "operationId": "postGate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "serial_number": {
+                                        "type": "string"
+                                    },
+                                    "magic_code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "Office",
+                                    "serial_number": "ADJF93DI12",
+                                    "magic_code": "c7cf6353-9211-4987-a4ba-2c394f445d26"
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -268,9 +362,19 @@
                 },
                 "type": "object"
             }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
         }
     },
     "security": [
-        []
+        {
+            "api_key_security_example": []
+        }
     ]
 }

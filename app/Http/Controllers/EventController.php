@@ -19,7 +19,7 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = Event::find(1);
+        $events = Event::get();
         return $events;
     }
 
