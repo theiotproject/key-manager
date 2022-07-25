@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KeyUsageController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/virtualKeys/teamId/{team_id}/token', [VirtualKeyController::class, 'indexByTeamIdForLoggedUser']);
     Route::get('/virtualKeys/code/{team_id}', [VirtualKeyController::class, 'generateCode']); // do zmienienia na key_id
     Route::resource('/virtualKeys', VirtualKeyController::class);
+    Route::resource('/keyUsages', KeyUsageController::class);
 });
 
 //Public routes
@@ -45,4 +47,3 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
-
