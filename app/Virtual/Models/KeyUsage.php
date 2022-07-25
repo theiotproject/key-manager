@@ -1,17 +1,16 @@
 <?php
 
 /**
- * Class Event
+ * Class KeyUsage
  *
  * @OA\Schema(
  *     description=""
  * )
  */
 
-class Event
+class KeyUsage
 {
-   
-     /**
+    /**
      * @OA\Property(
      * )
      *
@@ -25,17 +24,9 @@ class Event
      *     type="string"
      * )
      *
-     * @var \DateTime
+     * @var integer
      */
-    public $scan_time;
-
-    /**
-     * @OA\Property(
-     * )
-     *
-     * @var string
-     */
-    public $qr_code;
+    public $virtual_key_id;
 
     /**
      * @OA\Property(
@@ -43,7 +34,15 @@ class Event
      *
      * @var boolean
      */
-    public $status;
+    public $access_granted;
+
+    /**
+     * @OA\Property(
+     * )
+     *
+     * @var string
+     */
+    public $message;
 
     /**
      * @OA\Property(
@@ -64,4 +63,5 @@ class Event
      * @var \DateTime
      */
     private $updated_at;
+
 }

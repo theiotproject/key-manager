@@ -5,6 +5,163 @@
         "version": "0.1"
     },
     "paths": {
+        "/api/auth/token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Log In to the API",
+                "description": "Returns API token",
+                "operationId": "LogIn",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "device_name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "user@gmail.com",
+                                    "password": "password123",
+                                    "device_name": "redmi"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/auth/permission/teamId/{team_id}/request": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "get User Permission By TeamId",
+                "description": "Returns User Permission of user by TeamId",
+                "operationId": "getRequestUserPermissionByTeamId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/auth/permission/teamId/{team_id}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get Permission of User by TeamId",
+                "description": "Returns Permission of User",
+                "operationId": "getAuthUserPermissionByTeamId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/auth/users/{team_id}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get Users By TeamId",
+                "description": "Return User List",
+                "operationId": "indexUsersByTeamId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/events": {
             "get": {
                 "tags": [
@@ -131,19 +288,19 @@
                 ]
             }
         },
-        "/gates/{id}": {
+        "/api/gates/virtualKeyId/{virtualKeyId}": {
             "get": {
                 "tags": [
                     "Gates"
                 ],
-                "summary": "Get Gate",
-                "description": "Returns single gate",
-                "operationId": "getGate",
+                "summary": "Get list of gates by Virtual Key",
+                "description": "Returns list of gates of Virtual Key",
+                "operationId": "getGatesByVirtualKey",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "virtualKeyId",
                         "in": "path",
-                        "description": "Pass ID of Gate",
+                        "description": "Pass ID of Virtual Key",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -160,7 +317,49 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/gates/userId/{id}/teams": {
+            "get": {
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Get Gates of User",
+                "description": "Returns gates from User",
+                "operationId": "getUserGates",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of User",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/gates": {
@@ -206,7 +405,320 @@
                     "403": {
                         "description": "Forbidden"
                     }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/keyUsages": {
+            "post": {
+                "tags": [
+                    "KeyUsages"
+                ],
+                "summary": "Post keyUsage",
+                "description": "Creates keyUsage",
+                "operationId": "postKeyUsage",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "virtual_key_id": {
+                                        "type": "string"
+                                    },
+                                    "access_granted": {
+                                        "type": "boolean"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "id": "c2346a2b-e92b-467e-b09f-9d1f30d871c9",
+                                    "virtual_key_id": "1",
+                                    "access_granted": "1",
+                                    "message": "Access Granted"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
                 }
+            }
+        },
+        "/api/teams/userId/{user_id}": {
+            "get": {
+                "tags": [
+                    "Teams"
+                ],
+                "summary": "index Teams By User",
+                "description": "Returns Teams",
+                "operationId": "indexTeamsByUser",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "Pass ID of User",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/virtualKeys/teamId/{team_id}": {
+            "get": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "index VirtualKeys By TeamId",
+                "description": "Returns list of VirtualKeys",
+                "operationId": "indexVirtualKeysByTeamId",
+                "parameters": [
+                    {
+                        "name": "team_id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/virtualKeys/teamId/{team_id}/token": {
+            "get": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "Get list of VirtualKeys for team",
+                "description": "Returns list of VirtualKeys",
+                "operationId": "indexByTeamIdForLoggedUser",
+                "parameters": [
+                    {
+                        "name": "team_id",
+                        "in": "path",
+                        "description": "Pass ID of Team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/virtualKeys/code/{team_id}": {
+            "get": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "Generate Code",
+                "description": "Returns code",
+                "operationId": "generateCode",
+                "parameters": [
+                    {
+                        "name": "team_id",
+                        "in": "path",
+                        "description": "Pass ID of VirtualKey",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/virtualKeys/teamId/{team_id}/users/gates": {
+            "get": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "index Virtual Keys With Users And Gates Data",
+                "description": "Returns Virtual Keys with Users and Gates Data",
+                "operationId": "indexVirtualKeysByTeamIdWithUsersAndGatesData",
+                "parameters": [
+                    {
+                        "name": "team_id",
+                        "in": "path",
+                        "description": "Pass ID of team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/virtualKeys": {
+            "post": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "Post VirtualKey",
+                "description": "Creates VirtualKey",
+                "operationId": "postVirtualKey",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "users": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "label": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "valid_days": {
+                                        "type": "string"
+                                    },
+                                    "gates": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "users": {
+                                        "id": 1,
+                                        "label": "Key opens office"
+                                    },
+                                    "gates": 1,
+                                    "valid_days": "MTWRF"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         }
     },
@@ -216,10 +728,17 @@
                 "description": "",
                 "properties": {
                     "id": {
-                        "type": "integer"
-                    },
-                    "message": {
                         "type": "string"
+                    },
+                    "scan_time": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "qr_code": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean"
                     },
                     "created_at": {
                         "type": "string",
@@ -249,6 +768,33 @@
                     },
                     "team_id": {
                         "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "datetime"
+                    }
+                },
+                "type": "object"
+            },
+            "KeyUsage": {
+                "description": "",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "virtual_key_id": {
+                        "type": "string",
+                        "format": "datetime"
+                    },
+                    "access_granted": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
                     },
                     "created_at": {
                         "type": "string",

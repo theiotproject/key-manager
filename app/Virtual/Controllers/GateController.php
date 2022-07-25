@@ -34,17 +34,50 @@ class GateController
      *      )
      *     )
      */
+    
+     /**
+     * @OA\Get(
+     *      path="/api/gates/virtualKeyId/{virtualKeyId}",
+     *      operationId="getGatesByVirtualKey",
+     *      tags={"Gates"},
+     *      summary="Get list of gates by Virtual Key",
+     *      security={{"sanctum":{}}},
+     *      description="Returns list of gates of Virtual Key",
+     * 
+     *     @OA\Parameter(
+     *         description="Pass ID of Virtual Key",
+     *         in="path",
+     *         name="virtualKeyId",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *     ),
+     * 
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
 
      /**
      * @OA\Get(
-     *      path="/gates/{id}",
-     *      operationId="getGate",
+     *      path="/api/gates/userId/{id}/teams",
+     *      operationId="getUserGates",
      *      tags={"Gates"},
-     *      summary="Get Gate",
-     *      description="Returns single gate",
+     *      security={{"sanctum":{}}},
+     *      summary="Get Gates of User",
+     *      description="Returns gates from User",
      * 
      *     @OA\Parameter(
-     *         description="Pass ID of Gate",
+     *         description="Pass ID of User",
      *         in="path",
      *         name="id",
      *         required=true,
@@ -70,6 +103,7 @@ class GateController
      *      path="/gates",
      *      operationId="postGate",
      *      tags={"Gates"},
+     *      security={{"sanctum":{}}},
      *      summary="Post gate",
      *      description="Creates gate",
      *  @OA\RequestBody(
