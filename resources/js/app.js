@@ -24,7 +24,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueGtag, {
-                config: { id: "G-JPDLBMCQNS" },
+                config: { id: "G-FGFW0JR6DV" },
             })
             .use(ZiggyVue, Ziggy)
             .use(VueSmoothScroll)
