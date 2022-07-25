@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
+            $table->string('GUID');
+            $table->date('scan_time');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
