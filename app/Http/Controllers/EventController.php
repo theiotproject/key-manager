@@ -108,4 +108,9 @@ class EventController extends Controller
     public function indexEventsByVirtualKey($teamId){
 
     }
+
+    public function indexEventsByTeamId($teamId) {
+
+    }
+
 }
