@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->string('id')->primary();
             $table->datetime('scan_time');
             $table->string('qr_code');
             $table->boolean('status');

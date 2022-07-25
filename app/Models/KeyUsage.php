@@ -10,4 +10,6 @@ class KeyUsage extends Model
     use HasFactory;
 
     protected $fillable = ['id', 'virtual_key_id', 'access_granted', 'message'];
+
+    public $incrementing = false;
 }

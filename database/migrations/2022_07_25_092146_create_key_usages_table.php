@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('key_usages', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->string('id')->primary();
             $table->integer('virtual_key_id');
             $table->boolean('access_granted');
             $table->string('message');
