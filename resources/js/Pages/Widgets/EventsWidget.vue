@@ -44,12 +44,18 @@ import { Link } from "@inertiajs/inertia-vue3";
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
+              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded-l-lg">Date</th>
                   <th scope="col" class="px-6 py-3 rounded-r-lg">Message</th>
                 </tr>
               </thead>
+                <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
+                <tr>
+                    <th scope="col" class="px-6 py-3 rounded-l-lg">Date</th>
+                    <th scope="col" class="px-6 py-3 rounded-r-lg">Message</th>
+                </tr>
+                </thead>
               <tbody>
                 <tr class="bg-white border-b text-green-700">
                   <td
@@ -227,8 +233,12 @@ export default {
     //       this.events = response.data;
     //     });
     // },
+      isSafari(){
+          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      }
   },
   created() {
+      this.isSafari();
     // this.getEvents();
   },
 };

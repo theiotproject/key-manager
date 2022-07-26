@@ -55,11 +55,16 @@ import { Link } from "@inertiajs/inertia-vue3";
             style="background-color: #f7f7f7"
           >
             <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
+              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded l-lg rounded-r-lg">Name</th>
                 </tr>
               </thead>
+                <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
+                <tr>
+                    <th scope="col" class="px-6 py-3 rounded l-lg rounded-r-lg">Name</th>
+                </tr>
+                </thead>
               <tbody>
                 <tr
                   class="border-b"
@@ -127,8 +132,12 @@ export default {
           this.permission = response.data;
         });
     },
+      isSafari(){
+          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      }
   },
   created() {
+      this.isSafari();
     this.getGates();
     this.getPermission();
   },
