@@ -171,15 +171,6 @@ export default {
                     }
                 });
 
-                // label += " in "
-                // this.form.checkedDays.forEach((day,index) => {
-                //     if (this.form.checkedDays.length() - 1 == index) {
-                //         label +=  + " ";
-                //     } else {
-                //         label += gate.name + ", ";
-                //     }
-                // })
-
                 let newUser = {
                     id: user.id,
                     label: label,
@@ -192,7 +183,6 @@ export default {
                 gates: gates,
                 validDays: str,
             };
-            console.log(data);
             axios.post("/virtualKeys", data).then();
             this.$inertia.get("../dashboard");
         },
