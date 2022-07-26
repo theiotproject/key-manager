@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'message'];
+    protected $fillable = ['id', 'scan_time', 'qr_code', 'status'];
     public $incrementing = false;
+
+    public function keyUsage() {
+        return $this->hasOne(KeyUsage::class, 'id', 'id');
+    }
 }

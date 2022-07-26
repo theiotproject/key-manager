@@ -12,4 +12,8 @@ class KeyUsage extends Model
     protected $fillable = ['id', 'virtual_key_id', 'access_granted', 'message'];
 
     public $incrementing = false;
+
+    public function getEvent() {
+        return $this->hasOne(Event::class, 'id', 'id');
+    }
 }

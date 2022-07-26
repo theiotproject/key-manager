@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Gate;
+use App\Models\KeyUsage;
 use Illuminate\Http\Request;
 
 use function Psy\debug;
@@ -111,6 +113,37 @@ class EventController extends Controller
 
     public function indexEventsByTeamId($teamId) {
 
+        //get all gates from team id
+        //then all virtual keys from gate
+        //get 10 keyusaged with same virtual key id AND keyusaged.access_status=true
+        //sometimes keyusaged will have access_status = false -> then there's no event
+        //get all events (if exist) with same id as keyusaged
+        //list all events on the front
+
+        $gates = Gate::all()->where('team_id', $teamId);
+
+        $virtualKeys = array();
+        foreach($gates as $gate){
+            array_push($virtualKeys, $gate->virtualKeys);
+        }
+
+
+        return $virtualKeys;
+
+
+//        $events = Event::take(10)->get();
+//        $keyUsages = array();
+//        foreach($events as $event){
+//            $keyUsage = KeyUsage::find($event->id);
+//            $keyUsage->getEvent;
+//
+//            array_push($keyUsages, $keyUsage);
+//        }
+//        return $keyUsages;
+//
+//        $getEvent =  KeyUsage::find('fsdafsdfsadfsa')->getEvent;
+//        $getEvent->keyUsage;
+//        return $getEvent;
     }
 
 }
