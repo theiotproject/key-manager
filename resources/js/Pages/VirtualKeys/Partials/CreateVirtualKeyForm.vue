@@ -3,6 +3,8 @@ import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
+
+import MakeToast from "../../../Services/MakeToast.vue";
 </script>
 
 <template>
@@ -183,14 +185,27 @@ export default {
                 gates: gates,
                 validDays: str,
             };
-            axios.post("/virtualKeys", data).then();
-            this.$inertia.get("../dashboard");
+            axios
+                .post("/virtualKeys", data)
+                .then((result) => {
+                    MakeToast.create(
+                        "Virtual Key successfully added",
+                        "success"
+                    );
+                    this.$inertia.get("../dashboard");
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot create Virtual Key", "error");
+                });
         },
         getUsers() {
             axios
                 .get(`/auth/users/${this.attrs.user.current_team_id}`)
                 .then((response) => {
                     this.users = response.data;
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot load users", "error");
                 });
         },
         getGates() {
@@ -200,6 +215,9 @@ export default {
                 )
                 .then((response) => {
                     this.gates = response.data.data;
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot load gates", "error");
                 });
         },
     },
