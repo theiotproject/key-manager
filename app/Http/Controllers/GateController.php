@@ -6,6 +6,7 @@ use App\Http\Resources\GateResource;
 use App\Models\Gate;
 use App\Models\Team;
 use App\Models\User;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
