@@ -41,14 +41,14 @@ import { Link } from "@inertiajs/inertia-vue3";
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-                    <th scope="col" class="lg:px-3 md:px-0 py-3 rounded-r-lg">Label</th>
+                  <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3 px-5 sm:rounded-r-lg rounded-none">Label</th>
                 </tr>
               </thead>
                 <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
                 <tr>
-                    <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-                    <th scope="col" class="lg:px-3 md:px-0 py-3 rounded-r-lg">Label</th>
+                    <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none">Label</th>
                 </tr>
                 </thead>
               <tbody>
@@ -62,6 +62,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                     class="
                       lg:px-3
                       md:px-0
+                      px-5
                       py-4
                       font-medium
                       text-gray-900

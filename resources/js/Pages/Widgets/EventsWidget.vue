@@ -46,14 +46,14 @@ import { Link } from "@inertiajs/inertia-vue3";
             <table class="w-full text-sm text-left text-gray-500">
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">Date</th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">Message</th>
+                  <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Date</th>
+                  <th scope="col" class="px-6 py-3 sm:rounded-r-lg rounded-none">Message</th>
                 </tr>
               </thead>
                 <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
                 <tr>
-                    <th scope="col" class="px-6 py-3 rounded-l-lg">Date</th>
-                    <th scope="col" class="px-6 py-3 rounded-r-lg">Message</th>
+                    <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Date</th>
+                    <th scope="col" class="px-6 py-3 sm:rounded-r-lg rounded-none">Message</th>
                 </tr>
                 </thead>
               <tbody>
@@ -62,6 +62,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                     class="
                                             lg:px-6
                       md:px-3
+                      px-5
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -86,6 +87,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                         class="
                                             lg:px-6
                       md:px-3
+                      px-5
                       py-4
                       font-medium
                       whitespace-nowrap
@@ -104,79 +106,6 @@ import { Link } from "@inertiajs/inertia-vue3";
                     >
                         Access denied
                     </td>
-                </tr>
-                <tr class="bg-white border-b text-green-700">
-                    <td
-                        class="
-                      lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        07/19 22:12:54
-                    </td>
-                    <td
-                        class="
-                      lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        Authorized
-                    </td>
-                </tr>
-                <tr class="bg-white border-b text-green-700">
-                    <td
-                        class="
-                                            lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        07/19 21:23:32
-                    </td>
-                    <td
-                        class="
-                                            lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        Authorized
-                    </td>
-                </tr>
-                <tr class="bg-white border-b text-red-700">
-                    <td
-                        class="
-                                            lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        07/19 20:23:54
-                    </td>
-                    <td
-                        class="
-                                            lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      whitespace-nowrap
-                    "
-                    >
-                        Access denied
-                    </td>
-
                 </tr>
 
                 <!-- <tr
