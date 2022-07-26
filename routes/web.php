@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use PhpParser\Node\Expr\AssignOp\Plus;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\VirtualKeyController;
