@@ -99,11 +99,19 @@ class VirtualKeyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function destroy($id)
     {
-        //
+        $virtualKey = VirtualKey::find($id);
+        $gates = $virtualKey->gates;
+        if($gates!=null) {
+            foreach ($gates as $gate) {
+                $virtualKey->gates()->detach($gate->id);
+            }
+        }
+        $virtualKey->delete();
+        return Inertia::render('Dashboard');
     }
 
     public function indexVirtualKeysByTeamId($teamId)

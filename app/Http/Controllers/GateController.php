@@ -7,6 +7,7 @@ use App\Models\Gate;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class GateController extends Controller
@@ -86,11 +87,28 @@ class GateController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function destroy($id)
     {
-        //
+        $gate = Gate::find($id);
+        $virtualKeys = $gate->virtualKeys;
+        if($virtualKeys!=null) {
+            foreach ($virtualKeys as $virtualKey) {
+                $gate->virtualKeys()->detach($virtualKey->id);
+            }
+            foreach ($virtualKeys as $virtualKey) {
+                $gates = $virtualKey->gates;
+                $gatesArray = array();
+                foreach($gates as $gate2){
+                    array_push($gatesArray, $gate2->name);
+                }
+                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualKey->save();
+            }
+        }
+        $gate->delete();
+        return Inertia::render('Dashboard');
     }
     /**
      * Display a listing of the resource.
@@ -127,3 +145,4 @@ class GateController extends Controller
         return $gates;
     }
 }
+

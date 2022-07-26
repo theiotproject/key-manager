@@ -1,6 +1,31 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import {Link, useForm} from "@inertiajs/inertia-vue3";
+import { ref } from "vue";
+import JetConfirmationModal from "@/Jetstream/ConfirmationModal.vue";
+import JetDangerButton from "@/Jetstream/DangerButton.vue";
+import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+
+const removeGateForm = useForm();
+
+const gateBeingRemoved = ref(null);
+
+const confirmGateRemoval = (gate) => {
+    gateBeingRemoved.value = gate;
+};
+
+const removeGate = () => {
+    removeGateForm.delete(
+        route("gates.destroy", [gateBeingRemoved.value]),
+        {
+            errorBag: "removeGate",
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => (gateBeingRemoved.value = null),
+        }
+    );
+};
+
 </script>
 <template>
   <AppLayout title="Dashboard">
@@ -61,50 +86,81 @@ import { Link } from "@inertiajs/inertia-vue3";
                               <table class="w-full text-sm text-left text-gray-500">
                                   <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
                                   <tr>
-                                      <th scope="col" class="px-6 py-3 rounded l-lg rounded-r-lg">Name</th>
+                                      <th scope="col" class="px-6 py-3 rounded-l-lg">Name</th>
+                                      <th scope="col" class="px-6 py-3 text-right rounded-r-lg"></th>
                                   </tr>
                                   </thead>
                                   <tbody>
                                   <tr
                                       class="border-b"
-                                      v-for="(gate,index) in gates"
+                                      v-for="gate in gates"
                                       :key="gate.id"
                                   >
                                       <td
-                                          v-if="index <= 3"
                                           class="
-                      lg:px-6
-                      md:px-3
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
+                                            lg:px-6
+                                            md:px-3
+                                            py-4
+                                            font-medium
+                                            text-gray-900
+                                            whitespace-nowrap
+                                            "
                                       >
                                           {{ gate.name }}
+                                      </td>
+                                      <td
+                                          class="
+                                            lg:px-6
+                                            md:px-3
+                                            py-4
+                                            font-medium
+                                            text-right
+                                            text-gray-900
+                                            whitespace-nowrap
+                                            "
+                                      >
+                                          <button
+                                              class="cursor-pointer ml-6 text-sm text-red-500"
+                                              @click="confirmGateRemoval(gate)"
+                                          >
+                                              Remove
+                                          </button>
                                       </td>
                                   </tr>
                                   </tbody>
                               </table>
                           </div>
-
-                      </div>
-                      <div class="mt-5 w-full flex justify-center" v-if="gates.length > 4">
-                          <Link
-                              :href="route('gates.index')"
-                              class="
-                        text-gray-600
-                        hover:text-black
-                        py-2
-                        px-4
-                        rounded">
-                              Show more
-                          </Link>
                       </div>
                   </div>
               </div>
           </div>
       </div>
+        <!-- Remove Gate Confirmation Modal -->
+        <JetConfirmationModal
+            :show="gateBeingRemoved"
+            @close="gateBeingRemoved = null"
+        >
+            <template #title> Remove Gate </template>
+
+            <template #content>
+                Are you sure you would like to remove this gate?
+            </template>
+
+            <template #footer>
+                <JetSecondaryButton @click="gateBeingRemoved = null">
+                    Cancel
+                </JetSecondaryButton>
+
+                <JetDangerButton
+                    class="ml-3"
+                    :class="{ 'opacity-25': removeGateForm.processing }"
+                    :disabled="removeGateForm.processing"
+                    @click="removeGate"
+                >
+                    Remove
+                </JetDangerButton>
+            </template>
+        </JetConfirmationModal>
     </div>
   </AppLayout>
 </template>

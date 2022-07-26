@@ -1,8 +1,30 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
-import axios from "axios";
-import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
+import {Link, useForm} from "@inertiajs/inertia-vue3";
+import { ref } from "vue";
+import JetConfirmationModal from "@/Jetstream/ConfirmationModal.vue";
+import JetDangerButton from "@/Jetstream/DangerButton.vue";
+import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+
+const removeVirtualKeyForm = useForm();
+
+const virtualKeyBeingRemoved = ref(null);
+
+const confirmVirtualKeyRemoval = (virtualKey) => {
+    virtualKeyBeingRemoved.value = virtualKey;
+};
+
+const removeVirtualKey = () => {
+    removeVirtualKeyForm.delete(
+        route("virtualKeys.destroy", [virtualKeyBeingRemoved.value]),
+        {
+            errorBag: "removeVirtualKey",
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => (virtualKeyBeingRemoved.value = null),
+        }
+    )
+}
 </script>
 
 <template>
@@ -53,7 +75,8 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                                         <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
                                         <tr>
                                             <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
-                                            <th scope="col" class="lg:px-3 md:px-0 rounded-r-lg">Label</th>
+                                            <th scope="col" class="lg:px-3 md:px-0">Label</th>
+                                            <th scope="col" class="lg:px-3 md:px-0 rounded-r-lg"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -96,6 +119,22 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
 
                                                 {{virtualKey.label}}
                                             </td>
+                                            <td  class="
+                      lg:px-3
+                      md:px-0
+                      py-4
+                      text-right
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap">
+
+                                                <button
+                                                    class="cursor-pointer ml-6 text-sm text-red-500"
+                                                    @click="confirmVirtualKeyRemoval(virtualKey)"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -105,6 +144,32 @@ import VirtualKeyTable from "./Partials/VirtualKeyTable.vue";
                     </div>
                 </div>
             </div>
+            <!-- Remove Virtual Key Confirmation Modal -->
+            <JetConfirmationModal
+                :show="virtualKeyBeingRemoved"
+                @close="virtualKeyBeingRemoved = null"
+            >
+                <template #title> Remove Virtual Key </template>
+
+                <template #content>
+                    Are you sure you would like to remove this virtual key?
+                </template>
+
+                <template #footer>
+                    <JetSecondaryButton @click="virtualKeyBeingRemoved = null">
+                        Cancel
+                    </JetSecondaryButton>
+
+                    <JetDangerButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': removeVirtualKeyForm.processing }"
+                        :disabled="removeVirtualKeyForm.processing"
+                        @click="removeVirtualKey"
+                    >
+                        Remove
+                    </JetDangerButton>
+                </template>
+            </JetConfirmationModal>
         </div>
     </AppLayout>
 </template>

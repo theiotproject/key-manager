@@ -47,6 +47,7 @@ Route::middleware([
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
     Route::get('/events/teamId/{teamId}', [EventController::class, 'indexEventsByTeamId']);
+    Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
 });
 
 
