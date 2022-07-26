@@ -14,6 +14,6 @@ class KeyUsage extends Model
     public $incrementing = false;
 
     public function getEvent() {
-        return $this->hasOne(Event::class, 'id', 'id');
+        return $this->hasOne(Event::class, 'GUID', 'id');
     }
 }
