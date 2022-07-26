@@ -39,7 +39,7 @@ const logout = () => {
 
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
-                <Link @click="goBack">
+                <Link href="/">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-6 sm:h-9 absolute top-5 left-3 sm:top-3 opacity-60 hover:opacity-80"
@@ -529,12 +529,3 @@ const logout = () => {
         </div>
     </div>
 </template>
-<script>
-export default {
-    methods: {
-        goBack() {
-            this.$router.go(-1);
-        },
-    },
-};
-</script>

@@ -125,6 +125,7 @@ import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
 </template>
 <script>
 export default {
+    props: ["attrs"],
     name: "CreateVirtualKeyForm",
     data: function () {
         return {
