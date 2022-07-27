@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Models\Gate;
 use App\Models\KeyUsage;
+use App\Models\VirtualKey;
 use Illuminate\Http\Request;
 
 use function Psy\debug;
@@ -107,43 +109,37 @@ class EventController extends Controller
         //
     }
 
-    public function indexEventsByVirtualKey($teamId){
+    public function indexEventsByTeamId($teamId, $limit) {
 
-    }
+        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
 
-    public function indexEventsByTeamId($teamId) {
-
-        //get all gates from team id
-        //then all virtual keys from gate
-        //get 10 keyusaged with same virtual key id AND keyusaged.access_status=true
-        //sometimes keyusaged will have access_status = false -> then there's no event
-        //get all events (if exist) with same id as keyusaged
-        //list all events on the front
-
-        $gates = Gate::all()->where('team_id', $teamId);
-
-        $virtualKeys = array();
-        foreach($gates as $gate){
-            array_push($virtualKeys, $gate->virtualKeys);
+        $virtualKeyIds = array();
+        foreach($virtualKeys as $virtualKey){
+            array_push($virtualKeyIds, $virtualKey->id);
         }
 
+        $keyUsages = KeyUsage::all()->whereIn('virtual_key_id', $virtualKeyIds)->where('access_granted', 1);
 
-        return $virtualKeys;
+        $keyUsageIds = array();
+        foreach($keyUsages as $keyUsage){
+            array_push($keyUsageIds, $keyUsage->id);
+        }
 
+        $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take($limit)->values();
 
-//        $events = Event::take(10)->get();
-//        $keyUsages = array();
-//        foreach($events as $event){
-//            $keyUsage = KeyUsage::find($event->id);
-//            $keyUsage->getEvent;
-//
-//            array_push($keyUsages, $keyUsage);
-//        }
-//        return $keyUsages;
-//
-//        $getEvent =  KeyUsage::find('fsdafsdfsadfsa')->getEvent;
-//        $getEvent->keyUsage;
-//        return $getEvent;
+        $result = array();
+        $gates = array();
+        foreach ($events as $event){
+            $virtualKeyId = $event->keyUsage->virtual_key_id;
+            $virtualKey = VirtualKey::find($virtualKeyId);
+            $user = $virtualKey->user;
+            $gate = Gate::where('serial_number', $event->serial_number)->get();
+            array_push($gates, $gate);
+            $merge = array_merge($event->toArray(), $user->toArray(), $gates);
+            array_push($result, new EventResource($merge));
+        }
+        return $result;
     }
-
 }

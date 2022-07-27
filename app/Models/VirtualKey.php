@@ -24,4 +24,8 @@ class VirtualKey extends Model
     {
         return $this->belongsToMany(Gate::class);
     }
+
+    public function keyUsage(){
+        return $this->hasMany(KeyUsage::class);
+    }
 }

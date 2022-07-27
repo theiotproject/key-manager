@@ -46,7 +46,7 @@ Route::middleware([
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
-    Route::get('/events/teamId/{teamId}', [EventController::class, 'indexEventsByTeamId']);
+    Route::get('/events/teamId/{teamId}/limit/{limit}', [EventController::class, 'indexEventsByTeamId']);
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
 });
 

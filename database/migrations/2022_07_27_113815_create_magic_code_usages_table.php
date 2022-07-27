@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
-            $table->id();
-            $table->string('GUID');
-            $table->string('serial_number');
+        Schema::create('magic_code_usages', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('magic_code');
             $table->string('message');
-            $table->datetime('scan_time');
-            $table->string('qr_code');
-            $table->boolean('status');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('magic_code_usages');
     }
 };
