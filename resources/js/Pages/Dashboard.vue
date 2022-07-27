@@ -107,7 +107,7 @@ export default {
 @media only screen and (min-width: 1250px) {
     .parent {
         display: grid;
-        grid-template-columns: repeat(2, 1fr) 0.9fr;
+        grid-template-columns: 0.8fr 1fr 1.1fr;
         grid-template-rows: repeat(2, 1fr);
     }
 

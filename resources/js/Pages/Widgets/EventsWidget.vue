@@ -59,15 +59,9 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                        class="px-6 py-3"
                                     >
                                         Gate
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
-                                    >
-                                        Date
                                     </th>
                                     <th
                                         scope="col"
@@ -90,15 +84,9 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                        class="px-6 py-3"
                                     >
                                         Gate
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
-                                    >
-                                        Date
                                     </th>
                                     <th
                                         scope="col"
@@ -114,25 +102,21 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     :key="event.id"
                                     v-bind:class="
                                         event.status
-                                            ? 'text-green-700'
-                                            : 'text-red-700'
+                                            ? 'text-green-800 bg-teal-50'
+                                            : 'text-red-700 bg-red-50'
                                     "
-                                    class="bg-white border-b"
+                                    class=" border-b"
                                 >
                                     <td
                                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                        {{ event.name }}
+                                        <span v-if="event.name.length<8">{{ event.name }}</span>
+                                        <span v-else>{{ event.name.substring(0,8)+".." }}</span>
                                     </td>
                                     <td
                                         class="px-6 py-4 font-medium whitespace-nowrap"
                                     >
                                         {{ event.gate_name }}
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 font-medium whitespace-nowrap"
-                                    >
-                                        {{ event.scan_time }}
                                     </td>
                                     <td
                                         class="px-6 py-4 font-medium whitespace-nowrap"
