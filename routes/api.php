@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KeyUsageController;
+use App\Http\Controllers\MagicCodeUsageController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/virtualKeys/code/{team_id}', [VirtualKeyController::class, 'generateCode']); // do zmienienia na key_id
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/keyUsages', KeyUsageController::class);
+    Route::resource('/magicCodeUsages', MagicCodeUsageController::class);
 Route::resource('/events', EventController::class);
 
 });
