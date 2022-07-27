@@ -114,8 +114,8 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     :key="event.id"
                                     v-bind:class="
                                         event.status
-                                            ? 'text-red-700'
-                                            : 'text-green-700'
+                                            ? 'text-green-700'
+                                            : 'text-red-700'
                                     "
                                     class="bg-white border-b"
                                 >
@@ -166,7 +166,9 @@ export default {
     methods: {
         getEvents() {
             axios
-                .get(`/events/teamId/${this.attrs.user.current_team_id}`)
+                .get(
+                    `/events/teamId/${this.attrs.user.current_team_id}/limit/10`
+                )
                 .then((response) => {
                     this.events = response.data;
                 })
