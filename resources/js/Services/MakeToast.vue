@@ -7,7 +7,7 @@ const $toast = useToast();
 export default {
     create(message, type) {
         let instance = $toast.default(message, {
-            position: "bottom-left",
+            position: "bottom-right",
             type: type,
             duration: 4000,
         });

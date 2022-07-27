@@ -22,7 +22,7 @@ const removeGate = () => {
         preserveState: true,
         onSuccess: () => {
             gateBeingRemoved.value = null;
-            MakeToast.create("Deleted Gate successfully", "success");
+            MakeToast.create("Deleted Gate successfully", "info");
         },
         onError: () => {
             MakeToast.create("Cannot delete Gate", "error");

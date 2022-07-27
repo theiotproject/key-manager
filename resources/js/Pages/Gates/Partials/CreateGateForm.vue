@@ -161,7 +161,7 @@ export default {
                     .then((response) => {
                         this.$inertia.get("../dashboard");
                         this.dataId = response.data.id;
-                        MakeToast.create("Gate successfully added", "success");
+                        MakeToast.create("Gate successfully added", "info");
                     })
                     .catch((err) => {
                         MakeToast.create("Cannot create Gate", "error");
