@@ -42,12 +42,18 @@ import { Link } from "@inertiajs/inertia-vue3";
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400">
+              <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">Name</th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">Role</th>
+                  <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Name</th>
+                  <th scope="col" class="px-6 py-3 sm:rounded-r-lg rounded-none">Role</th>
                 </tr>
               </thead>
+                <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
+                <tr>
+                    <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Name</th>
+                    <th scope="col" class="px-6 py-3 sm:rounded-r-lg rounded-none">Role</th>
+                </tr>
+                </thead>
               <tbody>
                 <tr
                   class="bg-white border-b"
@@ -59,6 +65,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                   class="
                       lg:px-3
                       md:px-0
+                      px-5
                       py-4
                       font-medium
                       text-gray-900
@@ -132,8 +139,12 @@ export default {
           this.users = response.data;
         });
     },
+      isSafari(){
+          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      }
   },
   created() {
+      this.isSafari()
     this.getUsers();
   },
 };

@@ -48,60 +48,67 @@ import MakeToast from "../../Services/MakeToast.vue";
                         <table class="w-full text-sm text-left text-gray-500">
                             <thead
                                 class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400"
+                                v-if="!isSafari()"
                             >
                                 <tr>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 rounded-l-lg"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
                                     >
                                         User
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 rounded-l-lg"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
                                     >
                                         Gate
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 rounded-l-lg"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
                                     >
                                         Date
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 rounded-r-lg"
+                                        class="px-6 py-3 sm:rounded-r-lg rounded-none"
+                                    >
+                                        Message
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead
+                                class="text-xs text-white uppercase bg-blue-500"
+                                v-if="isSafari()"
+                            >
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        User
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        Gate
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        Date
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-r-lg rounded-none"
                                     >
                                         Message
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr class="bg-white border-b text-green-700">
-                                    <td
-                                        class="lg:px-6 md:px-3 py-4 font-medium whitespace-nowrap"
-                                    >
-                                        07/19 19:28:00
-                                    </td>
-                                    <td
-                                        class="lg:px-6 md:px-3 py-4 font-medium whitespace-nowrap"
-                                    >
-                                        Authorized
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b text-red-700">
-                                    <td
-                                        class="lg:px-6 md:px-3 py-4 font-medium whitespace-nowrap"
-                                    >
-                                        07/19 20:23:54
-                                    </td>
-                                    <td
-                                        class="lg:px-6 md:px-3 py-4 font-medium whitespace-nowrap"
-                                    >
-                                        Access denied
-                                    </td>
-                                </tr> -->
-
                                 <tr
                                     v-for="event in events"
                                     :key="event.id"
@@ -167,8 +174,12 @@ export default {
                     MakeToast.create("Cannot load Events", "error");
                 });
         },
+        isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        },
     },
     created() {
+        this.isSafari();
         this.getEvents();
     },
 };

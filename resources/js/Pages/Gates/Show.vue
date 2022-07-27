@@ -90,20 +90,23 @@ const removeGate = () => {
                                 >
                                     <table
                                         class="w-full text-sm text-left text-gray-500"
-                                    >
-                                        <thead
-                                            class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400"
-                                        >
+                                    ><thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
+                                  <tr>
+                                      <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Name</th>
+                                      <th scope="col" class="px-6 py-3 text-right sm:rounded-r-lg rounded-none"></th>
+                                  </tr>
+                                  </thead>
+                                  <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
                                             <tr>
                                                 <th
                                                     scope="col"
-                                                    class="px-6 py-3 rounded-l-lg"
+                                                    class="px-6 py-3 sm:rounded-l-lg rounded-none"
                                                 >
                                                     Name
                                                 </th>
                                                 <th
                                                     scope="col"
-                                                    class="px-6 py-3 text-right rounded-r-lg"
+                                                    class="px-6 py-3 text-right sm:rounded-r-lg rounded-none"
                                                 ></th>
                                             </tr>
                                         </thead>
@@ -114,7 +117,7 @@ const removeGate = () => {
                                                 :key="gate.id"
                                             >
                                                 <td
-                                                    class="lg:px-6 md:px-3 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                                    class="lg:px-6 md:px-3 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                 >
                                                     {{ gate.name }}
                                                 </td>
@@ -203,10 +206,14 @@ export default {
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load permission", "error");
-                });
-        },
+        });
     },
-    created() {
+      isSafari(){
+          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      }
+  },
+  created() {
+      this.isSafari();
         this.getGates();
         this.getPermission();
     },

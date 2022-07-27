@@ -72,11 +72,18 @@ const removeVirtualKey = () => {
                             <div class="bg-white overflow-hidden sm:rounded-lg">
                                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                                     <table class="w-full text-sm text-left text-gray-500">
-                                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" >
+                                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3 rounded-l-lg">User</th>
+                                            <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
                                             <th scope="col" class="lg:px-3 md:px-0">Label</th>
-                                            <th scope="col" class="lg:px-3 md:px-0 rounded-r-lg"></th>
+                                            <th scope="col" class="lg:px-3 md:px-0 sm:rounded-r-lg rounded-none"></th>
+                                        </tr>
+                                        </thead>
+                                        <thead class="text-xs text-white uppercase bg-blue-500 border-none" v-if="isSafari()">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 sm:rounded-l-lg border-none rounded-none">User</th>
+                                            <th scope="col" class="lg:px-3 md:px-0 border-none" >Label</th>
+                                            <th scope="col" class="lg:px-3 md:px-0 sm:rounded-r-lg border-none rounded-none"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -89,6 +96,7 @@ const removeVirtualKey = () => {
                                                 class="
                       lg:px-3
                       md:px-0
+                      px-5
                       py-4
                       font-medium
                       text-gray-900
@@ -204,8 +212,12 @@ export default {
                     this.permission = response.data;
                 });
         },
+        isSafari(){
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        }
     },
     created() {
+        this.isSafari()
         this.getVirtualKeys();
         this.getPermission();
     },

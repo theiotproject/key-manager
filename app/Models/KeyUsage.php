@@ -13,7 +13,7 @@ class KeyUsage extends Model
 
     public $incrementing = false;
 
-    public function getEvent() {
-        return $this->hasOne(Event::class, 'GUID', 'id');
+    public function getEvents() {
+        return $this->hasMany(Event::class, 'GUID', 'id');
     }
 }
