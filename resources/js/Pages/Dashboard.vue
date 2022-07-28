@@ -25,7 +25,7 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
                         v-bind:attrs="attrs"
                     />
                     <EventsWidget
-                        class="max-h-200 area4 overflow-y-scroll"
+                        class="max-h-200 area4"
                         v-bind:attrs="attrs"
                     />
                 </div>

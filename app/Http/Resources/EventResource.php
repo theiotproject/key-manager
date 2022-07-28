@@ -16,6 +16,7 @@ class EventResource extends JsonResource
     {
         return [
             'status' => $this['status'],
+            'profile_photo_url' => $this['profile_photo_url'],
             'name' => $this['name'],
             'message' => $this['message'],
             'scan_time' => $this['scan_time'],

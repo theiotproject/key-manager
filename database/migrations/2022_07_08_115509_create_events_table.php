@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('serial_number');
             $table->string('message');
             $table->datetime('scan_time');
-            $table->string('qr_code');
+            $table->string('qr_code', '8000');
             $table->boolean('status');
             $table->timestamps();
         });
