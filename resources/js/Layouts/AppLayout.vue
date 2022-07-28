@@ -8,6 +8,7 @@ import JetDropdown from "@/Jetstream/Dropdown.vue";
 import JetDropdownLink from "@/Jetstream/DropdownLink.vue";
 import JetNavLink from "@/Jetstream/NavLink.vue";
 import JetResponsiveNavLink from "@/Jetstream/ResponsiveNavLink.vue";
+import MakeToast from "../Services/MakeToast.vue";
 
 defineProps({
     title: String,
@@ -28,7 +29,14 @@ const switchToTeam = (team) => {
 };
 
 const logout = () => {
-    Inertia.post(route("logout"));
+    Inertia.post(route("logout"), {
+        errorBag: "logout",
+        preserveScroll: true,
+        onSuccess: MakeToast.create("Logged out", "info"),
+        onError: () => {
+            MakeToast.create("Failed to log out", "error");
+        },
+    });
 };
 </script>
 
