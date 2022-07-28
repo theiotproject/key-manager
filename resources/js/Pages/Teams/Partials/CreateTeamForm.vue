@@ -1,28 +1,33 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
-import JetButton from '@/Jetstream/Button.vue';
-import JetFormSection from '@/Jetstream/FormSection.vue';
-import JetInput from '@/Jetstream/Input.vue';
-import JetInputError from '@/Jetstream/InputError.vue';
-import JetLabel from '@/Jetstream/Label.vue';
+import { useForm } from "@inertiajs/inertia-vue3";
+import JetButton from "@/Jetstream/Button.vue";
+import JetFormSection from "@/Jetstream/FormSection.vue";
+import JetInput from "@/Jetstream/Input.vue";
+import JetInputError from "@/Jetstream/InputError.vue";
+import JetLabel from "@/Jetstream/Label.vue";
+import MakeToast from "../../../Services/MakeToast.vue";
 
 const form = useForm({
-    name: '',
+    name: "",
 });
 
 const createTeam = () => {
-    form.post(route('teams.store'), {
-        errorBag: 'createTeam',
+    form.post(route("teams.store"), {
+        errorBag: "createTeam",
         preserveScroll: true,
+        onSuccess: () => {
+            MakeToast.create("Added Team " + props.team.name, "info");
+        },
+        onError: () => {
+            MakeToast.create("Failed to Add Team", "error");
+        },
     });
 };
 </script>
 
 <template>
     <JetFormSection @submitted="createTeam">
-        <template #title>
-            Team Details
-        </template>
+        <template #title> Team Details </template>
 
         <template #description>
             Create a new team to collaborate with others on projects.
@@ -33,7 +38,11 @@ const createTeam = () => {
                 <JetLabel value="Team Owner" />
 
                 <div class="flex items-center mt-2">
-                    <img class="object-cover w-12 h-12 rounded-full" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
+                    <img
+                        class="object-cover w-12 h-12 rounded-full"
+                        :src="$page.props.user.profile_photo_url"
+                        :alt="$page.props.user.name"
+                    />
 
                     <div class="ml-4 leading-tight">
                         <div>{{ $page.props.user.name }}</div>
@@ -58,7 +67,10 @@ const createTeam = () => {
         </template>
 
         <template #actions>
-            <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <JetButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Create
             </JetButton>
         </template>
