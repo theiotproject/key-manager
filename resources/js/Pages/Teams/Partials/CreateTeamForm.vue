@@ -16,7 +16,7 @@ const createTeam = () => {
         errorBag: "createTeam",
         preserveScroll: true,
         onSuccess: () => {
-            MakeToast.create("Added Team " + props.team.name, "info");
+            MakeToast.create("Added Team " + form.name, "info");
         },
         onError: () => {
             MakeToast.create("Failed to Add Team", "error");

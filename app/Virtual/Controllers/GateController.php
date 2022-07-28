@@ -141,4 +141,35 @@ class GateController
      *      )
      *     )
      */
+
+      /**
+     * @OA\Delete(
+     *      path="/gates/{gateId}",
+     *      operationId="deleteGate",
+     *      tags={"Gates"},
+     *      security={{"sanctum":{}}},
+     *      summary="Delete Gate",
+     *      description="Deletes Gate by gateId",
+     * 
+     *     @OA\Parameter(
+     *         description="Pass ID of Gate",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
 }

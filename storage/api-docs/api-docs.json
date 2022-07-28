@@ -413,6 +413,43 @@
                 ]
             }
         },
+        "/gates/{gateId}": {
+            "delete": {
+                "tags": [
+                    "Gates"
+                ],
+                "summary": "Delete Gate",
+                "description": "Deletes Gate by gateId",
+                "operationId": "deleteGate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pass ID of Gate",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/keyUsages": {
             "post": {
                 "tags": [
