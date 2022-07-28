@@ -24,7 +24,7 @@ defineProps({
     <span id="home"></span>
     <main class="relative">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 xl:px-0">
-            <section class="h-screen">
+            <!-- <section class="h-screen">
                 <HomeMain />
             </section>
             <span id="about"></span>
@@ -34,9 +34,9 @@ defineProps({
             <span id="contact"></span>
             <section class="md:h-screen" id="contact">
                 <Contact />
-            </section>
+            </section> -->
 
-            <!-- <section class="">
+            <section class="">
                 <HomeMain />
             </section>
             <span id="about"></span>
@@ -46,7 +46,7 @@ defineProps({
             <span id="contact"></span>
             <section class="" id="contact">
                 <Contact />
-            </section> -->
+            </section>
         </div>
     </main>
     <Footer />

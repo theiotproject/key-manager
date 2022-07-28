@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import MakeToast from "../../Services/MakeToast.vue";
 
 var emailRegExp =
     /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -42,7 +43,7 @@ export default {
             this.name = "";
             this.email.value = "";
             this.message.text = "";
-            alert("Thanks for contacting us!");
+            MakeToast.create("Thanks for contacting us!", "success");
         },
         // validate by type and value
         validate: function (type, value) {
