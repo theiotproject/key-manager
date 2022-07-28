@@ -43,7 +43,13 @@ import MakeToast from "../../Services/MakeToast.vue";
                                 <tr>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                        class="px-3 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        User
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-2 py-3"
                                     >
                                         Gate
                                     </th>
@@ -96,10 +102,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                                                 :src="event.profile_photo_url"
                                             />
                                             </a>
-                                            <span v-if="event.gate_name.length<8">{{ event.gate_name }}</span>
-                                            <span v-else>{{ event.gate_name.substring(0,20)+".." }}</span>
                                         </div>
 
+                                    </td>
+                                    <td
+                                        class="px-2 py-4 font-medium whitespace-nowrap"
+                                    >
+                                        <span v-if="event.gate_name.length<8">{{ event.gate_name }}</span>
+                                        <span v-else>{{ event.gate_name.substring(0,20)+".." }}</span>
                                     </td>
                                     <td
                                         class="px-2 py-4 font-medium whitespace-nowrap"
