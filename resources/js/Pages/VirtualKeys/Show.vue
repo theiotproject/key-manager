@@ -1,10 +1,11 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import {Link, useForm} from "@inertiajs/inertia-vue3";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 import JetConfirmationModal from "@/Jetstream/ConfirmationModal.vue";
 import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import MakeToast from "../../Services/MakeToast.vue";
 
 const removeVirtualKeyForm = useForm();
 
@@ -21,10 +22,16 @@ const removeVirtualKey = () => {
             errorBag: "removeVirtualKey",
             preserveScroll: true,
             preserveState: true,
-            onSuccess: () => (virtualKeyBeingRemoved.value = null),
+            onSuccess: () => {
+                virtualKeyBeingRemoved.value = null;
+                MakeToast.create("Deleted Virtual Key", "info");
+            },
+            onError: () => {
+                MakeToast.create("Failed to delete Virtual Key", "error");
+            },
         }
-    )
-}
+    );
+};
 </script>
 
 <template>
@@ -61,8 +68,17 @@ const removeVirtualKey = () => {
                             :href="route('virtualKey.create')"
                             class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                    clip-rule="evenodd"
+                                />
                             </svg>
                             Create New Virtual Key
                         </Link>
@@ -70,80 +86,119 @@ const removeVirtualKey = () => {
                     <div class="pb-5">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden sm:rounded-lg">
-                                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                    <table class="w-full text-sm text-left text-gray-500">
-                                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
-                                            <th scope="col" class="lg:px-3 md:px-0">Label</th>
-                                            <th scope="col" class="lg:px-3 md:px-0 sm:rounded-r-lg rounded-none"></th>
-                                        </tr>
+                                <div
+                                    class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                                >
+                                    <table
+                                        class="w-full text-sm text-left text-gray-500"
+                                    >
+                                        <thead
+                                            class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400"
+                                            v-if="!isSafari()"
+                                        >
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                                >
+                                                    User
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0"
+                                                >
+                                                    Label
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0 sm:rounded-r-lg rounded-none"
+                                                ></th>
+                                            </tr>
                                         </thead>
-                                        <thead class="text-xs text-white uppercase bg-blue-500 border-none" v-if="isSafari()">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 sm:rounded-l-lg border-none rounded-none">User</th>
-                                            <th scope="col" class="lg:px-3 md:px-0 border-none" >Label</th>
-                                            <th scope="col" class="lg:px-3 md:px-0 sm:rounded-r-lg border-none rounded-none"></th>
-                                        </tr>
+                                        <thead
+                                            class="text-xs text-white uppercase bg-blue-500 border-none"
+                                            v-if="isSafari()"
+                                        >
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-3 sm:rounded-l-lg border-none rounded-none"
+                                                >
+                                                    User
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0 border-none"
+                                                >
+                                                    Label
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0 sm:rounded-r-lg border-none rounded-none"
+                                                ></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr
-                                            class="bg-white border-b"
-                                            v-for="virtualKey in virtualKeys"
-                                            :key="virtualKey.id"
-                                        >
-                                            <td
-                                                class="
-                      lg:px-3
-                      md:px-0
-                      px-5
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
+                                            <tr
+                                                class="bg-white border-b"
+                                                v-for="virtualKey in virtualKeys"
+                                                :key="virtualKey.id"
                                             >
-                                                <div class="flex
-                      items-center">
-                                                    <img
-                                                        class="h-8 w-8 rounded-full object-cover mr-3"
-                                                        :src="virtualKey.user.profile_photo_url"
-                                                        :alt="virtualKey.user.name"
-                                                    />
-                                                    <div>
-                                                        {{ virtualKey.user.name }}
-                                                        <p class="text-gray-400 text-xs">{{ virtualKey.user.email }}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td  class="
-                      lg:px-3
-                      md:px-0
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap">
-
-                                                {{virtualKey.label}}
-                                            </td>
-                                            <td  class="
-                      lg:px-3
-                      md:px-0
-                      py-4
-                      text-right
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap">
-
-                                                <button
-                                                    class="cursor-pointer ml-6 text-sm text-red-500"
-                                                    @click="confirmVirtualKeyRemoval(virtualKey)"
+                                                <td
+                                                    class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                 >
-                                                    Remove
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                    <div
+                                                        class="flex items-center"
+                                                    >
+                                                        <img
+                                                            class="h-8 w-8 rounded-full object-cover mr-3"
+                                                            :src="
+                                                                virtualKey.user
+                                                                    .profile_photo_url
+                                                            "
+                                                            :alt="
+                                                                virtualKey.user
+                                                                    .name
+                                                            "
+                                                        />
+                                                        <div>
+                                                            {{
+                                                                virtualKey.user
+                                                                    .name
+                                                            }}
+                                                            <p
+                                                                class="text-gray-400 text-xs"
+                                                            >
+                                                                {{
+                                                                    virtualKey
+                                                                        .user
+                                                                        .email
+                                                                }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td
+                                                    class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                                >
+                                                    {{ virtualKey.label }}
+                                                </td>
+                                                <td
+                                                    class="lg:px-3 md:px-0 py-4 text-right font-medium text-gray-900 whitespace-nowrap"
+                                                >
+                                                    <button
+                                                        class="cursor-pointer ml-6 text-sm text-red-500"
+                                                        @click="
+                                                            confirmVirtualKeyRemoval(
+                                                                virtualKey
+                                                            )
+                                                        "
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -170,7 +225,9 @@ const removeVirtualKey = () => {
 
                     <JetDangerButton
                         class="ml-3"
-                        :class="{ 'opacity-25': removeVirtualKeyForm.processing }"
+                        :class="{
+                            'opacity-25': removeVirtualKeyForm.processing,
+                        }"
                         :disabled="removeVirtualKeyForm.processing"
                         @click="removeVirtualKey"
                     >
@@ -201,6 +258,9 @@ export default {
                 .then((response) => {
                     this.virtualKeys = response.data;
                     console.log(this.virtualKeys);
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot load Virtual Keys", "error");
                 });
         },
         getPermission() {
@@ -210,14 +270,17 @@ export default {
                 )
                 .then((response) => {
                     this.permission = response.data;
+                })
+                .catch((err) => {
+                    MakeToast.create("Failed to get permission", "error");
                 });
         },
-        isSafari(){
+        isSafari() {
             return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        }
+        },
     },
     created() {
-        this.isSafari()
+        this.isSafari();
         this.getVirtualKeys();
         this.getPermission();
     },
