@@ -129,6 +129,9 @@ Here is how you can run the project locally:
 
     > Make sure to follow your Laravel local Development Environment.
 
+## Documentation
+You can check out API documentation <a href="https://keymanager.theiotproject.com/api/documentation">here</a>
+
 ## Testing
 Will be addedd in the future...
 
