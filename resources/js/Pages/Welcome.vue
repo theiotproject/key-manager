@@ -55,6 +55,27 @@ defineProps({
 <script>
 export default {
     name: "About",
+    metaInfo() {
+        return {
+            // title: 'Key Manager - Why use the keys if you have a Phone?',
+            title: "Key Manager",
+            meta: [
+                {
+                    name: "description",
+                    content:
+                        "Our goal is to replace a regular key by a system which will open a lock by reading a QR code out of our smartphone. System is based on raspberry, literally pulled out of the company trash.",
+                },
+                {
+                    property: "og:title",
+                    content:
+                        "Key Manager - Why use the keys if you have a Phone?",
+                },
+                { property: "og:site_name", content: "Key Manager" },
+                { property: "og:type", content: "website" },
+                { name: "robots", content: "index,follow" },
+            ],
+        };
+    },
     created() {
         document.body.style.backgroundColor = "#f7f7f7";
     },

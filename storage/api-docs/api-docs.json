@@ -413,7 +413,7 @@
                 ]
             }
         },
-        "/gates/{gateId}": {
+        "/gates/{gate}": {
             "delete": {
                 "tags": [
                     "Gates"
@@ -423,7 +423,7 @@
                 "operationId": "deleteGate",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "gate",
                         "in": "path",
                         "description": "Pass ID of Gate",
                         "required": true,
@@ -661,6 +661,43 @@
                         "name": "team_id",
                         "in": "path",
                         "description": "Pass ID of team",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/virtualKeys/{virtualKey}": {
+            "delete": {
+                "tags": [
+                    "VirtualKeys"
+                ],
+                "summary": "delete Virtual Key by Id",
+                "description": "Deletes Virtual Key by Id",
+                "operationId": "deleteVirtualKey",
+                "parameters": [
+                    {
+                        "name": "virtualKey",
+                        "in": "path",
+                        "description": "Pass ID of Virtual Key",
                         "required": true,
                         "schema": {
                             "type": "string"

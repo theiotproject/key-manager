@@ -130,6 +130,37 @@ class VirtualKeyController
      */
 
       /**
+     * @OA\Delete(
+     *      path="/virtualKeys/{virtualKey}",
+     *      operationId="deleteVirtualKey",
+     *      tags={"VirtualKeys"},
+     *      security={{"sanctum":{}}},
+     *      summary="delete Virtual Key by Id",
+     *      description="Deletes Virtual Key by Id",
+     * 
+     *     @OA\Parameter(
+     *         description="Pass ID of Virtual Key",
+     *         in="path",
+     *         name="virtualKey",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
+
+      /**
      * @OA\Post(
      *      path="/api/virtualKeys",
      *      operationId="postVirtualKey",
