@@ -144,7 +144,7 @@ class GateController
 
       /**
      * @OA\Delete(
-     *      path="/gates/{gateId}",
+     *      path="/gates/{gate}",
      *      operationId="deleteGate",
      *      tags={"Gates"},
      *      security={{"sanctum":{}}},
@@ -154,7 +154,7 @@ class GateController
      *     @OA\Parameter(
      *         description="Pass ID of Gate",
      *         in="path",
-     *         name="id",
+     *         name="gate",
      *         required=true,
      *         @OA\Schema(type="string"),
      *     ),
