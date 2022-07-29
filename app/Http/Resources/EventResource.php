@@ -20,7 +20,7 @@ class EventResource extends JsonResource
             'name' => $this['name'],
             'message' => $this['message'],
             'scan_time' => $this['scan_time'],
-            'gate_name' => $this['0'][0]->name
+            'gate_name' => $this['0']['name']
         ];
     }
 }

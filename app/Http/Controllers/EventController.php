@@ -130,14 +130,12 @@ class EventController extends Controller
         $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take($limit)->values();
 
         $result = array();
-        $gates = array();
         foreach ($events as $event){
             $virtualKeyId = $event->keyUsage->virtual_key_id;
             $virtualKey = VirtualKey::find($virtualKeyId);
             $user = $virtualKey->user;
             $gate = Gate::where('serial_number', $event->serial_number)->get();
-            array_push($gates, $gate);
-            $merge = array_merge($event->toArray(), $user->toArray(), $gates);
+            $merge = array_merge($event->toArray(), $user->toArray(), $gate->toArray());
             array_push($result, new EventResource($merge));
         }
         return $result;
