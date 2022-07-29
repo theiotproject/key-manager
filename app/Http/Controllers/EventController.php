@@ -9,6 +9,7 @@ use App\Models\KeyUsage;
 use App\Models\VirtualKey;
 use Illuminate\Http\Request;
 
+use Inertia\Inertia;
 use function Psy\debug;
 
 class EventController extends Controller
@@ -16,15 +17,14 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
 
 
 
     public function index()
     {
-        $events = Event::get();
-        return $events;
+        return Inertia::render('Events/Show');
     }
 
     /**
