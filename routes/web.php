@@ -22,6 +22,8 @@ use App\Http\Controllers\VirtualKeyController;
 |
 */
 
+
+
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
@@ -51,7 +53,6 @@ Route::middleware([
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
 });
 
-
 Route::group(['middleware' => 'isAdmin'], function () {
     Route::get('/gates/create', [GateController::class, 'create'])->name('gates.create');
 });
@@ -63,5 +64,3 @@ Route::middleware([
         return Inertia::render('VirtualKeys/Create');
     })->name('virtualKey.create')->middleware('isAdmin');
 });
-
-

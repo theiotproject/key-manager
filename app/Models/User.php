@@ -75,6 +75,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(VirtualKey::class);
     }
 
+      public function virtualTickets()
+    {
+        return $this->belongsToMany(VirtualTicket::class);
+    }
+
     public function isAdmin()
     {
         $team = Team::find($this->current_team_id);
