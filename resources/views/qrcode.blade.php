@@ -264,7 +264,7 @@
 <td style="color:#333333;padding-top: 20px;padding-bottom: 3px;"><strong>Open Gates:</strong></td>
 </tr>
 <tr>
-<td style="color:#555555;padding-top: 3px;padding-bottom: 20px;">{{$gates}}</td>
+<td style="color:#555555;padding-top: 3px;padding-bottom: 20px;">{{$label}}</td>
 </tr>
 </tbody>
 </table>

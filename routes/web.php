@@ -10,6 +10,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\VirtualKeyController;
+use App\Http\Controllers\VirtualTicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,7 @@ Route::middleware([
 
     Route::get('/auth/permission/teamId/{team_id}', [AuthController::class, 'getAuthUserPermissionByTeamId']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
+    Route::resource('/virtualTickets', VirtualTicketController::class);
     Route::resource('/gates', GateController::class);
     Route::resource('/events', EventController::class);
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
