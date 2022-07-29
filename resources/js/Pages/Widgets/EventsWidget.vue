@@ -126,18 +126,18 @@ import MakeToast from "../../Services/MakeToast.vue";
                         </table>
                     </div>
                 </div>
-                <div class="mt-5 w-full flex justify-center">
-                    <Link
-                        :href="route('events.index')"
-                        class="
-                        text-gray-600
-                        hover:text-black
-                        py-2
-                        px-4
-                        rounded">
-                        Show all
-                    </Link>
-                </div>
+<!--                <div class="mt-5 w-full flex justify-center">-->
+<!--                    <Link-->
+<!--                        :href="route('events.index')"-->
+<!--                        class="-->
+<!--                        text-gray-600-->
+<!--                        hover:text-black-->
+<!--                        py-2-->
+<!--                        px-4-->
+<!--                        rounded">-->
+<!--                        Show all-->
+<!--                    </Link>-->
+<!--                </div>-->
             </div>
         </div>
     </div>
