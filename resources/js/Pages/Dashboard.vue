@@ -6,6 +6,7 @@ import VirtualKeysWidget from "./Widgets/VirtualKeysWidget.vue";
 import UsersWidget from "./Widgets/UsersWidget.vue";
 import EventsWidget from "./Widgets/EventsWidget.vue";
 import HomeHeader from "../Components/Home/HomeHeader.vue";
+
 </script>
 
 <template>
@@ -18,11 +19,12 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="parent gap-x-5 gap-y-5">
-                    <GatesWidget class="max-h-100 area1" v-bind:attrs="attrs" />
+                    <GatesWidget class="max-h-100 area1" v-bind:attrs="attrs" id="gates"/>
                     <UsersWidget class="max-h-100 area2" v-bind:attrs="attrs" />
                     <VirtualKeysWidget
                         class="max-h-100 area3"
                         v-bind:attrs="attrs"
+                        id="virtualKeys"
                     />
                     <EventsWidget
                         class="max-h-200 area4"
@@ -37,11 +39,30 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
 <script>
 import GateShow from "./Gates/Show.vue";
 import CreateGateForm from "./Gates/Partials/CreateGateForm.vue";
+import introJs from "intro.js";
 
 export default {
     components: {
         GateShow,
         CreateGateForm,
+    },
+    setup(){
+        let tour = introJs();
+        tour.setOption({
+            steps: [{
+                title: 'Welcome',
+                intro: 'Hello World! 👋'
+            },
+                {
+                    element: document.querySelector('#gates'),
+                    intro: 'This step focuses on an image'
+                },
+                {
+                    title: 'Farewell!',
+                    element: document.querySelector('#virtualKeys'),
+                    intro: 'And this is our final step!'
+                }]
+        }).start();
     },
     data() {
         return {
