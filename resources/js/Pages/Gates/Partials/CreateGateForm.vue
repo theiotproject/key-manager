@@ -39,13 +39,22 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     value="Serial number"
                     class="mt-5"
                 />
+                <div class="flex items-center">
                 <JetInput
                     id="serial_number"
                     v-model="form.serial_number"
                     type="text"
+                    placeholder="12A4-5AB-C5E"
                     class="block w-full mt-1"
                     autofocus
                 />
+                <div class="flex flex-col items-center m-5">
+                    <div v-if="hint" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative cursor-help" viewBox="0 0 20 20" fill="#374151" @mouseover="hint = true" @mouseout="hint = false">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                </div>
                 <JetLabel
                     for="magic_code"
                     value="Magic Code (GUID)"
@@ -112,6 +121,7 @@ export default {
     props: ["attrs"],
     data: function () {
         return {
+            hint: false,
             form: {
                 passwordFieldType: "password",
                 serial_number: "",
