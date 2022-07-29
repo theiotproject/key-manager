@@ -8,7 +8,6 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import VueSmoothScroll from "v-smooth-scroll";
 import VueGtag from "vue-gtag";
-import VueMeta from "vue-meta";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||
@@ -27,7 +26,6 @@ createInertiaApp({
             .use(VueGtag, {
                 config: { id: "G-FGFW0JR6DV" },
             })
-            .use(VueMeta)
             .use(ZiggyVue, Ziggy)
             .use(VueSmoothScroll)
             .mount(el);
