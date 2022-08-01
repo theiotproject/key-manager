@@ -140,4 +140,19 @@ class EventController extends Controller
         }
         return $result;
     }
+
+    public function indexRejectedEventsByTeamId($teamId, $limit) {
+
+        $events = Event::whereHas('gate', function($q) use($teamId){
+            $q->where('team_id', $teamId);
+        })->get();
+
+        $result = array();
+        foreach ($events as $event){
+            $gate = Gate::where('serial_number', $event->serial_number)->get();
+            $merge = array_merge($event->toArray(), $gate->toArray());
+            array_push($result, $merge);
+        }
+        return $result;
+    }
 }

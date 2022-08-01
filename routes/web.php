@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/auth/permission/teamId/{team_id}', [AuthController::class, 'getAuthUserPermissionByTeamId']);
+    Route::get('/auth/role/teamId/{team_id}', [AuthController::class, 'getAuthUserRoleByTeamId']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/gates', GateController::class);
     Route::resource('/events', EventController::class);
@@ -50,7 +52,10 @@ Route::middleware([
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
     Route::get('/events/teamId/{teamId}/limit/{limit}', [EventController::class, 'indexEventsByTeamId']);
+    Route::get('/events/teamId/{teamId}/limit/{limit}/rejected', [EventController::class, 'indexRejectedEventsByTeamId']);
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
+    Route::get('/gates/{gate}/edit', [GateController::class, 'edit'])->name('gates.edit');
+    Route::put('/gates/{gate}', [GateController::class, 'update']);
 });
 
 Route::group(['middleware' => 'isAdmin'], function () {

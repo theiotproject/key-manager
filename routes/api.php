@@ -54,4 +54,4 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
 
-Route::get('/qrcode', [QrCodeController::class, 'generateQrCode']);
+//Route::get('/qrcode', [QrCodeController::class, 'generateQrCode']);

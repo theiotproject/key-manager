@@ -64,7 +64,7 @@ const removeVirtualKey = () => {
                             <p class="ml-3">Virtual Keys</p>
                         </h2>
                         <Link
-                            v-if="permission"
+                            v-if="role === 'owner' || role === 'admin'"
                             :href="route('virtualKey.create')"
                             class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                         >
@@ -188,6 +188,7 @@ const removeVirtualKey = () => {
                                                     class="lg:px-3 md:px-0 py-4 text-right font-medium text-gray-900 whitespace-nowrap"
                                                 >
                                                     <button
+                                                        v-if="role === 'owner' || role === 'admin'"
                                                         class="cursor-pointer ml-6 text-sm text-red-500"
                                                         @click="
                                                             confirmVirtualKeyRemoval(
@@ -245,7 +246,7 @@ export default {
     data() {
         return {
             virtualKeys: {},
-            permission: 0,
+            role: '',
             attrs: this.$attrs,
         };
     },
@@ -263,16 +264,15 @@ export default {
                     MakeToast.create("Cannot load Virtual Keys", "error");
                 });
         },
-        getPermission() {
+        getRole(){
             axios
                 .get(
-                    `/auth/permission/teamId/${this.attrs.user.current_team_id}`
-                )
-                .then((response) => {
-                    this.permission = response.data;
-                })
+                    `/auth/role/teamId/${this.attrs.user.current_team_id}`
+                ).then((response) => {
+                this.role = response.data;
+            })
                 .catch((err) => {
-                    MakeToast.create("Failed to get permission", "error");
+                    MakeToast.create("Cannot load role", "error");
                 });
         },
         isSafari() {
@@ -282,7 +282,7 @@ export default {
     created() {
         this.isSafari();
         this.getVirtualKeys();
-        this.getPermission();
+        this.getRole();
     },
 };
 </script>
