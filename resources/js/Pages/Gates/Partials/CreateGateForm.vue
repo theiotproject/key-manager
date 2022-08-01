@@ -47,6 +47,9 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     placeholder="12A4-5AB-C5E"
                     class="block w-full mt-1"
                     autofocus
+                    maxlength="12"
+                    v-on:input="sernum"
+                    oninput="this.value = this.value.toUpperCase()"
                 />
                 <div class="flex flex-col items-center m-5">
                     <div v-if="hint" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
@@ -135,8 +138,16 @@ export default {
         };
     },
     methods: {
+        sernum() {
+            var tele = document.querySelector('#serial_number');
+            tele.addEventListener('keydown', function(e) {
+                if (event.key != 'Backspace' && (tele.value.length === 4 || tele.value.length === 8)) {
+                    tele.value += '-';
+                }
+            });
+        },
         validForm(serial_number, magic_code) {
-            var serialNumberRegex = /[A-Z0-9]{10}/;
+            var serialNumberRegex = /[A-Z0-9]{4}-[A-Z0-9]{3}-[A-Z0-9]{3}/;
             var guidRegex =
                 /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
             if (!serialNumberRegex.test(serial_number)) {
@@ -161,7 +172,7 @@ export default {
         submitForm() {
             if (this.validForm(this.form.serial_number, this.form.magic_code)) {
                 const data = {
-                    serial_number: this.form.serial_number,
+                    serial_number: this.form.serial_number.replaceAll('-','').toUpperCase(),
                     magic_code: this.form.magic_code,
                     name: this.form.name,
                     team_id: this.attrs.user.current_team.id,
@@ -180,7 +191,6 @@ export default {
             }
         },
         switchVisibility() {
-            console.log("dziala");
             this.form.passwordFieldType =
                 this.form.passwordFieldType === "password"
                     ? "text"
