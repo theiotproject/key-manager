@@ -9,11 +9,11 @@ import MakeToast from "../../../Services/MakeToast.vue";
 
 <template>
     <JetFormSection v-on:submit.prevent="submitForm">
-        <template #title> Virtual Key Details </template>
+        <template #title> Virtual Ticket Details </template>
 
         <template #description>
-            Create a new Virtual Key for users by selecting the Gates, and the
-            time period
+            Create a new Virtual Ticket for users by selecting the Gates, and
+            the time period
         </template>
 
         <template #form>
@@ -128,7 +128,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
 <script>
 export default {
     props: ["attrs"],
-    name: "CreateVirtualKeyForm",
+    name: "CreateVirtualTicketForm",
     data: function () {
         return {
             form: {
@@ -186,13 +186,13 @@ export default {
                 validDays: str,
             };
             axios
-                .post("/virtualKeys", data)
+                .post("/virtualTickets", data)
                 .then((result) => {
-                    MakeToast.create("Added Virtual Key", "info");
+                    MakeToast.create("Added Virtual Ticket", "info");
                     this.$inertia.get("../dashboard");
                 })
                 .catch((err) => {
-                    MakeToast.create("Failed to add Virtual Key", "error");
+                    MakeToast.create("Failed to add Virtual Ticket", "error");
                 });
         },
         getUsers() {

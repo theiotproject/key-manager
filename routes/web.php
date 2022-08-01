@@ -8,23 +8,10 @@ use PhpParser\Node\Expr\AssignOp\Plus;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GateController;
-use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\VirtualTicketController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
-
+// Main page
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
@@ -34,6 +21,8 @@ Route::get('/', function () {
     ]);
 });
 
+
+// Routes with verified/logged users
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -50,13 +39,16 @@ Route::middleware([
     Route::resource('/events', EventController::class);
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
+    Route::get('virtualTickets/teamId/{team_id}/users/gates', [VirtualTicketController::class, 'indexVirtualTicketsByTeamIdWithUsersAndGatesData']);
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
     Route::get('/events/teamId/{teamId}/limit/{limit}', [EventController::class, 'indexEventsByTeamId']);
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
 });
 
+// Routes with administrator permission
 Route::group(['middleware' => 'isAdmin'], function () {
     Route::get('/gates/create', [GateController::class, 'create'])->name('gates.create');
+    Route::get('/virtualTickets/create', [VirtualTicketController::class, 'create'])->name('virtualTicket.create');
 });
 
 Route::middleware([

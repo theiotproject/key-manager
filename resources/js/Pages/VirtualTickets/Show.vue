@@ -7,27 +7,27 @@ import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import MakeToast from "../../Services/MakeToast.vue";
 
-const removeVirtualKeyForm = useForm();
+const removeVirtualTicketForm = useForm();
 
-const virtualKeyBeingRemoved = ref(null);
+const virtualTicketBeingRemoved = ref(null);
 
-const confirmVirtualKeyRemoval = (virtualKey) => {
-    virtualKeyBeingRemoved.value = virtualKey;
+const confirmVirtualTicketRemoval = (virtualTicket) => {
+    virtualTicketBeingRemoved.value = virtualTicket;
 };
 
-const removeVirtualKey = () => {
-    removeVirtualKeyForm.delete(
-        route("virtualKeys.destroy", [virtualKeyBeingRemoved.value]),
+const removeVirtualTicket = () => {
+    removeVirtualTicketForm.delete(
+        route("virtualTickets.destroy", [virtualTicketBeingRemoved.value]),
         {
-            errorBag: "removeVirtualKey",
+            errorBag: "removeVirtualTicket",
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
-                virtualKeyBeingRemoved.value = null;
-                MakeToast.create("Deleted Virtual Key", "info");
+                virtualTicketBeingRemoved.value = null;
+                MakeToast.create("Deleted Virtual Ticket", "info");
             },
             onError: () => {
-                MakeToast.create("Failed to delete Virtual Key", "error");
+                MakeToast.create("Failed to delete Virtual Ticket", "error");
             },
         }
     );
@@ -38,7 +38,7 @@ const removeVirtualKey = () => {
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Virtual Keys
+                Virtual Tickets
             </h2>
         </template>
 
@@ -61,11 +61,11 @@ const removeVirtualKey = () => {
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                            <p class="ml-3">Virtual Keys</p>
+                            <p class="ml-3">Virtual Tickets</p>
                         </h2>
                         <Link
                             v-if="permission"
-                            :href="route('virtualKey.create')"
+                            :href="route('virtualTicket.create')"
                             class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                         >
                             <svg
@@ -80,7 +80,7 @@ const removeVirtualKey = () => {
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                            Create New Virtual Key
+                            Create New Virtual Ticket
                         </Link>
                     </div>
                     <div class="pb-5">
@@ -141,8 +141,8 @@ const removeVirtualKey = () => {
                                         <tbody>
                                             <tr
                                                 class="bg-white border-b"
-                                                v-for="virtualKey in virtualKeys"
-                                                :key="virtualKey.id"
+                                                v-for="virtualTicket in virtualTickets"
+                                                :key="virtualTicket.id"
                                             >
                                                 <td
                                                     class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
@@ -153,26 +153,24 @@ const removeVirtualKey = () => {
                                                         <img
                                                             class="h-8 w-8 rounded-full object-cover mr-3"
                                                             :src="
-                                                                virtualKey.user
-                                                                    .profile_photo_url
+                                                                virtualTicket.name !=
+                                                                'unregistered'
+                                                                    ? virtualTicket.profile_photo_url
+                                                                    : 'https://ui-avatars.com/api/?name=?&color=7F9CF5&background=EBF4FF&font-size=0.6'
                                                             "
                                                             :alt="
-                                                                virtualKey.user
-                                                                    .name
+                                                                virtualTicket.name
                                                             "
                                                         />
                                                         <div>
                                                             {{
-                                                                virtualKey.user
-                                                                    .name
+                                                                virtualTicket.name
                                                             }}
                                                             <p
                                                                 class="text-gray-400 text-xs"
                                                             >
                                                                 {{
-                                                                    virtualKey
-                                                                        .user
-                                                                        .email
+                                                                    virtualTicket.email
                                                                 }}
                                                             </p>
                                                         </div>
@@ -182,7 +180,7 @@ const removeVirtualKey = () => {
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                 >
-                                                    {{ virtualKey.label }}
+                                                    {{ virtualTicket.label }}
                                                 </td>
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 text-right font-medium text-gray-900 whitespace-nowrap"
@@ -190,8 +188,8 @@ const removeVirtualKey = () => {
                                                     <button
                                                         class="cursor-pointer ml-6 text-sm text-red-500"
                                                         @click="
-                                                            confirmVirtualKeyRemoval(
-                                                                virtualKey
+                                                            confirmVirtualTicketRemoval(
+                                                                virtualTicket
                                                             )
                                                         "
                                                     >
@@ -207,29 +205,31 @@ const removeVirtualKey = () => {
                     </div>
                 </div>
             </div>
-            <!-- Remove Virtual Key Confirmation Modal -->
+            <!-- Remove Virtual Ticket Confirmation Modal -->
             <JetConfirmationModal
-                :show="virtualKeyBeingRemoved"
-                @close="virtualKeyBeingRemoved = null"
+                :show="virtualTicketBeingRemoved"
+                @close="virtualTicketBeingRemoved = null"
             >
-                <template #title> Remove Virtual Key </template>
+                <template #title> Remove Virtual Ticket </template>
 
                 <template #content>
-                    Are you sure you would like to remove this virtual key?
+                    Are you sure you would like to remove this Virtual Ticket?
                 </template>
 
                 <template #footer>
-                    <JetSecondaryButton @click="virtualKeyBeingRemoved = null">
+                    <JetSecondaryButton
+                        @click="virtualTicketBeingRemoved = null"
+                    >
                         Cancel
                     </JetSecondaryButton>
 
                     <JetDangerButton
                         class="ml-3"
                         :class="{
-                            'opacity-25': removeVirtualKeyForm.processing,
+                            'opacity-25': removeVirtualTicketForm.processing,
                         }"
-                        :disabled="removeVirtualKeyForm.processing"
-                        @click="removeVirtualKey"
+                        :disabled="removeVirtualTicketForm.processing"
+                        @click="removeVirtualTicket"
                     >
                         Remove
                     </JetDangerButton>
@@ -241,26 +241,26 @@ const removeVirtualKey = () => {
 
 <script>
 export default {
-    name: "VirtualKeyShow",
+    name: "VirtualTicketShow",
     data() {
         return {
-            virtualKeys: {},
+            virtualTickets: {},
             permission: 0,
             attrs: this.$attrs,
         };
     },
     methods: {
-        getVirtualKeys() {
+        getVirtualTickets() {
             axios
                 .get(
-                    `/virtualKeys/teamId/${this.attrs.user.current_team_id}/users/gates`
+                    `/virtualTickets/teamId/${this.attrs.user.current_team_id}/users/gates`
                 )
                 .then((response) => {
-                    this.virtualKeys = response.data;
-                    console.log(this.virtualKeys);
+                    this.virtualTickets = response.data;
+                    console.log(this.virtualTickets);
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load Virtual Keys", "error");
+                    MakeToast.create("Cannot load Virtual Tickets", "error");
                 });
         },
         getPermission() {
@@ -281,7 +281,7 @@ export default {
     },
     created() {
         this.isSafari();
-        this.getVirtualKeys();
+        this.getVirtualTickets();
         this.getPermission();
     },
 };

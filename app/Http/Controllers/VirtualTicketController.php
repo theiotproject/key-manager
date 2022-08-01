@@ -10,6 +10,8 @@ use App\Models\VirtualTicket;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
+use App\Models\User;
+use App\Http\Resources\VirtualTicketResource;
 
 class VirtualTicketController extends Controller
 {
@@ -58,7 +60,7 @@ class VirtualTicketController extends Controller
                 'email' => "slawek@qware.pl",
                 'code' => '821381209382',
                 'valid_from' => '2022-07-26 10:35:09',
-                'valid_to' => '2022-08-20 23:35:09',
+                'valid_to' => '2022"gates": [8-20 23:35:09',
                 'label' => 'Key opens Biuro'
             ]);
 
@@ -127,19 +129,33 @@ class VirtualTicketController extends Controller
     //     return $virtualKeys;
     // }
 
-    // public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
-    // {
-    //     $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-    //         $query->where('team_id', $teamId);
-    //     })->get();
+    public function indexVirtualTicketsByTeamIdWithUsersAndGatesData($teamId)
+    {
+        $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
 
-    //     foreach ($virtualKeys as $virtualKey) {
-    //         $virtualKey->user;
-    //         $virtualKey->gates;
-    //     }
+        $virtualTicketsData = array();
 
-    //     return $virtualKeys;
-    // }
+        foreach ($virtualTickets as $virtualTicket) {
+            $user = User::where('email', $virtualTicket->email)->get();
+
+            //check if user with this email exists, if not create temporary user
+            if ($user->isEmpty()) {
+                $user = array(new User(['name'=>'unregistered', 'profile_photo_url'=>'https://ui-avatars.com/api/?name=s&color=7F9CF5&background=EBF4FF']));
+                $virtualTicket->gates;
+                $merge = array_merge($virtualTicket->toArray(), $user);
+                array_push($virtualTicketsData, new VirtualTicketResource($merge));
+             }
+             else {
+                $virtualTicket->gates;
+                $merge = array_merge($virtualTicket->toArray(), $user->toArray());
+                array_push($virtualTicketsData, new VirtualTicketResource($merge));
+             }
+        }
+
+        return $virtualTicketsData;
+    }
 
     // public function indexByTeamIdForLoggedUser(Request $request, $teamId)
     // {
