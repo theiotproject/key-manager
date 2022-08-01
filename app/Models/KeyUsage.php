@@ -16,4 +16,5 @@ class KeyUsage extends Model
     public function getEvents() {
         return $this->hasMany(Event::class, 'GUID', 'id');
     }
+
 }

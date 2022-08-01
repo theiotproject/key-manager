@@ -47,7 +47,7 @@ const logout = () => {
 
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
-                <Link href="/">
+                <!-- <Link href="/">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-6 sm:h-9 absolute top-5 left-3 sm:top-3 opacity-60 hover:opacity-80"
@@ -60,7 +60,7 @@ const logout = () => {
                             clip-rule="evenodd"
                         />
                     </svg>
-                </Link>
+                </Link> -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
@@ -116,9 +116,7 @@ const logout = () => {
                             >
                                 <JetNavLink
                                     :href="route('events.index')"
-                                    :active="
-                                        route().current('events.index')
-                                    "
+                                    :active="route().current('events.index')"
                                 >
                                     Events
                                 </JetNavLink>
