@@ -3,6 +3,7 @@ import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
+import JetInput from "@/Jetstream/Input.vue";
 
 import MakeToast from "../../../Services/MakeToast.vue";
 </script>
@@ -13,7 +14,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
 
         <template #description>
             Create a new Virtual Ticket for users by selecting the Gates, and
-            the time period
+            the time period. It will be send via email to the selected Users
         </template>
 
         <template #form>
@@ -29,54 +30,34 @@ import MakeToast from "../../../Services/MakeToast.vue";
             <div class="col-span-6 sm:col-span-full">
                 <div>
                     <JetLabel value="Days" class="mb-3" />
-                    <ul
-                        class="items-center w-full font-medium text-gray-900 bg-white rounded-lg sm:flex-wrap sm:flex"
-                    >
-                        <li
-                            v-for="(day, index) in days"
-                            :key="index"
-                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r"
-                        >
-                            <div class="flex items-center pl-3">
-                                <input
-                                    v-model="form.checkedDays"
-                                    v-bind:id="index"
-                                    type="checkbox"
-                                    :value="index"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
-                                />
-                                <label
-                                    v-bind:id="index"
-                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900"
-                                >
-                                    {{ day }}
-                                </label>
-                            </div>
-                        </li>
-                    </ul>
+                    <div>calendar</div>
                 </div>
                 <hr class="mt-5 mb-5" />
 
                 <div>
                     <JetLabel for="gates" value="Gates" class="mb-3" />
                     <ul
-                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
                         aria-labelledby="dropdownSearchButton"
                     >
-                        <li v-for="(gate, index) in gates" :key="index">
+                        <li
+                            v-for="(gate, index) in gates"
+                            :key="index"
+                            @click="checkGate(index)"
+                        >
                             <div
-                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                                class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
                             >
                                 <input
                                     v-model="form.checkedGates"
                                     v-bind:id="index"
                                     type="checkbox"
                                     :value="gate"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 d"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
                                 />
                                 <label
                                     for="{{index}}"
-                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
+                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
                                     >{{ gate.name }}</label
                                 >
                             </div>
@@ -88,30 +69,60 @@ import MakeToast from "../../../Services/MakeToast.vue";
 
                 <div>
                     <JetLabel for="users" value="Users" />
-                    <SearchBar />
+                    <!-- <SearchBar /> -->
                     <ul
-                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
                         aria-labelledby="dropdownSearchButton"
                     >
-                        <li v-for="(user, index) in users" :key="index">
+                        <li
+                            v-for="(user, index) in users"
+                            :key="index"
+                            @click="checkUser(index)"
+                            class="cursor-pointer"
+                        >
                             <div
-                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                                class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
                             >
                                 <input
                                     v-model="form.checkedUsers"
                                     v-bind:id="index"
                                     type="checkbox"
                                     :value="user"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
                                 />
-                                <label
-                                    for="{{index}}"
-                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
-                                    >{{ user.name }}</label
-                                >
+                                <div>
+                                    <label
+                                        for="{{index}}"
+                                        class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
+                                        >{{ user.name }}</label
+                                    >
+                                    <label
+                                        for="{{index}}"
+                                        class="ml-5 w-full text-sm font-medium text-gray-600 rounded cursor-pointer"
+                                        >{{ user.email }}</label
+                                    >
+                                </div>
                             </div>
                         </li>
                     </ul>
+                </div>
+
+                <hr class="mt-5 mb-5" />
+
+                <div>
+                    <JetLabel
+                        for="email"
+                        value="Enter Email if User is not registered"
+                        class="mt-5"
+                    />
+                    <JetInput
+                        id="email"
+                        v-model="form.email"
+                        type="text"
+                        placeholder="johndove@gmail.com"
+                        class="block w-full mt-1"
+                        autofocus
+                    />
                 </div>
             </div>
         </template>
@@ -133,25 +144,42 @@ export default {
         return {
             form: {
                 label: "",
-                checkedDays: [0, 1, 2, 3, 4],
+                email: "",
                 checkedUsers: [],
                 checkedGates: [],
             },
             users: {},
             gates: {},
-            days: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-            ],
-            daysLetter: ["M", "T", "W", "R", "F", "S", "U"],
+            checkedEmails: [],
         };
     },
     methods: {
+        checkUser(index) {
+            let canCheck = true;
+            this.form.checkedUsers.find((checkedUser, id) => {
+                if (checkedUser == this.users[index]) {
+                    this.form.checkedUsers.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedUsers.push(this.users[index]);
+            }
+        },
+        checkGate(index) {
+            let canCheck = true;
+            this.form.checkedGates.find((checkedGate, id) => {
+                if (checkedGate == this.gates[index]) {
+                    this.form.checkedGates.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedGates.push(this.gates[index]);
+            }
+        },
         submitForm() {
             let str = "";
             this.form.checkedDays.forEach((day) => {

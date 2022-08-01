@@ -13,7 +13,7 @@ import CreateVirtualKeyForm from "./Partials/CreateVirtualKeyForm.vue";
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <CreateVirtualKeyForm v-bind:attrs="attrs" />
+                <CreateVirtualKeyForm v-bind:attrs="localAttrs" />
             </div>
         </div>
     </AppLayout>
@@ -26,7 +26,7 @@ export default {
 
     data() {
         return {
-            attrs: this.$attrs,
+            localAttrs: this.$attrs,
         };
     },
 };

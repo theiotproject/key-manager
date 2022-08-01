@@ -35,19 +35,22 @@ import MakeToast from "../../../Services/MakeToast.vue";
                         <li
                             v-for="(day, index) in days"
                             :key="index"
-                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r"
+                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r cursor-pointer hover:bg-gray-100"
                         >
-                            <div class="flex items-center pl-3">
+                            <div
+                                @click="checkDay(index)"
+                                class="flex items-center pl-3 cursor-pointer"
+                            >
                                 <input
                                     v-model="form.checkedDays"
                                     v-bind:id="index"
                                     type="checkbox"
                                     :value="index"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
                                 />
                                 <label
                                     v-bind:id="index"
-                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900"
+                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900 cursor-pointer"
                                 >
                                     {{ day }}
                                 </label>
@@ -60,23 +63,28 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 <div>
                     <JetLabel for="gates" value="Gates" class="mb-3" />
                     <ul
-                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
                         aria-labelledby="dropdownSearchButton"
                     >
-                        <li v-for="(gate, index) in gates" :key="index">
+                        <li
+                            v-for="(gate, index) in gates"
+                            :key="index"
+                            class="cursor-pointer"
+                        >
                             <div
-                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                                class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+                                @click="checkGate(index)"
                             >
                                 <input
                                     v-model="form.checkedGates"
                                     v-bind:id="index"
                                     type="checkbox"
                                     :value="gate"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 d"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
                                 />
                                 <label
                                     for="{{index}}"
-                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
+                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
                                     >{{ gate.name }}</label
                                 >
                             </div>
@@ -88,27 +96,39 @@ import MakeToast from "../../../Services/MakeToast.vue";
 
                 <div>
                     <JetLabel for="users" value="Users" />
-                    <SearchBar />
+                    <!-- <SearchBar /> -->
                     <ul
-                        class="overflow-y-auto px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
                         aria-labelledby="dropdownSearchButton"
                     >
-                        <li v-for="(user, index) in users" :key="index">
+                        <li
+                            v-for="(user, index) in users"
+                            :key="index"
+                            class="cursor-pointer"
+                        >
                             <div
-                                class="flex items-center p-2 rounded hover:bg-gray-100"
+                                class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+                                @click="checkUser(index)"
                             >
                                 <input
                                     v-model="form.checkedUsers"
                                     v-bind:id="index"
                                     type="checkbox"
                                     :value="user"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
                                 />
-                                <label
-                                    for="{{index}}"
-                                    class="ml-2 w-full text-sm font-medium text-gray-900 rounded"
-                                    >{{ user.name }}</label
-                                >
+                                <div>
+                                    <label
+                                        for="{{index}}"
+                                        class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
+                                        >{{ user.name }}</label
+                                    >
+                                    <label
+                                        for="{{index}}"
+                                        class="ml-5 w-full text-sm font-medium text-gray-600 rounded cursor-pointer"
+                                        >{{ user.email }}</label
+                                    >
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -152,6 +172,46 @@ export default {
         };
     },
     methods: {
+        checkDay(index) {
+            let canCheck = true;
+            this.form.checkedDays.find((checkedDay, id) => {
+                if (checkedDay == index) {
+                    this.form.checkedDays.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedDays.push(index);
+            }
+        },
+        checkUser(index) {
+            let canCheck = true;
+            this.form.checkedUsers.find((checkedUser, id) => {
+                if (checkedUser == this.users[index]) {
+                    this.form.checkedUsers.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedUsers.push(this.users[index]);
+            }
+        },
+        checkGate(index) {
+            let canCheck = true;
+            this.form.checkedGates.find((checkedGate, id) => {
+                if (checkedGate == this.gates[index]) {
+                    this.form.checkedGates.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedGates.push(this.gates[index]);
+            }
+        },
+
         submitForm() {
             let str = "";
             this.form.checkedDays.forEach((day) => {
