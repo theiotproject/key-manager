@@ -48,7 +48,7 @@ Route::middleware([
 // Routes with administrator permission
 Route::group(['middleware' => 'isAdmin'], function () {
     Route::get('/gates/create', [GateController::class, 'create'])->name('gates.create');
-    Route::get('/virtualTickets/create', [VirtualTicketController::class, 'create'])->name('virtualTicket.create');
+    Route::get('virtualTickets/create', [VirtualTicketController::class, 'create'])->name('virtualTicket.create');
 });
 
 Route::middleware([
