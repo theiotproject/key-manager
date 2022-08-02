@@ -87,6 +87,18 @@ class GateController extends Controller
         $gate->serial_number = $request->input('serial_number');
         $gate->magic_code = $request->input('magic_code');
         $gate->save();
+        $virtualKeys = $gate->virtualKeys;
+        if($virtualKeys!=null) {
+            foreach ($virtualKeys as $virtualKey) {
+                $gates = $virtualKey->gates;
+                $gatesArray = array();
+                foreach($gates as $gate2){
+                    array_push($gatesArray, $gate2->name);
+                }
+                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualKey->save();
+            }
+        }
     }
 
     /**
