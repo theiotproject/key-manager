@@ -5,13 +5,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 import JetModal from "@/Jetstream/DialogModal.vue";
 import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
-import {ref} from "vue";
 
-const showQrCode = ref(null);
-
-const openModal = (virtualKey) => {
-    showQrCode.value = true;
-};
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -111,7 +105,7 @@ const openModal = (virtualKey) => {
                       font-medium
                       text-gray-900
                       whitespace-nowrap">
-                        <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey); openModal(virtualKey)">
+                        <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey)">
                             Generate QR Code
                         </button>
                     </td>
@@ -136,17 +130,17 @@ const openModal = (virtualKey) => {
     </div>
       <JetModal
           :show="showQrCode"
-          @close="showQrCode=null; this.timer = false"
+          @close="showQrCode=null; timer = false"
       >
-          <template #title> {{this.usedVirtualKey}} </template>
+          <template #title> {{usedVirtualKey}} </template>
 
           <template #content>
-              <p class="py-5">Time left to scan this code: {{this.countDown.toFixed(1)}}</p>
+              <p class="py-5">Time left to scan this code: {{countDown.toFixed(1)}}</p>
               <qrcode-vue :value="qrCode.value" :size="300" level="H" />
           </template>
 
           <template #footer>
-              <JetSecondaryButton @click="showQrCode=null; this.timer = false">
+              <JetSecondaryButton @click="showQrCode=null; timer = false">
                   Cancel
               </JetSecondaryButton>
           </template>
@@ -165,6 +159,7 @@ export default {
             value: '',
             size: 250
         },
+        showQrCode: false,
         timer: false,
         countDown: 60,
         usedVirtualKey: '',
