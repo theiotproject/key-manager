@@ -129,16 +129,17 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
     </div>
       <JetModal
           :show="this.showQrCode"
-          @close="this.showQrCode=null"
+          @close="this.showQrCode=null; this.timer = false"
       >
           <template #title> {{this.usedVirtualKey}} </template>
 
           <template #content>
-              <qrcode-vue :value="qrCode.value" :size="500" level="H" />
+              <p class="py-5">Time left to scan this code: {{this.countDown.toFixed(1)}}</p>
+              <qrcode-vue :value="qrCode.value" :size="300" level="H" />
           </template>
 
           <template #footer>
-              <JetSecondaryButton @click="this.showQrCode=null">
+              <JetSecondaryButton @click="this.showQrCode=null; this.timer = false">
                   Cancel
               </JetSecondaryButton>
           </template>
@@ -157,6 +158,8 @@ export default {
             value: '',
             size: 250
         },
+        timer: false,
+        countDown: 60,
         usedVirtualKey: '',
         showQrCode: false,
         gates: {},
@@ -203,6 +206,9 @@ export default {
 
           this.qrCode.value = "OPEN:ID:" + this.generateGuid() + ";VF:" + validFrom + ";VT:" + validTo + ";L:" + gateSerialNumbers + ";;";
           this.usedVirtualKey = virtualKey.label;
+          this.timer = true;
+          this.countDown = 60;
+          this.countDownTimer();
           this.showQrCode = true;
           },
       generateGuid() {
@@ -213,6 +219,14 @@ export default {
                       (15 >> (c / 4)))
               ).toString(16)
           );
+      },
+      countDownTimer () {
+          if (this.countDown > 0 && this.timer === true) {
+              setTimeout(() => {
+                  this.countDown -= 0.1
+                  this.countDownTimer()
+              }, 100)
+          }
       }
   },
   created() {
