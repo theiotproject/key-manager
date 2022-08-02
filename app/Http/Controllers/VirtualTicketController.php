@@ -43,9 +43,11 @@ class VirtualTicketController extends Controller
      */
     public function store(Request $request)
     {
+
+        foreach($request->users as $user){
             $virtualTicket = new VirtualTicket();
-            $virtualTicket->label = $request->label;
-            $virtualTicket->email = $request->email;
+            $virtualTicket->label = $user['label'];
+            $virtualTicket->email = $user['email'];
             $virtualTicket->valid_from = $request->valid_from;
             $virtualTicket->valid_to = $request->valid_to;
             $virtualTicket->save();
@@ -55,7 +57,7 @@ class VirtualTicketController extends Controller
                 $virtualTicket->gates()->attach($gate);
             }
 
-            $mailContent = new Request( [
+                $mailContent = new Request( [
                 'team_name' => 'Biuro',
                 'email' => "slawek@qware.pl",
                 'code' => '821381209382',
@@ -65,6 +67,11 @@ class VirtualTicketController extends Controller
             ]);
 
             app(SendEmailController::class)->sendQrCode($mailContent);
+        }
+
+
+
+
     }
 
     /**

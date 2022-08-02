@@ -2,9 +2,6 @@
 import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
-import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
-import JetInput from "@/Jetstream/Input.vue";
-
 import MakeToast from "../../../Services/MakeToast.vue";
 </script>
 
@@ -27,11 +24,21 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     </div>
                 </div>
             </div>
+
             <div class="col-span-6 sm:col-span-full">
                 <div>
-                    <JetLabel value="Days" class="mb-3" />
-                    <v-date-picker v-model="form.date" is-range />
+                    <JetLabel value="Select a Date range" class="mb-3" />
+                    <v-date-picker
+                        is24hr
+                        v-model="form.date"
+                        is-range
+                        :model-config="dateConfig"
+                        :masks="dateMasks"
+                    />
+                    <!-- for future time picking -->
+                    <!-- <v-date-picker v-model="form.date" is-range mode="date"/> -->
                 </div>
+
                 <hr class="mt-5 mb-5" />
 
                 <div>
@@ -107,13 +114,11 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     </ul>
                 </div>
 
-                <hr class="mt-5 mb-5" />
-
-                <div>
+                <div class="mt-3">
                     <label
                         for="email"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >Your Email</label
+                        >Email of unregistered User:</label
                     >
                     <div class="relative mb-6">
                         <div
@@ -135,16 +140,46 @@ import MakeToast from "../../../Services/MakeToast.vue";
                             </svg>
                         </div>
                         <input
+                            v-on:blur="onEmailAdd"
+                            v-bind:class="
+                                !emailValid
+                                    ? 'border-red-700 focus:ring-red-700 focus:border-red-700'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                            "
+                            v-on:keydown.enter.prevent="onEmailAdd"
                             v-model="form.email"
                             type="email"
                             id="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
                             placeholder="johndove@gmail.com"
                         />
                     </div>
                 </div>
+
+                <hr class="mt-5 mb-5" />
+
+                <div v-if="this.form.checkedEmails.length > 0">
+                    <p class="text-sm">Email will be sent to:</p>
+                    <ul class="mt-4">
+                        <li
+                            v-for="email in this.form.checkedEmails"
+                            class="text-gray-700 flex justify-between text-sm hover:bg-gray-100 mb-1 py-3 px-3 border-b border-gray-300 rounded-lg w-full"
+                        >
+                            {{ email }}
+                            <button
+                                v-on:submit.prevent="onEmailCancel(email)"
+                                class="cursor-pointer ml-6 text-sm text-red-500"
+                                @click.prevent="onEmailCancel(email)"
+                            >
+                                Cancel
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- <hr class="mt-6 mb-2" /> -->
+                </div>
             </div>
         </template>
+
         <template #actions>
             <JetButton
                 :class="{ 'opacity-25': form.processing }"
@@ -156,6 +191,9 @@ import MakeToast from "../../../Services/MakeToast.vue";
     </JetFormSection>
 </template>
 <script>
+var emailRegExp =
+    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
 export default {
     props: ["attrs"],
     name: "CreateVirtualTicketForm",
@@ -163,20 +201,75 @@ export default {
     data: function () {
         return {
             form: {
-                date: "",
+                date: {
+                    start: "",
+                    end: "",
+                },
                 label: "",
                 email: "",
                 checkedUsers: [],
                 checkedGates: [],
+                checkedEmails: [],
             },
+            emailValid: true,
             users: {},
             gates: {},
-            checkedEmails: [],
+            dateConfig: {
+                start: {
+                    timeAdjust: "00:00:00",
+                },
+                end: {
+                    timeAdjust: "23:59:59",
+                },
+            },
+            dateMasks: {
+                input: "YYYY-MM-DD",
+            },
         };
     },
     methods: {
+        onEmailCancel(email) {
+            this.form.checkedEmails.find((checkedEmail, index) => {
+                if (checkedEmail === email) {
+                    this.form.checkedEmails.splice(index, 1);
+
+                    this.form.checkedUsers.find((checkedUser, id) => {
+                        console.log(checkedUser);
+                        if (checkedUser.email == email) {
+                            this.form.checkedUsers.splice(id, 1);
+                            return;
+                        }
+                    });
+                    return;
+                }
+            });
+        },
+        onEmailAdd() {
+            let email = this.form.email;
+            if (this.isEmail(email)) {
+                this.emailValid = true;
+                this.form.checkedEmails.push(email);
+                this.form.email = "";
+
+                this.users.find((user, id) => {
+                    if (user.email == email) {
+                        this.form.checkedUsers.push(user);
+                        return;
+                    }
+                });
+            } else {
+                this.emailValid = false;
+            }
+        },
         checkUser(index) {
             let canCheck = true;
+            this.form.checkedEmails.find((checkedUser, id) => {
+                if (checkedUser == this.users[index].email) {
+                    this.form.checkedEmails.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
             this.form.checkedUsers.find((checkedUser, id) => {
                 if (checkedUser == this.users[index]) {
                     this.form.checkedUsers.splice(id, 1);
@@ -186,6 +279,7 @@ export default {
             });
             if (canCheck) {
                 this.form.checkedUsers.push(this.users[index]);
+                this.form.checkedEmails.push(this.users[index].email);
             }
         },
         checkGate(index) {
@@ -202,28 +296,31 @@ export default {
             }
         },
         submitForm() {
-            let str = "";
-            this.form.checkedDays.forEach((day) => {
-                str += this.daysLetter[day];
-            });
-
             let users = [];
             let gates = [];
 
+            let label = "Key opens ";
+
+            this.form.checkedGates.forEach((gate, index) => {
+                gates.push(gate.id);
+                if (this.form.checkedGates.length - 1 == index) {
+                    label += gate.name;
+                } else {
+                    label += gate.name + ", ";
+                }
+            });
+
             this.form.checkedUsers.forEach((user) => {
-                let label = "Key opens ";
-
-                this.form.checkedGates.forEach((gate, index) => {
-                    gates.push(gate.id);
-                    if (this.form.checkedGates.length - 1 == index) {
-                        label += gate.name;
-                    } else {
-                        label += gate.name + ", ";
-                    }
-                });
-
                 let newUser = {
-                    id: user.id,
+                    email: user.email,
+                    label: label,
+                };
+                users.push(newUser);
+            });
+
+            this.form.checkedEmails.forEach((email) => {
+                let newUser = {
+                    email: email,
                     label: label,
                 };
                 users.push(newUser);
@@ -232,10 +329,12 @@ export default {
             const data = {
                 users: users,
                 gates: gates,
-                validDays: str,
+                valid_from: this.form.date.start,
+                valid_to: this.form.date.end,
             };
+            console.log(data);
             axios
-                .post("/virtualTickets", data)
+                .post("/api/virtualTickets", data)
                 .then((result) => {
                     MakeToast.create("Added Virtual Ticket", "info");
                     this.$inertia.get("../dashboard");
@@ -266,7 +365,12 @@ export default {
                     MakeToast.create("Cannot load gates", "error");
                 });
         },
+        // check for valid email adress
+        isEmail: function (value) {
+            return emailRegExp.test(value);
+        },
     },
+
     created() {
         this.getUsers();
         this.getGates();
