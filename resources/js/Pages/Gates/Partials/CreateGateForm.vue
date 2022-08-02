@@ -150,7 +150,7 @@ export default {
             var serialNumberRegex = /[A-Z0-9]{4}-[A-Z0-9]{3}-[A-Z0-9]{3}/;
             var guidRegex =
                 /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-            if (!serialNumberRegex.test(serial_number)) {
+            if (!serialNumberRegex.test(serial_number.toUpperCase())) {
                 this.form.errors.name = "Serial Number is not valid";
                 return false;
             }
