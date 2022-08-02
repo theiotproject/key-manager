@@ -1,5 +1,6 @@
 import "./bootstrap";
 import "../css/app.css";
+import "v-calendar/dist/style.css";
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
@@ -8,6 +9,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import VueSmoothScroll from "v-smooth-scroll";
 import VueGtag from "vue-gtag";
+import VCalendar from "v-calendar";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||
@@ -27,6 +29,7 @@ createInertiaApp({
                 config: { id: "G-FGFW0JR6DV" },
             })
             .use(ZiggyVue, Ziggy)
+            .use(VCalendar, {})
             .use(VueSmoothScroll)
             .mount(el);
     },
