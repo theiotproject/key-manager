@@ -5,6 +5,9 @@ import { Link } from "@inertiajs/inertia-vue3";
 import JetModal from "@/Jetstream/DialogModal.vue";
 import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import {ref} from "vue";
+
+const showQrCode = ref(null);
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -128,8 +131,8 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
       </div>
     </div>
       <JetModal
-          :show="this.showQrCode"
-          @close="this.showQrCode=null; this.timer = false"
+          :show="showQrCode"
+          @close="showQrCode=null; this.timer = false"
       >
           <template #title> {{this.usedVirtualKey}} </template>
 
@@ -139,7 +142,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
           </template>
 
           <template #footer>
-              <JetSecondaryButton @click="this.showQrCode=null; this.timer = false">
+              <JetSecondaryButton @click="showQrCode=null; this.timer = false">
                   Cancel
               </JetSecondaryButton>
           </template>
@@ -161,7 +164,6 @@ export default {
         timer: false,
         countDown: 60,
         usedVirtualKey: '',
-        showQrCode: false,
         gates: {},
       virtualKeys: {},
       permission: 0,
