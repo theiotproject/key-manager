@@ -216,7 +216,7 @@ export default {
             gates: {},
             dateConfig: {
                 start: {
-                    timeAdjust: "00:00:00",
+                    timeAdjust: "00:00:01",
                 },
                 end: {
                     timeAdjust: "23:59:59",
@@ -326,13 +326,26 @@ export default {
                 users.push(newUser);
             });
 
+            let start = this.form.date.start;
+            const validDateStart =
+                start.toISOString().slice(0, 10) + " 00:00:00";
+
+            let end = this.form.date.end;
+            const validDateEnd =
+                end.toISOString().slice(0, 10) +
+                " " +
+                end.getHours() +
+                ":" +
+                end.getMinutes() +
+                ":" +
+                end.getSeconds();
+
             const data = {
                 users: users,
                 gates: gates,
-                valid_from: this.form.date.start,
-                valid_to: this.form.date.end,
+                valid_from: validDateStart,
+                valid_to: validDateEnd,
             };
-            console.log(data);
             axios
                 .post("/api/virtualTickets", data)
                 .then((result) => {
