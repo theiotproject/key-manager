@@ -43,9 +43,10 @@ class VirtualTicketController extends Controller
      */
     public function store(Request $request)
     {
-
+        $guid = (string) Str::uuid();
         foreach($request->users as $user){
             $virtualTicket = new VirtualTicket();
+            $virtualTicket->GUID = $guid;
             $virtualTicket->label = $user['label'];
             $virtualTicket->email = $user['email'];
             $virtualTicket->valid_from = $request->valid_from;
