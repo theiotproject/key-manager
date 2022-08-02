@@ -8,6 +8,10 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import {ref} from "vue";
 
 const showQrCode = ref(null);
+
+const openModal = (virtualKey) => {
+    showQrCode.value = true;
+};
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -107,7 +111,7 @@ const showQrCode = ref(null);
                       font-medium
                       text-gray-900
                       whitespace-nowrap">
-                        <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey)">
+                        <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey); openModal(virtualKey)">
                             Generate QR Code
                         </button>
                     </td>
