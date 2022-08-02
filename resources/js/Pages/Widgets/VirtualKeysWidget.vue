@@ -5,6 +5,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 import JetModal from "@/Jetstream/DialogModal.vue";
 import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import QrcodeVue from 'qrcode.vue';
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
