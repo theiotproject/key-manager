@@ -195,7 +195,10 @@ const removeVirtualKey = () => {
                                                         Edit
                                                     </Link>
                                                     <button
-                                                        v-if="role === 'owner' || role === 'admin'"
+                                                        v-if="
+                                                            role === 'owner' ||
+                                                            role === 'admin'
+                                                        "
                                                         class="cursor-pointer ml-6 text-sm text-red-500"
                                                         @click="
                                                             confirmVirtualKeyRemoval(
@@ -217,7 +220,7 @@ const removeVirtualKey = () => {
             </div>
             <!-- Remove Virtual Key Confirmation Modal -->
             <JetConfirmationModal
-                :show="virtualKeyBeingRemoved"
+                :show="virtualKeyBeingRemoved !== null"
                 @close="virtualKeyBeingRemoved = null"
             >
                 <template #title> Remove Virtual Key </template>
@@ -253,7 +256,7 @@ export default {
     data() {
         return {
             virtualKeys: {},
-            role: '',
+            role: "",
             attrs: this.$attrs,
         };
     },
@@ -265,19 +268,17 @@ export default {
                 )
                 .then((response) => {
                     this.virtualKeys = response.data;
-                    console.log(this.virtualKeys);
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load Virtual Keys", "error");
                 });
         },
-        getRole(){
+        getRole() {
             axios
-                .get(
-                    `/auth/role/teamId/${this.attrs.user.current_team_id}`
-                ).then((response) => {
-                this.role = response.data;
-            })
+                .get(`/auth/role/teamId/${this.attrs.user.current_team_id}`)
+                .then((response) => {
+                    this.role = response.data;
+                })
                 .catch((err) => {
                     MakeToast.create("Cannot load role", "error");
                 });
