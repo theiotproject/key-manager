@@ -5,6 +5,7 @@ import JetInput from "@/Jetstream/Input.vue";
 import JetInputError from "@/Jetstream/InputError.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import MakeToast from "../../../Services/MakeToast.vue";
+import {usePage} from "@inertiajs/inertia-vue3";
 </script>
 
 <template>
@@ -40,23 +41,23 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     class="mt-5"
                 />
                 <div class="flex items-center">
-                <JetInput
-                    id="serial_number"
-                    v-model="form.serial_number"
-                    type="text"
-                    placeholder="12A4-5AB-C5E"
-                    class="block w-full mt-1"
-                    autofocus
-                    maxlength="12"
-                    v-on:input="sernum"
-                    oninput="this.value = this.value.toUpperCase()"
-                />
-                <div class="flex flex-col items-center m-5">
-                    <div v-if="hint" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative cursor-help" viewBox="0 0 20 20" fill="#374151" @mouseover="hint = true" @mouseout="hint = false">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                    </svg>
-                </div>
+                    <JetInput
+                        id="serial_number"
+                        v-model="form.serial_number"
+                        type="text"
+                        placeholder="12A4-5AB-C5E"
+                        class="block w-full mt-1"
+                        autofocus
+                        maxlength="12"
+                        v-on:input="sernum"
+                        oninput="this.value = this.value.toUpperCase()"
+                    />
+                    <div class="flex flex-col items-center m-5">
+                        <div v-if="hint" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative cursor-help" viewBox="0 0 20 20" fill="#374151" @mouseover="hint = true" @mouseout="hint = false">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
                 </div>
                 <JetLabel
                     for="magic_code"
@@ -113,23 +114,25 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
-                Create
+                Save
             </JetButton>
         </template>
     </JetFormSection>
 </template>
 <script>
+import {usePage} from "@inertiajs/inertia-vue3";
+
 export default {
     name: "CreateGateForm",
-    props: ["attrs"],
+    props: ["attrs", "gate"],
     data: function () {
         return {
             hint: false,
             form: {
                 passwordFieldType: "password",
-                serial_number: "",
-                magic_code: this.generateGuid(),
-                name: "",
+                serial_number: this.gate.serial_number.slice(0,4) + '-' + this.gate.serial_number.slice(4,7) + '-' + this.gate.serial_number.slice(7,10),
+                magic_code: this.gate.magic_code,
+                name: this.gate.name,
                 errors: {
                     name: "",
                 },
@@ -160,15 +163,6 @@ export default {
             }
             return true;
         },
-        generateGuid() {
-            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-                (
-                    c ^
-                    (crypto.getRandomValues(new Uint8Array(1))[0] &
-                        (15 >> (c / 4)))
-                ).toString(16)
-            );
-        },
         submitForm() {
             if (this.validForm(this.form.serial_number, this.form.magic_code)) {
                 const data = {
@@ -178,14 +172,14 @@ export default {
                     team_id: this.attrs.user.current_team.id,
                 };
                 axios
-                    .post("/gates", data)
+                    .put(`/gates/${this.gate.id}`, data)
                     .then((response) => {
-                        this.$inertia.get("../dashboard");
+                        this.$inertia.get("/gates");
                         this.dataId = response.data.id;
-                        MakeToast.create("Gate successfully added", "info");
+                        MakeToast.create("Gate successfully updated", "info");
                     })
                     .catch((err) => {
-                        MakeToast.create("Cannot create Gate", "error");
+                        MakeToast.create("Cannot update Gate", "error");
                     });
             } else {
             }

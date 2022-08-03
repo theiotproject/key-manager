@@ -2,6 +2,10 @@
     <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
+import JetModal from "@/Jetstream/DialogModal.vue";
+import JetDangerButton from "@/Jetstream/DangerButton.vue";
+import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -42,13 +46,15 @@ import { Link } from "@inertiajs/inertia-vue3";
               <thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
                 <tr>
                   <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
-                    <th scope="col" class="lg:px-3 md:px-0 py-3 px-5 sm:rounded-r-lg rounded-none">Label</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3 px-5">Label</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3 px-5 sm:rounded-r-lg rounded-none"></th>
                 </tr>
               </thead>
                 <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
                 <tr>
                     <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">User</th>
-                    <th scope="col" class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none">Label</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3">Label</th>
+                    <th scope="col" class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none"></th>
                 </tr>
                 </thead>
               <tbody>
@@ -92,6 +98,17 @@ import { Link } from "@inertiajs/inertia-vue3";
 
                         {{virtualKey.label}}
                     </td>
+                    <td v-if="index <=2" class="
+                      lg:px-3
+                      md:px-0
+                      py-4
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap">
+                        <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey)">
+                            Generate QR Code
+                        </button>
+                    </td>
                 </tr>
               </tbody>
             </table>
@@ -111,17 +128,53 @@ import { Link } from "@inertiajs/inertia-vue3";
           </div>
       </div>
     </div>
+      <JetModal
+          :show="showQrCode"
+          @close="showQrCode=null; timer=false; qrCodeReady=false"
+      >
+          <template #title> {{usedVirtualKey}} </template>
+
+          <template #content v-if="qrCodeReady && validDay">
+              <p class="py-5">Time left to scan this code: {{countDown.toFixed(1)}}</p>
+              <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+          </template>
+          <template #content v-else-if="!validDay">
+              <p class="py-5">Day is not valid</p>
+          </template>
+          <template #content v-else>
+              <p class="py-5">Loading...</p>
+          </template>
+
+          <template #footer>
+              <JetSecondaryButton @click="showQrCode=null; timer=false; qrCodeReady=false">
+                  Cancel
+              </JetSecondaryButton>
+          </template>
+      </JetModal>
   </div>
 </template>
 <script>
+import QrcodeVue from 'qrcode.vue'
+
 export default {
   name: "VirtualKeyWidget",
   props: ["attrs"],
   data() {
     return {
-      virtualKeys: {},
-      permission: 0,
-      attrs: this.attrs,
+        qrCode: {
+            value: '',
+            size: 250
+        },
+        validDay: false,
+        qrCodeReady: false,
+        showQrCode: false,
+        timer: false,
+        countDown: 60,
+        usedVirtualKey: '',
+        gates: {},
+        virtualKeys: {},
+        permission: 0,
+        attrs: this.attrs,
     };
   },
   methods: {
@@ -144,6 +197,79 @@ export default {
     },
       isSafari(){
           return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      },
+      async generateQrCode(virtualKey) {
+        this.usedVirtualKey = virtualKey.label;
+        this.countDown = 60;
+        this.showQrCode = true;
+        const currentDate = new Date();
+        const weekday = currentDate.getDay();
+
+        const weekdayMap = new Map();
+
+        weekdayMap.set(0, 'U');
+        weekdayMap.set(1, 'M');
+        weekdayMap.set(2, 'T');
+        weekdayMap.set(3, 'W');
+        weekdayMap.set(4, 'R');
+        weekdayMap.set(5, 'F');
+        weekdayMap.set(6, 'S');
+
+        this.validDay = virtualKey.valid_days.includes(weekdayMap.get(weekday))
+        if(!this.validDay){
+            return 0;
+        }
+
+          await axios
+              .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
+              .then((response) => {
+                  this.gates = response.data;
+              })
+              .catch((err) => {
+                  MakeToast.create("Cannot load gates", "error");
+              });
+          this.qrCodeReady = true;
+          const validFrom = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 10 ? '0' : '') + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+          const validTo = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 9 ? '0' : '') + (currentDate.getMinutes() + 1) + ":" + currentDate.getSeconds();
+
+          const gateSerialNumbers = Array.from(this.gates).map(gate => gate.serial_number).toString();
+          const guid = this.generateGuid();
+          this.qrCode.value = "OPEN:ID:" + guid + ";VF:" + validFrom + ";VT:" + validTo + ";L:" + gateSerialNumbers + ";;";
+          this.timer = true;
+          this.countDownTimer();
+
+          const data = {
+              id: guid,
+              virtual_key_id: virtualKey.id,
+              access_granted: 1,
+              message: "ACCESS GRANTED"
+          };
+          axios
+              .post('/api/keyUsages', data)
+              .then((response) => {
+                  this.dataId = response.data.id;
+                  console.log(response.data.id);
+              })
+              .catch((err) => {
+                  MakeToast.create("Cannot create key usage", "error");
+              });
+          },
+      generateGuid() {
+          return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+              (
+                  c ^
+                  (crypto.getRandomValues(new Uint8Array(1))[0] &
+                      (15 >> (c / 4)))
+              ).toString(16)
+          );
+      },
+      countDownTimer () {
+          if (this.countDown > 0 && this.timer === true) {
+              setTimeout(() => {
+                  this.countDown -= 0.1
+                  this.countDownTimer()
+              }, 100)
+          }
       }
   },
   created() {

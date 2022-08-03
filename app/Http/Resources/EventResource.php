@@ -14,13 +14,23 @@ class EventResource extends JsonResource
      */
     public function toArray($request)
     {
+        if(isset($this['0'])){
+            return [
+                'status' => $this['status'],
+                'profile_photo_url' => $this['profile_photo_url'],
+                'name' => $this['name'],
+                'message' => $this['message'],
+                'scan_time' => $this['scan_time'],
+                'gate_name' => $this['0']['name']
+            ];
+        }
         return [
             'status' => $this['status'],
             'profile_photo_url' => $this['profile_photo_url'],
             'name' => $this['name'],
             'message' => $this['message'],
             'scan_time' => $this['scan_time'],
-            'gate_name' => $this['0']['name']
+            'gate_name' => 'Deleted gate'
         ];
     }
 }

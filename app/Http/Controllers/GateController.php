@@ -65,11 +65,12 @@ class GateController extends Controller
      * Show.vue.vue the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function edit($id)
     {
-        //
+        $gate = Gate::find($id);
+        return Inertia::render('Gates/Edit', ["gate"=>$gate]);
     }
 
     /**
@@ -77,11 +78,27 @@ class GateController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $gate = Gate::find($id);
+        $gate->name = $request->input('name');
+        $gate->serial_number = $request->input('serial_number');
+        $gate->magic_code = $request->input('magic_code');
+        $gate->save();
+        $virtualKeys = $gate->virtualKeys;
+        if($virtualKeys!=null) {
+            foreach ($virtualKeys as $virtualKey) {
+                $gates = $virtualKey->gates;
+                $gatesArray = array();
+                foreach($gates as $gate2){
+                    array_push($gatesArray, $gate2->name);
+                }
+                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualKey->save();
+            }
+        }
     }
 
     /**

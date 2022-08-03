@@ -52,4 +52,15 @@ class AuthController extends Controller
         $owner->setAttribute('membership', ['role'=>'owner']);
         return $users;
     }
+
+    public function getAuthUserRoleByTeamId($teamId)
+    {
+        $user = Auth::user();
+        $team = Team::find($teamId);
+        if($team->user_id == $user->id){
+            return "owner";
+        }
+        return $team->users->where('id', $user->id)->first()->membership->role;
+    }
+
 }

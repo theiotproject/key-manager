@@ -59,7 +59,7 @@ const removeGate = () => {
                             <p class="ml-3">Gates</p>
                         </h2>
                         <Link
-                            v-if="permission"
+                            v-if="role === 'owner' || role === 'admin'"
                             :href="route('gates.create')"
                             class="mr-10 mt-4 text-gray-600 hover:text-black rounded flex items-center gap-2"
                         >
@@ -124,7 +124,15 @@ const removeGate = () => {
                                                 <td
                                                     class="lg:px-6 md:px-3 py-4 font-medium text-right text-gray-900 whitespace-nowrap"
                                                 >
+                                                    <Link
+                                                        v-if="role === 'owner' || role === 'admin'"
+                                                        class="cursor-pointer ml-6 text-sm text-blue-500"
+                                                        :href="route('gates.edit', [gate])"
+                                                    >
+                                                        Edit
+                                                    </Link>
                                                     <button
+                                                        v-if="role === 'owner' || role === 'admin'"
                                                         class="cursor-pointer ml-6 text-sm text-red-500"
                                                         @click="
                                                             confirmGateRemoval(
@@ -180,10 +188,17 @@ export default {
         return {
             gates: {},
             permission: 0,
+            role: '',
             attrs: this.$attrs,
         };
     },
     methods: {
+        showEditForm(gate){
+            console.log(gate.id);
+            axios.get(
+                `/gates/${gate.id}/edit`
+            )
+        },
         getGates() {
             axios
                 .get(
@@ -196,26 +211,25 @@ export default {
                     MakeToast.create("Cannot load gates", "error");
                 });
         },
-        getPermission() {
-            axios
-                .get(
-                    `/auth/permission/teamId/${this.attrs.user.current_team_id}`
-                )
-                .then((response) => {
-                    this.permission = response.data;
+        getRole(){
+          axios
+              .get(
+                  `/auth/role/teamId/${this.attrs.user.current_team_id}`
+              ).then((response) => {
+                    this.role = response.data;
                 })
-                .catch((err) => {
-                    MakeToast.create("Cannot load permission", "error");
-        });
-    },
+              .catch((err) => {
+                    MakeToast.create("Cannot load role", "error");
+              });
+        },
       isSafari(){
           return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
       }
   },
   created() {
-      this.isSafari();
+        this.isSafari();
         this.getGates();
-        this.getPermission();
+        this.getRole();
     },
 };
 </script>

@@ -14,4 +14,8 @@ class Event extends Model
     public function keyUsage() {
         return $this->belongsTo(KeyUsage::class, 'GUID', 'id');
     }
+
+    public function gate(){
+        return $this->belongsTo(Gate::class, 'serial_number', 'serial_number');
+    }
 }
