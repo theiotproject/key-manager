@@ -158,11 +158,11 @@ import MakeToast from "../../../Services/MakeToast.vue";
 
                 <hr class="mt-5 mb-5" />
 
-                <div v-if="this.form.checkedEmails.length > 0">
+                <div v-if="form.checkedEmails.length > 0">
                     <p class="text-sm">Email will be sent to:</p>
                     <ul class="mt-4">
                         <li
-                            v-for="email in this.form.checkedEmails"
+                            v-for="email in form.checkedEmails"
                             class="text-gray-700 flex justify-between text-sm hover:bg-gray-100 mb-1 py-3 px-3 border-b border-gray-300 rounded-lg w-full"
                         >
                             {{ email }}
