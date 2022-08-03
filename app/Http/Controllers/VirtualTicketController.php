@@ -43,36 +43,43 @@ class VirtualTicketController extends Controller
      */
     public function store(Request $request)
     {
-        $guid = (string) Str::uuid();
         foreach($request->users as $user){
+            $valid_from = $request->valid_from;
+            $valid_to = $request->valid_to;
+
+            $guid = (string) Str::uuid();
             $virtualTicket = new VirtualTicket();
             $virtualTicket->GUID = $guid;
             $virtualTicket->label = $user['label'];
             $virtualTicket->email = $user['email'];
-            $virtualTicket->valid_from = $request->valid_from;
-            $virtualTicket->valid_to = $request->valid_to;
+            $virtualTicket->valid_from = $valid_from;
+            $virtualTicket->valid_to = $valid_to;
             $virtualTicket->save();
+
+            $gateSerialNumbers = "";
+            $gatesData=array();
 
             foreach($request->gates as $gateId){
                 $gate = Gate::find($gateId);
                 $virtualTicket->gates()->attach($gate);
+                array_push($gatesData, $gate['0']->serial_number);
             }
 
-                $mailContent = new Request( [
+            $gateSerialNumbers = implode (",", $gatesData);
+
+            $qrcode = "OPEN:ID:" . $guid . ";VF:" . $valid_from . ";VT:" . $valid_to . ";L:" . $gateSerialNumbers . ";;";
+
+            $mailContent = new Request( [
                 'team_name' => 'Biuro',
-                'email' => "slawek@qware.pl",
-                'code' => '821381209382',
-                'valid_from' => '2022-07-26 10:35:09',
-                'valid_to' => '2022"gates": [8-20 23:35:09',
-                'label' => 'Key opens Biuro'
+                'email' => $user['email'],
+                'code' => $qrcode,
+                'valid_from' => $valid_from,
+                'valid_to' => $valid_to,
+                'label' => $user['label']
             ]);
 
             app(SendEmailController::class)->sendQrCode($mailContent);
         }
-
-
-
-
     }
 
     /**

@@ -279,7 +279,7 @@
 
 </tr>
 <tr>
-<td style="color:#555555;padding-top: 3px;padding-bottom: 20px;"> {!! QrCode::size(250)->generate('{{$code}}'); !!}
+<td style="color:#555555;padding-top: 3px;padding-bottom: 20px;"> {!! QrCode::size(250)->generate($code); !!}
 </td>
 </tr>
 </tbody>

@@ -310,14 +310,6 @@ export default {
                 }
             });
 
-            this.form.checkedUsers.forEach((user) => {
-                let newUser = {
-                    email: user.email,
-                    label: label,
-                };
-                users.push(newUser);
-            });
-
             this.form.checkedEmails.forEach((email) => {
                 let newUser = {
                     email: email,
