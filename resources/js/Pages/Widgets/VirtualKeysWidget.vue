@@ -1,12 +1,8 @@
 
     <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
-import JetModal from "@/Jetstream/DialogModal.vue";
-import JetDangerButton from "@/Jetstream/DangerButton.vue";
-import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
-
-</script>
+    import {Link} from "@inertiajs/inertia-vue3";
+    import JetModal from "@/Jetstream/DialogModal.vue";
+    import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";</script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
@@ -60,7 +56,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
               <tbody>
                 <tr
                   class="bg-white border-b"
-                  v-for="(virtualKey,index) in virtualKeys"
+                  v-for="(virtualKey,index) in usersVirtualkeys"
                   :key="virtualKey.id"
                 >
                   <td
@@ -108,6 +104,47 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                         <button class="ml-6 text-sm text-blue-500" @click="generateQrCode(virtualKey)">
                             Generate QR Code
                         </button>
+                    </td>
+                </tr>
+                <tr
+                    class="bg-white border-b"
+                    v-for="(virtualKey,index) in notUsersVirtualKeys"
+                    :key="virtualKey.id"
+                >
+                    <td
+                        v-if="(usersVirtualkeys.length + index) < 3"
+                        class="
+                      lg:px-3
+                      md:px-0
+                      px-5
+                      py-4
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap
+                    "
+                    >
+                        <div class="flex
+                      items-center">
+                            <img
+                                class="h-8 w-8 rounded-full object-cover mr-3"
+                                :src="virtualKey.user.profile_photo_url"
+                                :alt="virtualKey.user.name"
+                            />
+                            <div>
+                                {{ virtualKey.user.name }}
+                                <p class="text-gray-400 text-xs">{{ virtualKey.user.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td v-if="(usersVirtualkeys.length + index) < 3" class="
+                      lg:px-3
+                      md:px-0
+                      py-4
+                      font-medium
+                      text-gray-900
+                      whitespace-nowrap">
+
+                        {{virtualKey.label}}
                     </td>
                 </tr>
               </tbody>
@@ -272,6 +309,18 @@ export default {
           }
       }
   },
+    computed: {
+      usersVirtualkeys: function(){
+          return Array.from(this.virtualKeys).filter((virtualKey)=>{
+             return (virtualKey.user_id === this.attrs.user.id);
+          });
+      },
+        notUsersVirtualKeys: function() {
+            return Array.from(this.virtualKeys).filter((virtualKey) => {
+                return (virtualKey.user_id !== this.attrs.user.id);
+            });
+        }
+    },
   created() {
       this.isSafari();
     this.getVirtualKeys();
