@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('virtual_tickets', function (Blueprint $table) {
             $table->id();
+            $table->string('GUID');
             $table->string('label');
             $table->string('email');
             $table->string('valid_from');

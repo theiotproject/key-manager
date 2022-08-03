@@ -10,7 +10,7 @@ class VirtualTicket extends Model
     use HasFactory;
 
       protected $fillable = [
-        'label', 'email', 'valid_from', "valid_to"
+        'GUID', 'label', 'email', 'valid_from', "valid_to"
     ];
 
     // public function user()

@@ -10,8 +10,8 @@ use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\VirtualKeyController;
+use App\Http\Controllers\VirtualTicketController;
 use App\Http\Controllers\SendEmailController;
-use App\Http\Controllers\QrCodeController;
 use App\Mail\SendMail;
 
 
@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('/keyUsages', KeyUsageController::class);
     Route::resource('/magicCodeUsages', MagicCodeUsageController::class);
     Route::resource('/events', EventController::class);
+    Route::resource('/virtualTickets', VirtualTicketController::class);
 
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
 
@@ -53,5 +54,3 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
-
-//Route::get('/qrcode', [QrCodeController::class, 'generateQrCode']);
