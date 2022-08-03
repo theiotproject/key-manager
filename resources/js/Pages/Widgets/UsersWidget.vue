@@ -146,6 +146,7 @@ import { Link } from "@inertiajs/inertia-vue3";
                 >
                     <Link
                         class="text-gray-600 hover:text-black py-2 px-4 rounded"
+                        :href="route('teams.show',$page.props.user.current_team)"
                     >
                         Show more
                     </Link>

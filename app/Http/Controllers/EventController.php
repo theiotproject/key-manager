@@ -145,7 +145,7 @@ class EventController extends Controller
 
         $events = Event::whereHas('gate', function($q) use($teamId){
             $q->where('team_id', $teamId);
-        })->get();
+        })->orderBy('scan_time', 'DESC')->get();
 
         $result = array();
         foreach ($events as $event){
