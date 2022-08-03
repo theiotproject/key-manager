@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
 use App\Models\User;
 use App\Http\Resources\VirtualTicketResource;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class VirtualTicketController extends Controller
 {
@@ -122,18 +123,27 @@ class VirtualTicketController extends Controller
      * @param  int  $id
      * @return \Inertia\Response
      */
-    // public function destroy($id)
-    // {
-    //     $virtualKey = VirtualKey::find($id);
-    //     $gates = $virtualKey->gates;
-    //     if($gates!=null) {
-    //         foreach ($gates as $gate) {
-    //             $virtualKey->gates()->detach($gate->id);
-    //         }
-    //     }
-    //     $virtualKey->delete();
-    //     return Inertia::render('Dashboard');
-    // }
+    public function destroy($id)
+    {
+        // try {
+
+            $virtualTicket = VirtualTicket::findOrFail($id);
+            $gates = $virtualTicket->gates;
+
+            if($gates!=null) {
+                foreach ($gates as $gate) {
+                    $virtualTicket->gates()->detach($gate->id);
+                }
+            }
+
+            $virtualTicket->delete();
+
+        // } catch (\Exception $e) {
+        //     throw new HttpException(500, $e->getMessage());
+        // }
+        return Inertia::render('VirtualTickets/Show');
+
+    }
 
     // public function indexVirtualKeysByTeamId($teamId)
     // {
