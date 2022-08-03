@@ -17,7 +17,7 @@ class VirtualKeyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -76,11 +76,12 @@ class VirtualKeyController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function edit($id)
     {
-        //
+        $virtualKey = VirtualKey::find($id);
+        return Inertia::render('VirtualKeys/Edit', ["virtualKey"=>$virtualKey]);
     }
 
     /**
@@ -88,11 +89,23 @@ class VirtualKeyController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return string
      */
     public function update(Request $request, $id)
     {
-        //
+        $virtualKey = VirtualKey::find($id);
+        $virtualKey->label = $request->label;
+        $virtualKey->valid_days = $request->validDays;
+        $gateIds = array();
+        $gateNames = array();
+        foreach($request->gates as $gate){
+            array_push($gateIds, $gate['id']);
+            array_push($gateNames, $gate['name']);
+        }
+        $virtualKey->gates()->sync($gateIds);
+        $virtualKey->label = 'Key opens ' . implode(', ', $gateNames );
+        $virtualKey->save();
+        return Inertia::render('VirtualKeys/Show');
     }
 
     /**

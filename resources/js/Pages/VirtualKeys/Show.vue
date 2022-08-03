@@ -187,6 +187,13 @@ const removeVirtualKey = () => {
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 text-right font-medium text-gray-900 whitespace-nowrap"
                                                 >
+                                                    <Link
+                                                        v-if="role === 'owner' || role === 'admin'"
+                                                        class="cursor-pointer ml-6 text-sm text-blue-500"
+                                                        :href="route('virtualKeys.edit', [virtualKey])"
+                                                    >
+                                                        Edit
+                                                    </Link>
                                                     <button
                                                         v-if="role === 'owner' || role === 'admin'"
                                                         class="cursor-pointer ml-6 text-sm text-red-500"

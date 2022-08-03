@@ -48,6 +48,7 @@ Route::middleware([
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
     Route::get('/gates/{gate}/edit', [GateController::class, 'edit'])->name('gates.edit');
     Route::put('/gates/{gate}', [GateController::class, 'update']);
+    Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
 });
 
 // Routes with administrator permission
