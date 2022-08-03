@@ -51,14 +51,14 @@ class SendEmailController extends Controller
       'email'  =>  'required|email',
      ]);
 
-     $gates = $request->get('gates');
-     $gates_label = "";
-     foreach($gates as $key=>$gate) {
-         if($key == count($gates)) {
-            $gates_label += $gate;
-        }
-        $gates_label .= $gate . ", ";
-     }
+    //  $gates = $request->get('gates');
+    //  $gates_label = "";
+    //  foreach($gates as $key=>$gate) {
+    //      if($key == count($gates)) {
+    //         $gates_label += $gate;
+    //     }
+    //     $gates_label .= $gate . ", ";
+    //  }
 
      Mail::send('qrcode',
              array(
@@ -67,7 +67,7 @@ class SendEmailController extends Controller
                  'code' => $request->get('code'),
                  'valid_from' => $request->get('valid_from'),
                  'valid_to' => $request->get('valid_to'),
-                 'gates' => $gates_label,
+                 'label' => $request->get('label'),
              ), function($message) use ($request)
                {
                   $message->subject("Key Manager - Virtual Ticket");

@@ -115,6 +115,18 @@ const logout = () => {
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
                                 <JetNavLink
+                                    :href="route('virtualTickets.index')"
+                                    :active="
+                                        route().current('virtualTickets.index')
+                                    "
+                                >
+                                    Virtual Tickets
+                                </JetNavLink>
+                            </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <JetNavLink
                                     :href="route('events.index')"
                                     :active="route().current('events.index')"
                                 >

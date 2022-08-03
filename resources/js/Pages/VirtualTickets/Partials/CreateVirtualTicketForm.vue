@@ -2,18 +2,16 @@
 import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
-import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
-
 import MakeToast from "../../../Services/MakeToast.vue";
 </script>
 
 <template>
     <JetFormSection v-on:submit.prevent="submitForm">
-        <template #title> Virtual Key Details </template>
+        <template #title> Virtual Ticket Details </template>
 
         <template #description>
-            Create a new Virtual Key for users by selecting the Gates, and the
-            time period
+            Create a new Virtual Ticket for users by selecting the Gates, and
+            the time period. It will be send via email to the selected Users
         </template>
 
         <template #form>
@@ -26,38 +24,21 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     </div>
                 </div>
             </div>
+
             <div class="col-span-6 sm:col-span-full">
                 <div>
-                    <JetLabel value="Days" class="mb-3" />
-                    <ul
-                        class="items-center w-full font-medium text-gray-900 bg-white rounded-lg sm:flex-wrap sm:flex"
-                    >
-                        <li
-                            v-for="(day, index) in days"
-                            :key="index"
-                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r cursor-pointer hover:bg-gray-100"
-                        >
-                            <div
-                                @click="checkDay(index)"
-                                class="flex items-center pl-3 cursor-pointer"
-                            >
-                                <input
-                                    v-model="form.checkedDays"
-                                    v-bind:id="index"
-                                    type="checkbox"
-                                    :value="index"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
-                                />
-                                <label
-                                    v-bind:id="index"
-                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900 cursor-pointer"
-                                >
-                                    {{ day }}
-                                </label>
-                            </div>
-                        </li>
-                    </ul>
+                    <JetLabel value="Select a Date range" class="mb-3" />
+                    <v-date-picker
+                        is24hr
+                        v-model="form.date"
+                        is-range
+                        :model-config="dateConfig"
+                        :masks="dateMasks"
+                    />
+                    <!-- for future time picking -->
+                    <!-- <v-date-picker v-model="form.date" is-range mode="date"/> -->
                 </div>
+
                 <hr class="mt-5 mb-5" />
 
                 <div>
@@ -69,11 +50,10 @@ import MakeToast from "../../../Services/MakeToast.vue";
                         <li
                             v-for="(gate, index) in gates"
                             :key="index"
-                            class="cursor-pointer"
+                            @click="checkGate(index)"
                         >
                             <div
                                 class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
-                                @click="checkGate(index)"
                             >
                                 <input
                                     v-model="form.checkedGates"
@@ -104,11 +84,11 @@ import MakeToast from "../../../Services/MakeToast.vue";
                         <li
                             v-for="(user, index) in users"
                             :key="index"
+                            @click="checkUser(index)"
                             class="cursor-pointer"
                         >
                             <div
                                 class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
-                                @click="checkUser(index)"
                             >
                                 <input
                                     v-model="form.checkedUsers"
@@ -133,60 +113,163 @@ import MakeToast from "../../../Services/MakeToast.vue";
                         </li>
                     </ul>
                 </div>
+
+                <div class="mt-3">
+                    <label
+                        for="email"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >Email of unregistered User:</label
+                    >
+                    <div class="relative mb-6">
+                        <div
+                            class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+                        >
+                            <svg
+                                aria-hidden="true"
+                                class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+                                ></path>
+                                <path
+                                    d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <input
+                            v-on:blur="onEmailAdd"
+                            v-bind:class="
+                                !emailValid
+                                    ? 'border-red-700 focus:ring-red-700 focus:border-red-700'
+                                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                            "
+                            v-on:keydown.enter.prevent="onEmailAdd"
+                            v-model="form.email"
+                            type="email"
+                            id="email"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
+                            placeholder="johndove@gmail.com"
+                        />
+                    </div>
+                </div>
+
+                <hr class="mt-5 mb-5" />
+
+                <div v-if="this.form.checkedEmails.length > 0">
+                    <p class="text-sm">Email will be sent to:</p>
+                    <ul class="mt-4">
+                        <li
+                            v-for="email in this.form.checkedEmails"
+                            class="text-gray-700 flex justify-between text-sm hover:bg-gray-100 mb-1 py-3 px-3 border-b border-gray-300 rounded-lg w-full"
+                        >
+                            {{ email }}
+                            <button
+                                v-on:submit.prevent="onEmailCancel(email)"
+                                class="cursor-pointer ml-6 text-sm text-red-500"
+                                @click.prevent="onEmailCancel(email)"
+                            >
+                                Cancel
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- <hr class="mt-6 mb-2" /> -->
+                </div>
             </div>
         </template>
+
         <template #actions>
             <JetButton
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
-                Create
+                Send email
             </JetButton>
         </template>
     </JetFormSection>
 </template>
 <script>
+var emailRegExp =
+    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
 export default {
     props: ["attrs"],
-    name: "CreateVirtualKeyForm",
+    name: "CreateVirtualTicketForm",
+
     data: function () {
         return {
             form: {
+                date: {
+                    start: "",
+                    end: "",
+                },
                 label: "",
-                checkedDays: [0, 1, 2, 3, 4],
+                email: "",
                 checkedUsers: [],
                 checkedGates: [],
+                checkedEmails: [],
             },
+            emailValid: true,
             users: {},
             gates: {},
-            days: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-            ],
-            daysLetter: ["M", "T", "W", "R", "F", "S", "U"],
+            dateConfig: {
+                start: {
+                    timeAdjust: "00:00:01",
+                },
+                end: {
+                    timeAdjust: "23:59:59",
+                },
+            },
+            dateMasks: {
+                input: "YYYY-MM-DD",
+            },
         };
     },
     methods: {
-        checkDay(index) {
-            let canCheck = true;
-            this.form.checkedDays.find((checkedDay, id) => {
-                if (checkedDay == index) {
-                    this.form.checkedDays.splice(id, 1);
-                    canCheck = false;
+        onEmailCancel(email) {
+            this.form.checkedEmails.find((checkedEmail, index) => {
+                if (checkedEmail === email) {
+                    this.form.checkedEmails.splice(index, 1);
+
+                    this.form.checkedUsers.find((checkedUser, id) => {
+                        if (checkedUser !== undefined)
+                            if (checkedUser.email === email) {
+                                this.form.checkedUsers.splice(id, 1);
+                                return;
+                            }
+                    });
                     return;
                 }
             });
-            if (canCheck) {
-                this.form.checkedDays.push(index);
+        },
+        onEmailAdd() {
+            let email = this.form.email;
+            if (this.isEmail(email)) {
+                this.emailValid = true;
+                this.form.checkedEmails.push(email);
+                this.form.email = "";
+
+                this.users.find((user, id) => {
+                    if (user.email == email) {
+                        this.form.checkedUsers.push(user);
+                        return;
+                    }
+                });
+            } else {
+                this.emailValid = false;
             }
         },
         checkUser(index) {
             let canCheck = true;
+            this.form.checkedEmails.find((checkedUser, id) => {
+                if (checkedUser == this.users[index].email) {
+                    this.form.checkedEmails.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
             this.form.checkedUsers.find((checkedUser, id) => {
                 if (checkedUser == this.users[index]) {
                     this.form.checkedUsers.splice(id, 1);
@@ -196,6 +279,7 @@ export default {
             });
             if (canCheck) {
                 this.form.checkedUsers.push(this.users[index]);
+                this.form.checkedEmails.push(this.users[index].email);
             }
         },
         checkGate(index) {
@@ -211,48 +295,58 @@ export default {
                 this.form.checkedGates.push(this.gates[index]);
             }
         },
-
         submitForm() {
-            let str = "";
-            this.form.checkedDays.forEach((day) => {
-                str += this.daysLetter[day];
-            });
-
             let users = [];
             let gates = [];
 
-            this.form.checkedUsers.forEach((user) => {
-                let label = "Key opens ";
+            let label = "Key opens ";
 
-                this.form.checkedGates.forEach((gate, index) => {
-                    gates.push(gate.id);
-                    if (this.form.checkedGates.length - 1 == index) {
-                        label += gate.name;
-                    } else {
-                        label += gate.name + ", ";
-                    }
-                });
+            this.form.checkedGates.forEach((gate, index) => {
+                gates.push(gate.id);
+                if (this.form.checkedGates.length - 1 == index) {
+                    label += gate.name;
+                } else {
+                    label += gate.name + ", ";
+                }
+            });
 
+            this.form.checkedEmails.forEach((email) => {
                 let newUser = {
-                    id: user.id,
+                    email: email,
                     label: label,
                 };
                 users.push(newUser);
             });
 
+            let start = this.form.date.start;
+            const validDateStart =
+                start.toISOString().slice(0, 10) + " 00:00:00";
+
+            let end = this.form.date.end;
+            const validDateEnd =
+                end.toISOString().slice(0, 10) +
+                " " +
+                end.getHours() +
+                ":" +
+                end.getMinutes() +
+                ":" +
+                end.getSeconds();
+
             const data = {
                 users: users,
                 gates: gates,
-                validDays: str,
+                valid_from: validDateStart,
+                valid_to: validDateEnd,
             };
+            console.log(data);
             axios
-                .post("/virtualKeys", data)
+                .post("/api/virtualTickets", data)
                 .then((result) => {
-                    MakeToast.create("Added Virtual Key", "info");
+                    MakeToast.create("Added Virtual Ticket", "info");
                     this.$inertia.get("../dashboard");
                 })
                 .catch((err) => {
-                    MakeToast.create("Failed to add Virtual Key", "error");
+                    MakeToast.create("Failed to add Virtual Ticket", "error");
                 });
         },
         getUsers() {
@@ -277,7 +371,12 @@ export default {
                     MakeToast.create("Cannot load gates", "error");
                 });
         },
+        // check for valid email adress
+        isEmail: function (value) {
+            return emailRegExp.test(value);
+        },
     },
+
     created() {
         this.getUsers();
         this.getGates();

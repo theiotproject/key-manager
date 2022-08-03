@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('gate_virtual_ticket', function (Blueprint $table) {
             $table->id();
+             $table->foreignId('gate_id')->constrained();
+            $table->foreignId('virtual_ticket_id')->constrained();
             $table->timestamps();
         });
     }
