@@ -23,9 +23,22 @@ import MakeToast from "../../Services/MakeToast.vue";
                 </svg>
                 <p class="ml-3">Events</p>
             </h2>
-            <Link class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <Link
+                class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                 </svg>
             </Link>
         </div>
@@ -47,12 +60,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     >
                                         User
                                     </th>
-                                    <th
-                                        scope="col"
-                                        class="px-2 py-3"
-                                    >
-                                        Gate
-                                    </th>
+                                    <th scope="col" class="px-2 py-3">Gate</th>
                                     <th
                                         scope="col"
                                         class="px-2 py-3 sm:rounded-r-lg rounded-none"
@@ -89,27 +97,36 @@ import MakeToast from "../../Services/MakeToast.vue";
                                             ? 'text-green-800 bg-teal-50'
                                             : 'text-red-700 bg-red-50'
                                     "
-                                    class=" border-b"
+                                    class="border-b"
                                 >
                                     <td
                                         class="px-3 py-4 font-medium whitespace-nowrap"
                                     >
-                                        <div class="flex
-                      items-center">
-                                            <a :title="event.name" class="h-8 w-8 mr-2 cursor-pointer">
-                                            <img
-                                                class="rounded-full object-cover mr-1"
-                                                :src="event.profile_photo_url"
-                                            />
+                                        <div class="flex items-center">
+                                            <a
+                                                :title="event.name"
+                                                class="h-8 w-8 mr-2 cursor-pointer"
+                                            >
+                                                <img
+                                                    class="rounded-full object-cover mr-1"
+                                                    :src="
+                                                        event.profile_photo_url
+                                                    "
+                                                />
                                             </a>
                                         </div>
-
                                     </td>
                                     <td
                                         class="px-2 py-4 font-medium whitespace-nowrap"
                                     >
-                                        <span v-if="event.gate_name.length<8">{{ event.gate_name }}</span>
-                                        <span v-else>{{ event.gate_name.substring(0,20)+".." }}</span>
+                                        <span
+                                            v-if="event.gate_name.length < 8"
+                                            >{{ event.gate_name }}</span
+                                        >
+                                        <span v-else>{{
+                                            event.gate_name.substring(0, 20) +
+                                            ".."
+                                        }}</span>
                                     </td>
                                     <td
                                         class="px-2 py-4 font-medium whitespace-nowrap"
@@ -126,18 +143,18 @@ import MakeToast from "../../Services/MakeToast.vue";
                         </table>
                     </div>
                 </div>
-<!--                <div class="mt-5 w-full flex justify-center">-->
-<!--                    <Link-->
-<!--                        :href="route('events.index')"-->
-<!--                        class="-->
-<!--                        text-gray-600-->
-<!--                        hover:text-black-->
-<!--                        py-2-->
-<!--                        px-4-->
-<!--                        rounded">-->
-<!--                        Show all-->
-<!--                    </Link>-->
-<!--                </div>-->
+                <!--                <div class="mt-5 w-full flex justify-center">-->
+                <!--                    <Link-->
+                <!--                        :href="route('events.index')"-->
+                <!--                        class="-->
+                <!--                        text-gray-600-->
+                <!--                        hover:text-black-->
+                <!--                        py-2-->
+                <!--                        px-4-->
+                <!--                        rounded">-->
+                <!--                        Show all-->
+                <!--                    </Link>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>
@@ -149,14 +166,14 @@ export default {
     data() {
         return {
             events: {},
-            attrs: this.attrs,
+            localAttrs: this.attrs,
         };
     },
     methods: {
         getEvents() {
             axios
                 .get(
-                    `/events/teamId/${this.attrs.user.current_team_id}/limit/10`
+                    `/events/teamId/${this.localAttrs.user.current_team_id}/limit/10`
                 )
                 .then((response) => {
                     this.events = response.data;

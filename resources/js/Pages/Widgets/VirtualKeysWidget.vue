@@ -1,4 +1,3 @@
-
     <script setup>
     import {Link} from "@inertiajs/inertia-vue3";
     import JetModal from "@/Jetstream/DialogModal.vue";
@@ -151,130 +150,275 @@
             </table>
           </div>
         </div>
-          <div class="mt-5 w-full flex justify-center" v-if="virtualKeys.length > 3">
-              <Link
-                  :href="route('virtualKeys.index')"
-                  class="
-                        text-gray-600
-                        hover:text-black
-                        py-2
-                        px-4
-                        rounded">
-                  Show more
-              </Link>
-          </div>
-      </div>
+        <div class="pb-5">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden sm:rounded-lg">
+                    <div
+                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                    >
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead
+                                class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400"
+                                v-if="!isSafari()"
+                            >
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        User
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="lg:px-3 md:px-0 py-3 px-5"
+                                    >
+                                        Label
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="lg:px-3 md:px-0 py-3 px-5 sm:rounded-r-lg rounded-none"
+                                    ></th>
+                                </tr>
+                            </thead>
+                            <thead
+                                class="text-xs text-white uppercase bg-blue-500"
+                                v-if="isSafari()"
+                            >
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                    >
+                                        User
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="lg:px-3 md:px-0 py-3"
+                                    >
+                                        Label
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none"
+                                    ></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    class="bg-white border-b"
+                                    v-for="(virtualKey, index) in virtualKeys"
+                                    :key="virtualKey.id"
+                                >
+                                    <td
+                                        v-if="index <= 2"
+                                        class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                        <div class="flex items-center">
+                                            <img
+                                                class="h-8 w-8 rounded-full object-cover mr-3"
+                                                :src="
+                                                    virtualKey.user
+                                                        .profile_photo_url
+                                                "
+                                                :alt="virtualKey.user.name"
+                                            />
+                                            <div>
+                                                {{ virtualKey.user.name }}
+                                                <p
+                                                    class="text-gray-400 text-xs"
+                                                >
+                                                    {{ virtualKey.user.email }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td
+                                        v-if="index <= 2"
+                                        class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                        {{ virtualKey.label }}
+                                    </td>
+                                    <td
+                                        v-if="index <= 2"
+                                        class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                        <button
+                                            class="ml-6 text-sm text-blue-500"
+                                            @click="generateQrCode(virtualKey)"
+                                        >
+                                            Generate QR Code
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div
+                    class="mt-5 w-full flex justify-center"
+                    v-if="virtualKeys.length > 3"
+                >
+                    <Link
+                        :href="route('virtualKeys.index')"
+                        class="text-gray-600 hover:text-black py-2 px-4 rounded"
+                    >
+                        Show more
+                    </Link>
+                </div>
+            </div>
+        </div>
+        <JetModal
+            :show="showQrCode"
+            @close="
+                showQrCode = null;
+                timer = false;
+                qrCodeReady = false;
+            "
+        >
+            <template #title> {{ usedVirtualKey }} </template>
+
+            <template #content v-if="qrCodeReady && validDay">
+                <p class="py-5">
+                    Time left to scan this code: {{ countDown.toFixed(1) }}
+                </p>
+                <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+            </template>
+            <template #content v-else-if="!validDay">
+                <p class="py-5">Day is not valid</p>
+            </template>
+            <template #content v-else>
+                <p class="py-5">Loading...</p>
+            </template>
+
+            <template #footer>
+                <JetSecondaryButton
+                    @click="
+                        showQrCode = null;
+                        timer = false;
+                        qrCodeReady = false;
+                    "
+                >
+                    Cancel
+                </JetSecondaryButton>
+            </template>
+        </JetModal>
     </div>
-      <JetModal
-          :show="showQrCode"
-          @close="showQrCode=null; timer=false; qrCodeReady=false"
-      >
-          <template #title> {{usedVirtualKey}} </template>
-
-          <template #content v-if="qrCodeReady && validDay">
-              <p class="py-5">Time left to scan this code: {{countDown.toFixed(1)}}</p>
-              <qrcode-vue :value="qrCode.value" :size="300" level="H" />
-          </template>
-          <template #content v-else-if="!validDay">
-              <p class="py-5">Day is not valid</p>
-          </template>
-          <template #content v-else>
-              <p class="py-5">Loading...</p>
-          </template>
-
-          <template #footer>
-              <JetSecondaryButton @click="showQrCode=null; timer=false; qrCodeReady=false">
-                  Cancel
-              </JetSecondaryButton>
-          </template>
-      </JetModal>
-  </div>
 </template>
 <script>
-import QrcodeVue from 'qrcode.vue'
+import QrcodeVue from "qrcode.vue";
 
 export default {
-  name: "VirtualKeyWidget",
-  props: ["attrs"],
-  data() {
-    return {
-        qrCode: {
-            value: '',
-            size: 250
+    name: "VirtualKeyWidget",
+    props: ["attrs"],
+    data() {
+        return {
+            qrCode: {
+                value: "",
+                size: 250,
+            },
+            validDay: false,
+            qrCodeReady: false,
+            showQrCode: false,
+            timer: false,
+            countDown: 60,
+            usedVirtualKey: "",
+            gates: {},
+            virtualKeys: {},
+            permission: 0,
+            localAttrs: this.attrs,
+        };
+    },
+    methods: {
+        getVirtualKeys() {
+            axios
+                .get(
+                    `/virtualKeys/teamId/${this.localAttrs.user.current_team_id}/users/gates`
+                )
+                .then((response) => {
+                    this.virtualKeys = response.data;
+                });
         },
-        validDay: false,
-        qrCodeReady: false,
-        showQrCode: false,
-        timer: false,
-        countDown: 60,
-        usedVirtualKey: '',
-        gates: {},
-        virtualKeys: {},
-        permission: 0,
-        attrs: this.attrs,
-    };
-  },
-  methods: {
-    getVirtualKeys() {
-      axios
-        .get(
-          `/virtualKeys/teamId/${this.attrs.user.current_team_id}/users/gates`
-        )
-        .then((response) => {
-          this.virtualKeys = response.data;
-          console.log(this.virtualKeys);
-        });
-    },
-    getPermission() {
-      axios
-        .get(`/auth/permission/teamId/${this.attrs.user.current_team_id}`)
-        .then((response) => {
-          this.permission = response.data;
-        });
-    },
-      isSafari(){
-          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      },
-      async generateQrCode(virtualKey) {
-        this.usedVirtualKey = virtualKey.label;
-        this.countDown = 60;
-        this.showQrCode = true;
-        const currentDate = new Date();
-        const weekday = currentDate.getDay();
+        getPermission() {
+            axios
+                .get(
+                    `/auth/permission/teamId/${this.localAttrs.user.current_team_id}`
+                )
+                .then((response) => {
+                    this.permission = response.data;
+                });
+        },
+        isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        },
+        async generateQrCode(virtualKey) {
+            this.usedVirtualKey = virtualKey.label;
+            this.countDown = 60;
+            this.showQrCode = true;
+            const currentDate = new Date();
+            const weekday = currentDate.getDay();
 
-        const weekdayMap = new Map();
+            const weekdayMap = new Map();
 
-        weekdayMap.set(0, 'U');
-        weekdayMap.set(1, 'M');
-        weekdayMap.set(2, 'T');
-        weekdayMap.set(3, 'W');
-        weekdayMap.set(4, 'R');
-        weekdayMap.set(5, 'F');
-        weekdayMap.set(6, 'S');
+            weekdayMap.set(0, "U");
+            weekdayMap.set(1, "M");
+            weekdayMap.set(2, "T");
+            weekdayMap.set(3, "W");
+            weekdayMap.set(4, "R");
+            weekdayMap.set(5, "F");
+            weekdayMap.set(6, "S");
 
-        this.validDay = virtualKey.valid_days.includes(weekdayMap.get(weekday))
-        if(!this.validDay){
-            return 0;
-        }
+            this.validDay = virtualKey.valid_days.includes(
+                weekdayMap.get(weekday)
+            );
+            if (!this.validDay) {
+                return 0;
+            }
 
-          await axios
-              .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
-              .then((response) => {
-                  this.gates = response.data;
-              })
-              .catch((err) => {
-                  MakeToast.create("Cannot load gates", "error");
-              });
-          this.qrCodeReady = true;
-          const validFrom = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 10 ? '0' : '') + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-          const validTo = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 9 ? '0' : '') + (currentDate.getMinutes() + 1) + ":" + currentDate.getSeconds();
+            await axios
+                .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
+                .then((response) => {
+                    this.gates = response.data;
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot load gates", "error");
+                });
+            this.qrCodeReady = true;
+            const validFrom =
+                currentDate.toISOString().slice(0, 10) +
+                " " +
+                currentDate.getHours() +
+                ":" +
+                (currentDate.getMinutes() < 10 ? "0" : "") +
+                currentDate.getMinutes() +
+                ":" +
+                currentDate.getSeconds();
+            const validTo =
+                currentDate.toISOString().slice(0, 10) +
+                " " +
+                currentDate.getHours() +
+                ":" +
+                (currentDate.getMinutes() < 9 ? "0" : "") +
+                (currentDate.getMinutes() + 1) +
+                ":" +
+                currentDate.getSeconds();
 
-          const gateSerialNumbers = Array.from(this.gates).map(gate => gate.serial_number).toString();
-          const guid = this.generateGuid();
-          this.qrCode.value = "OPEN:ID:" + guid + ";VF:" + validFrom + ";VT:" + validTo + ";L:" + gateSerialNumbers + ";;";
-          this.timer = true;
-          this.countDownTimer();
-
+            const gateSerialNumbers = Array.from(this.gates)
+                .map((gate) => gate.serial_number)
+                .toString();
+            const guid = this.generateGuid();
+            this.qrCode.value =
+                "OPEN:ID:" +
+                guid +
+                ";VF:" +
+                validFrom +
+                ";VT:" +
+                validTo +
+                ";L:" +
+                gateSerialNumbers +
+                ";;";
+            this.timer = true;
+            this.countDownTimer();
+            
           const data = {
               id: guid,
               virtual_key_id: virtualKey.id,

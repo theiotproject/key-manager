@@ -207,7 +207,7 @@ const removeVirtualTicket = () => {
             </div>
             <!-- Remove Virtual Ticket Confirmation Modal -->
             <JetConfirmationModal
-                :show="virtualTicketBeingRemoved"
+                :show="virtualTicketBeingRemoved !== null"
                 @close="virtualTicketBeingRemoved = null"
             >
                 <template #title> Remove Virtual Ticket </template>
@@ -257,7 +257,6 @@ export default {
                 )
                 .then((response) => {
                     this.virtualTickets = response.data;
-                    console.log(this.virtualTickets);
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load Virtual Tickets", "error");

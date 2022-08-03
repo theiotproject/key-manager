@@ -90,13 +90,28 @@ const removeGate = () => {
                                 >
                                     <table
                                         class="w-full text-sm text-left text-gray-500"
-                                    ><thead class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400" v-if="!isSafari()">
-                                  <tr>
-                                      <th scope="col" class="px-6 py-3 sm:rounded-l-lg rounded-none">Name</th>
-                                      <th scope="col" class="px-6 py-3 text-right sm:rounded-r-lg rounded-none"></th>
-                                  </tr>
-                                  </thead>
-                                  <thead class="text-xs text-white uppercase bg-blue-500" v-if="isSafari()">
+                                    >
+                                        <thead
+                                            class="text-xs text-white uppercase bg-gradient-to-r from-blue-500 to-sky-400"
+                                            v-if="!isSafari()"
+                                        >
+                                            <tr>
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                                >
+                                                    Name
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-3 text-right sm:rounded-r-lg rounded-none"
+                                                ></th>
+                                            </tr>
+                                        </thead>
+                                        <thead
+                                            class="text-xs text-white uppercase bg-blue-500"
+                                            v-if="isSafari()"
+                                        >
                                             <tr>
                                                 <th
                                                     scope="col"
@@ -125,14 +140,25 @@ const removeGate = () => {
                                                     class="lg:px-6 md:px-3 py-4 font-medium text-right text-gray-900 whitespace-nowrap"
                                                 >
                                                     <Link
-                                                        v-if="role === 'owner' || role === 'admin'"
+                                                        v-if="
+                                                            role === 'owner' ||
+                                                            role === 'admin'
+                                                        "
                                                         class="cursor-pointer ml-6 text-sm text-blue-500"
-                                                        :href="route('gates.edit', [gate])"
+                                                        :href="
+                                                            route(
+                                                                'gates.edit',
+                                                                [gate]
+                                                            )
+                                                        "
                                                     >
                                                         Edit
                                                     </Link>
                                                     <button
-                                                        v-if="role === 'owner' || role === 'admin'"
+                                                        v-if="
+                                                            role === 'owner' ||
+                                                            role === 'admin'
+                                                        "
                                                         class="cursor-pointer ml-6 text-sm text-red-500"
                                                         @click="
                                                             confirmGateRemoval(
@@ -154,7 +180,7 @@ const removeGate = () => {
             </div>
             <!-- Remove Gate Confirmation Modal -->
             <JetConfirmationModal
-                :show="gateBeingRemoved"
+                :show="gateBeingRemoved !== null"
                 @close="gateBeingRemoved = null"
             >
                 <template #title> Remove Gate </template>
@@ -188,16 +214,14 @@ export default {
         return {
             gates: {},
             permission: 0,
-            role: '',
+            role: "",
             attrs: this.$attrs,
         };
     },
     methods: {
-        showEditForm(gate){
+        showEditForm(gate) {
             console.log(gate.id);
-            axios.get(
-                `/gates/${gate.id}/edit`
-            )
+            axios.get(`/gates/${gate.id}/edit`);
         },
         getGates() {
             axios
@@ -211,22 +235,21 @@ export default {
                     MakeToast.create("Cannot load gates", "error");
                 });
         },
-        getRole(){
-          axios
-              .get(
-                  `/auth/role/teamId/${this.attrs.user.current_team_id}`
-              ).then((response) => {
+        getRole() {
+            axios
+                .get(`/auth/role/teamId/${this.attrs.user.current_team_id}`)
+                .then((response) => {
                     this.role = response.data;
                 })
-              .catch((err) => {
+                .catch((err) => {
                     MakeToast.create("Cannot load role", "error");
-              });
+                });
         },
-      isSafari(){
-          return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      }
-  },
-  created() {
+        isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        },
+    },
+    created() {
         this.isSafari();
         this.getGates();
         this.getRole();
