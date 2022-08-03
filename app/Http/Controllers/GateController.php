@@ -111,6 +111,8 @@ class GateController extends Controller
     {
         $gate = Gate::find($id);
         $virtualKeys = $gate->virtualKeys;
+        $virtualTickets = $gate->virtualTickets;
+
         if($virtualKeys!=null) {
             foreach ($virtualKeys as $virtualKey) {
                 $gate->virtualKeys()->detach($virtualKey->id);
@@ -125,6 +127,22 @@ class GateController extends Controller
                 $virtualKey->save();
             }
         }
+
+         if($virtualTickets!=null) {
+            foreach ($virtualTickets as $virtualTicket) {
+                $gate->virtualTickets()->detach($virtualTicket->id);
+            }
+            foreach ($virtualTickets as $virtualTicket) {
+                $gates = $virtualTicket->gates;
+                $gatesArray = array();
+                foreach($gates as $gate2){
+                    array_push($gatesArray, $gate2->name);
+                }
+                $virtualTicket->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualTicket->save();
+            }
+        }
+
         $gate->delete();
         return Inertia::render('Dashboard');
     }
