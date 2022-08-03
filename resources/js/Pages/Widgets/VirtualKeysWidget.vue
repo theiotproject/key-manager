@@ -134,9 +134,12 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
       >
           <template #title> {{usedVirtualKey}} </template>
 
-          <template #content>
+          <template #content v-if="qrCodeReady">
               <p class="py-5">Time left to scan this code: {{countDown.toFixed(1)}}</p>
               <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+          </template>
+          <template #content v-else>
+              <p class="py-5">Loading...</p>
           </template>
 
           <template #footer>
@@ -159,6 +162,7 @@ export default {
             value: '',
             size: 250
         },
+        qrCodeReady: false,
         showQrCode: false,
         timer: false,
         countDown: 60,
@@ -191,6 +195,10 @@ export default {
           return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
       },
       async generateQrCode(virtualKey) {
+        this.usedVirtualKey = virtualKey.label;
+        this.countDown = 60;
+        this.showQrCode = true;
+
           await axios
               .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
               .then((response) => {
@@ -199,18 +207,32 @@ export default {
               .catch((err) => {
                   MakeToast.create("Cannot load gates", "error");
               });
+          this.qrCodeReady = true;
           const currentDate = new Date();
           const validFrom = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 10 ? '0' : '') + currentDate.getMinutes() + ":" + currentDate.getSeconds();
           const validTo = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 9 ? '0' : '') + (currentDate.getMinutes() + 1) + ":" + currentDate.getSeconds();
 
           const gateSerialNumbers = Array.from(this.gates).map(gate => gate.serial_number).toString();
-
-          this.qrCode.value = "OPEN:ID:" + this.generateGuid() + ";VF:" + validFrom + ";VT:" + validTo + ";L:" + gateSerialNumbers + ";;";
-          this.usedVirtualKey = virtualKey.label;
+          const guid = this.generateGuid();
+          this.qrCode.value = "OPEN:ID:" + guid + ";VF:" + validFrom + ";VT:" + validTo + ";L:" + gateSerialNumbers + ";;";
           this.timer = true;
-          this.countDown = 60;
           this.countDownTimer();
-          this.showQrCode = true;
+
+          const data = {
+              id: guid,
+              virtual_key_id: virtualKey.id,
+              access_granted: 1,
+              message: "ACCESS GRANTED"
+          };
+          axios
+              .post('/api/keyUsages', data)
+              .then((response) => {
+                  this.dataId = response.data.id;
+                  console.log(response.data.id);
+              })
+              .catch((err) => {
+                  MakeToast.create("Cannot create key usage", "error");
+              });
           },
       generateGuid() {
           return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
