@@ -128,6 +128,11 @@ const removeGate = () => {
                                         <tr
                                             v-for="event in events"
                                             :key="event.id"
+                                            v-bind:class="
+                                        event.status
+                                            ? 'text-green-800 bg-teal-50'
+                                            : 'text-red-700 bg-red-50'
+                                    "
                                             class=" border-b"
                                         >
                                             <td
