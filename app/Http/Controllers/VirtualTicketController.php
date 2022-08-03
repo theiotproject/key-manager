@@ -62,7 +62,7 @@ class VirtualTicketController extends Controller
             foreach($request->gates as $gateId){
                 $gate = Gate::find($gateId);
                 $virtualTicket->gates()->attach($gate);
-                array_push($gatesData, $gate['0']->serial_number);
+                array_push($gatesData, $gate->serial_number);
             }
 
             $gateSerialNumbers = implode (",", $gatesData);

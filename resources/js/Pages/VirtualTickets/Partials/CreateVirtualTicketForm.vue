@@ -234,11 +234,11 @@ export default {
                     this.form.checkedEmails.splice(index, 1);
 
                     this.form.checkedUsers.find((checkedUser, id) => {
-                        console.log(checkedUser);
-                        if (checkedUser.email == email) {
-                            this.form.checkedUsers.splice(id, 1);
-                            return;
-                        }
+                        if (checkedUser !== undefined)
+                            if (checkedUser.email === email) {
+                                this.form.checkedUsers.splice(id, 1);
+                                return;
+                            }
                     });
                     return;
                 }
@@ -338,6 +338,7 @@ export default {
                 valid_from: validDateStart,
                 valid_to: validDateEnd,
             };
+            console.log(data);
             axios
                 .post("/api/virtualTickets", data)
                 .then((result) => {
