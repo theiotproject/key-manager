@@ -130,20 +130,23 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
     </div>
       <JetModal
           :show="showQrCode"
-          @close="showQrCode=null; timer = false"
+          @close="showQrCode=null; timer=false; qrCodeReady=false"
       >
           <template #title> {{usedVirtualKey}} </template>
 
-          <template #content v-if="qrCodeReady">
+          <template #content v-if="qrCodeReady && validDay">
               <p class="py-5">Time left to scan this code: {{countDown.toFixed(1)}}</p>
               <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+          </template>
+          <template #content v-else-if="!validDay">
+              <p class="py-5">Day is not valid</p>
           </template>
           <template #content v-else>
               <p class="py-5">Loading...</p>
           </template>
 
           <template #footer>
-              <JetSecondaryButton @click="showQrCode=null; timer = false">
+              <JetSecondaryButton @click="showQrCode=null; timer=false; qrCodeReady=false">
                   Cancel
               </JetSecondaryButton>
           </template>
@@ -162,15 +165,16 @@ export default {
             value: '',
             size: 250
         },
+        validDay: false,
         qrCodeReady: false,
         showQrCode: false,
         timer: false,
         countDown: 60,
         usedVirtualKey: '',
         gates: {},
-      virtualKeys: {},
-      permission: 0,
-      attrs: this.attrs,
+        virtualKeys: {},
+        permission: 0,
+        attrs: this.attrs,
     };
   },
   methods: {
@@ -198,6 +202,23 @@ export default {
         this.usedVirtualKey = virtualKey.label;
         this.countDown = 60;
         this.showQrCode = true;
+        const currentDate = new Date();
+        const weekday = currentDate.getDay();
+
+        const weekdayMap = new Map();
+
+        weekdayMap.set(0, 'U');
+        weekdayMap.set(1, 'M');
+        weekdayMap.set(2, 'T');
+        weekdayMap.set(3, 'W');
+        weekdayMap.set(4, 'R');
+        weekdayMap.set(5, 'F');
+        weekdayMap.set(6, 'S');
+
+        this.validDay = virtualKey.valid_days.includes(weekdayMap.get(weekday))
+        if(!this.validDay){
+            return 0;
+        }
 
           await axios
               .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
@@ -208,7 +229,6 @@ export default {
                   MakeToast.create("Cannot load gates", "error");
               });
           this.qrCodeReady = true;
-          const currentDate = new Date();
           const validFrom = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 10 ? '0' : '') + currentDate.getMinutes() + ":" + currentDate.getSeconds();
           const validTo = currentDate.toISOString().slice(0, 10) + " " + currentDate.getHours() + ":" + (currentDate.getMinutes() < 9 ? '0' : '') + (currentDate.getMinutes() + 1) + ":" + currentDate.getSeconds();
 
