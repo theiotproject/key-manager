@@ -195,19 +195,23 @@ export default {
                     MakeToast.create("Failed to update Virtual Key", "error");
                 });
         },
-        async getGates() {
-            await axios
+       getGates() {
+            console.log("próba załadowania");
+           axios
                 .get(
                     `/gates/teamId/${this.attrs.user.current_team_id}/resource`
                 )
                 .then((response) => {
                     this.gates = response.data.data;
+                    console.log("załadowano");
+                    this.getVirtualKeyGates();
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load gates", "error");
                 });
         },
         getVirtualKeyGates() {
+            console.log("próba załadowania z kluczy wirtualnych")
             axios.get(
                 `/api/gates/virtualKeyId/${this.virtualKey.id}`
             )
@@ -230,7 +234,6 @@ export default {
     created() {
         this.getDays();
         this.getGates();
-        this.getVirtualKeyGates();
     },
 };
 </script>
