@@ -195,8 +195,8 @@ export default {
                     MakeToast.create("Failed to update Virtual Key", "error");
                 });
         },
-        getGates() {
-            axios
+        async getGates() {
+            await axios
                 .get(
                     `/gates/teamId/${this.attrs.user.current_team_id}/resource`
                 )
@@ -213,7 +213,7 @@ export default {
             )
                 .then((response)=>{
                     this.form.gatestest = response.data;
-                    const gates = response.data;
+                    let gates = response.data;
                     gates.forEach((originalGate)=>{
                         this.gates.find((gate) => {
                             if (gate.id === originalGate.id) {
