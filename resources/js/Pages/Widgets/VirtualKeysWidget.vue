@@ -292,7 +292,7 @@ export default {
             this.usedVirtualKey = virtualKey.label;
             this.countDown = 60;
             this.showQrCode = true;
-            const currentDate = new Date();
+            const currentDate = new Date()
             const weekday = currentDate.getDay();
             const weekdayMap = new Map();
             weekdayMap.set(0, "U");
@@ -325,15 +325,16 @@ export default {
                 (currentDate.getMinutes() < 10 ? "0" : "") +
                 currentDate.getMinutes() +
                 ":" +
+                (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
             const validTo =
                 currentDate.toISOString().slice(0, 10) +
                 " " +
                 currentDate.getHours() +
                 ":" +
-                (currentDate.getMinutes() < 9 ? "0" : "") +
-                (currentDate.getMinutes() + 1) +
+                (currentDate.getMinutes() < 9 ? "0" : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
                 ":" +
+                (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
             const gateSerialNumbers = Array.from(this.gates)
                 .map((gate) => gate.serial_number)
