@@ -68,15 +68,6 @@ export default {
                     this.virtualKeys = response.data.data;
                 });
         },
-        // getUsers() {
-        //   axios
-        //     .post(`/user/virtualKey/`, {
-        //       headers: { VirtualKeys: $this.virtualKeys },
-        //     })
-        //     .then((response) => {
-        //       this.users = response.data;
-        //     });
-        // },
     },
     created() {
         this.getVirtualKeys();

@@ -294,6 +294,7 @@ export default {
             this.showQrCode = true;
             const currentDate = new Date()
             const weekday = currentDate.getDay();
+            currentDate.setMinutes(6)
             const weekdayMap = new Map();
             weekdayMap.set(0, "U");
             weekdayMap.set(1, "M");
@@ -332,7 +333,7 @@ export default {
                 " " +
                 currentDate.getHours() +
                 ":" +
-                (currentDate.getMinutes() < 9 ? "0" : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
+                (currentDate.getMinutes() < 9 ? "0" + (currentDate.getMinutes() + 1) : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
                 ":" +
                 (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
