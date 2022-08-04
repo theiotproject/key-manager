@@ -246,20 +246,31 @@ export default {
         },
         onEmailAdd() {
             let email = this.form.email;
-            if (this.isEmail(email)) {
-                this.emailValid = true;
-                this.form.checkedEmails.push(email);
-                this.form.email = "";
-
-                this.users.find((user, id) => {
-                    if (user.email == email) {
-                        this.form.checkedUsers.push(user);
-                        return;
-                    }
-                });
-            } else {
+            if (!this.isEmail(email)) {
                 this.emailValid = false;
+                return;
             }
+            this.emailValid = true;
+
+            this.form.checkedEmails.find((checkedEmail, id) => {
+                if (checkedEmail === email) {
+                    this.emailValid = false;
+                    MakeToast.create("Email already added", "warning");
+                    return;
+                }
+            });
+
+            if (!this.emailValid) return;
+
+            this.form.checkedEmails.push(email);
+            this.form.email = "";
+
+            this.users.find((user, id) => {
+                if (user.email == email) {
+                    this.form.checkedUsers.push(user);
+                    return;
+                }
+            });
         },
         checkUser(index) {
             let canCheck = true;
