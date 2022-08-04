@@ -294,7 +294,6 @@ export default {
             this.showQrCode = true;
             const currentDate = new Date()
             const weekday = currentDate.getDay();
-            currentDate.setMinutes(6)
             const weekdayMap = new Map();
             weekdayMap.set(0, "U");
             weekdayMap.set(1, "M");
