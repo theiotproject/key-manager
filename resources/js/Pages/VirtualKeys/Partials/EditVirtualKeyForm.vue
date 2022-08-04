@@ -23,7 +23,6 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 <div class="flex items-center mt-2">
                     <div class="leading-tight">
                             <div>{{form.label}}</div>
-                        <div>{{form.gatestest}}</div>
                     </div>
                 </div>
             </div>
@@ -115,7 +114,6 @@ export default {
                 checkedDays: [],
                 checkedUsers: [],
                 checkedGates: [],
-                gatestest: [],
             },
             gates: {},
             days: [
@@ -196,14 +194,12 @@ export default {
                 });
         },
        getGates() {
-            console.log("próba załadowania");
            axios
                 .get(
                     `/gates/teamId/${this.attrs.user.current_team_id}/resource`
                 )
                 .then((response) => {
                     this.gates = response.data.data;
-                    console.log("załadowano");
                     this.getVirtualKeyGates();
                 })
                 .catch((err) => {
@@ -211,12 +207,10 @@ export default {
                 });
         },
         getVirtualKeyGates() {
-            console.log("próba załadowania z kluczy wirtualnych")
             axios.get(
                 `/api/gates/virtualKeyId/${this.virtualKey.id}`
             )
                 .then((response)=>{
-                    this.form.gatestest = response.data;
                     let gates = response.data;
                     gates.forEach((originalGate)=>{
                         this.gates.find((gate) => {
