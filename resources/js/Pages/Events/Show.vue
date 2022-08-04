@@ -63,7 +63,8 @@ const removeGate = () => {
                                     </svg>
                                     <p class="ml-3">Events</p>
                                 </h2>
-                                <Link
+                                <button
+                                    @click="getEvents"
                                     class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                                 >
                                     <svg
@@ -80,7 +81,7 @@ const removeGate = () => {
                                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                         />
                                     </svg>
-                                </Link>
+                                </button>
                             </div>
                             <div class="pb-5">
                                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

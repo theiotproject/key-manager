@@ -218,7 +218,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 
             <template #content v-if="qrCodeReady && validDay">
                 <p class="py-5">
-                    Time left to scan this code: {{ countDown.toFixed(1) }}
+                    This code will expire in: {{ countDown.toFixed(1) }}
                 </p>
                 <qrcode-vue :value="qrCode.value" :size="300" level="H" />
             </template>
@@ -292,7 +292,7 @@ export default {
             this.usedVirtualKey = virtualKey.label;
             this.countDown = 60;
             this.showQrCode = true;
-            const currentDate = new Date();
+            const currentDate = new Date()
             const weekday = currentDate.getDay();
             const weekdayMap = new Map();
             weekdayMap.set(0, "U");
@@ -325,15 +325,16 @@ export default {
                 (currentDate.getMinutes() < 10 ? "0" : "") +
                 currentDate.getMinutes() +
                 ":" +
+                (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
             const validTo =
                 currentDate.toISOString().slice(0, 10) +
                 " " +
                 currentDate.getHours() +
                 ":" +
-                (currentDate.getMinutes() < 9 ? "0" : "") +
-                (currentDate.getMinutes() + 1) +
+                (currentDate.getMinutes() < 9 ? "0" : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
                 ":" +
+                (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
             const gateSerialNumbers = Array.from(this.gates)
                 .map((gate) => gate.serial_number)
