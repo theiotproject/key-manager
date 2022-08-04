@@ -23,6 +23,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 <div class="flex items-center mt-2">
                     <div class="leading-tight">
                             <div>{{form.label}}</div>
+                        <div>{{form.gatestest}}</div>
                     </div>
                 </div>
             </div>
@@ -114,6 +115,7 @@ export default {
                 checkedDays: [],
                 checkedUsers: [],
                 checkedGates: [],
+                gatestest: [],
             },
             gates: {},
             days: [
@@ -210,10 +212,9 @@ export default {
                 `/api/gates/virtualKeyId/${this.virtualKey.id}`
             )
                 .then((response)=>{
-                    // this.form.checkedGates = response.data;
+                    this.form.gatestest = response.data;
                     const gates = response.data;
                     gates.forEach((originalGate)=>{
-
                         this.gates.find((gate) => {
                             if (gate.id === originalGate.id) {
                                 this.form.checkedGates.push(gate);
