@@ -257,8 +257,9 @@ export default {
 }
 
 .rotation-enter-active,
-.rotation-leave-active {
-    transition: all 1s ease-out;
+
+.rotation-leave-active{
+    transition: all 0.5s ease-out;
 }
 
 .rotation-leave-to {

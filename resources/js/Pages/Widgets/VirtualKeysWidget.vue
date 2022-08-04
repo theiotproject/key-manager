@@ -332,7 +332,7 @@ export default {
                 " " +
                 currentDate.getHours() +
                 ":" +
-                (currentDate.getMinutes() < 9 ? "0" : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
+                (currentDate.getMinutes() < 9 ? "0" + (currentDate.getMinutes() + 1) : currentDate.getMinutes() === 59 ? "00" : currentDate.getMinutes() + 1) +
                 ":" +
                 (currentDate.getSeconds() < 10 ? "0" : "")+
                 currentDate.getSeconds();
