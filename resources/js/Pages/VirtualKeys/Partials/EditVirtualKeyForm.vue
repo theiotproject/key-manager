@@ -98,7 +98,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
-                Create
+                Save
             </JetButton>
         </template>
     </JetFormSection>
@@ -184,7 +184,7 @@ export default {
                 validDays: str,
             };
             axios
-                .put(`/virtualKeys/${this.virtualKey.id}`, data)
+                .put(`/api/virtualKeys/${this.virtualKey.id}`, data)
                 .then((response) => {
                     MakeToast.create("Updated Virtual Key", "info");
                     this.$inertia.get("/virtualKeys");
