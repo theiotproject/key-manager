@@ -218,7 +218,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 
             <template #content v-if="qrCodeReady && validDay">
                 <p class="py-5">
-                    Time left to scan this code: {{ countDown.toFixed(1) }}
+                    This code will expire in: {{ countDown.toFixed(1) }}
                 </p>
                 <qrcode-vue :value="qrCode.value" :size="300" level="H" />
             </template>

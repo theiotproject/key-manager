@@ -24,10 +24,19 @@ import MakeToast from "../../Services/MakeToast.vue";
                 <p class="ml-3">Events</p>
             </h2>
             <button
-                @click="getEvents"
+                @click="getEvents; isEventNew = true;"
                 class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
             >
+
+                <transition name="appear" @after-leave="isEventNew=false">
+                    <span v-if="isEventNew" class="text-sm mx-3 text-gray-600">New events not found</span>
+                    <span v-else class="absolute"></span>
+                </transition>
+
+                <transition name="rotation" @after-leave="showHello=true">
                 <svg
+                    v-if="showHello"
+                    @click="showHello=false"
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-6 w-6"
                     fill="none"
@@ -41,6 +50,8 @@ import MakeToast from "../../Services/MakeToast.vue";
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                 </svg>
+                </transition>
+
             </button>
         </div>
         <div class="pb-5">
@@ -172,6 +183,9 @@ export default {
     props: ["attrs"],
     data() {
         return {
+            lastEventId: null,
+            isEventNew: false,
+            showHello: true,
             events: {},
             localAttrs: this.attrs,
         };
@@ -184,10 +198,21 @@ export default {
                 )
                 .then((response) => {
                     this.events = response.data;
+
+                    // if(this.lastEventId!=null){
+                    //
+                    //     if(this.lastEventId!==this.events[this.events.length]){
+                    //
+                    //     }
+                    //
+                    // } else {
+                    //
+                    // }
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load Events", "error");
                 });
+
         },
         isSafari() {
             return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -199,3 +224,32 @@ export default {
     },
 };
 </script>
+
+<style>
+.rotation-enter {
+    transform: rotate(0);
+}
+
+.rotation-enter-active,
+.rotation-leave-active{
+    transition: all 1s ease-out;
+}
+
+.rotation-leave-to{
+    transform: rotate(-360deg);
+}
+
+.appear-enter {
+    opacity: 0;
+}
+
+.appear-enter-active,
+.appear-leave-active{
+    transition: all 3s cubic-bezier(0.68, 0.38, 0.68, 0.39);
+}
+
+.appear-leave-to{
+    opacity: 0;
+}
+
+</style>
