@@ -62,11 +62,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                                         User
                                     </th>
                                     <th scope="col" class="px-2 py-3">Gate</th>
+                                    <th scope="col" class="px-2 py-3">
+                                        Message
+                                    </th>
                                     <th
                                         scope="col"
                                         class="px-2 py-3 sm:rounded-r-lg rounded-none"
                                     >
-                                        Message
+                                        Time
                                     </th>
                                 </tr>
                             </thead>
@@ -81,17 +84,15 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     >
                                         User
                                     </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3"
-                                    >
-                                        Gate
+                                    <th scope="col" class="px-6 py-3">Gate</th>
+                                    <th scope="col" class="px-2 py-3">
+                                        Message
                                     </th>
                                     <th
                                         scope="col"
                                         class="px-2 py-3 sm:rounded-r-lg rounded-none"
                                     >
-                                        Message
+                                        Time
                                     </th>
                                 </tr>
                             </thead>
@@ -140,11 +141,24 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     >
                                         {{ event.message }}
                                     </td>
-                                    <!-- <td
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    <td
+                                        class="px-2 py-4 font-medium whitespace-nowrap"
                                     >
-                                        {{ event.name }}
-                                    </td> -->
+                                        {{
+                                            timeAgo.format(
+                                                new Date(event.scan_time),
+                                                "twitter-minute-now"
+                                            )
+                                        }}
+                                        {{
+                                            timeAgo.format(
+                                                new Date(event.scan_time),
+                                                "twitter-minute-now"
+                                            ) == "now"
+                                                ? ""
+                                                : " ago"
+                                        }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -167,6 +181,11 @@ import MakeToast from "../../Services/MakeToast.vue";
     </div>
 </template>
 <script>
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo("en-US");
+
 export default {
     name: "EventsWidget",
     props: ["attrs"],
@@ -184,6 +203,8 @@ export default {
                 )
                 .then((response) => {
                     this.events = response.data;
+                    console.log(this.events);
+                    console.log(this.events[0].scan_time);
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load Events", "error");
