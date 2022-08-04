@@ -193,13 +193,14 @@ export default {
                     MakeToast.create("Failed to update Virtual Key", "error");
                 });
         },
-        getGates() {
-            axios
+       getGates() {
+           axios
                 .get(
                     `/gates/teamId/${this.attrs.user.current_team_id}/resource`
                 )
                 .then((response) => {
                     this.gates = response.data.data;
+                    this.getVirtualKeyGates();
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load gates", "error");
@@ -210,10 +211,8 @@ export default {
                 `/api/gates/virtualKeyId/${this.virtualKey.id}`
             )
                 .then((response)=>{
-                    // this.form.checkedGates = response.data;
-                    const gates = response.data;
+                    let gates = response.data;
                     gates.forEach((originalGate)=>{
-
                         this.gates.find((gate) => {
                             if (gate.id === originalGate.id) {
                                 this.form.checkedGates.push(gate);
@@ -229,7 +228,6 @@ export default {
     created() {
         this.getDays();
         this.getGates();
-        this.getVirtualKeyGates();
     },
 };
 </script>
