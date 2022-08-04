@@ -112,7 +112,19 @@ const removeGate = () => {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                class="px-6 py-3 sm:rounded-l-lg rounded-none"
+                                                class="px-3 py-3 sm:rounded-l-lg rounded-none"
+                                            >
+                                                Date
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                class="px-3 py-3"
+                                            >
+                                                User
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                class="px-2 py-3"
                                             >
                                                 Gate
                                             </th>

@@ -54,10 +54,12 @@ class VirtualKeyController extends Controller
         }
 
         foreach($virtualKeys as $virtualKey){
+            $gateIds = array();
             foreach($request->gates as $gateId){
                 $gate = Gate::find($gateId);
-                $virtualKey->gates()->attach($gate);
+                array_push($gateIds, $gate->id);
             }
+            $virtualKey->gates()->sync($gateIds);
         }
     }
 
