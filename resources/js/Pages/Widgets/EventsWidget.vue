@@ -24,34 +24,34 @@ import MakeToast from "../../Services/MakeToast.vue";
                 <p class="ml-3">Events</p>
             </h2>
             <button
-                @click="getEvents; isEventNew = true;"
+                @click="getEvents"
                 class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
             >
-
-                <transition name="appear" @after-leave="isEventNew=false">
-                    <span v-if="isEventNew" class="text-sm mx-3 text-gray-600">New events not found</span>
+                <transition name="appear" @after-leave="isEventNew = true">
+                    <span v-if="!isEventNew" class="text-sm mx-3 text-gray-600"
+                        >New events not found</span
+                    >
                     <span v-else class="absolute"></span>
                 </transition>
 
-                <transition name="rotation" @after-leave="showHello=true">
-                <svg
-                    v-if="showHello"
-                    @click="showHello=false"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                </svg>
+                <transition name="rotation" @after-leave="showHello = true">
+                    <svg
+                        v-if="showHello"
+                        @click="showHello = false"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                    </svg>
                 </transition>
-
             </button>
         </div>
         <div class="pb-5">
@@ -150,7 +150,12 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     <td
                                         class="px-2 py-4 font-medium whitespace-nowrap"
                                     >
-                                        {{ event.message }}
+                                        <!-- {{ event.message }} -->
+                                        {{
+                                            event.status
+                                                ? "Approved"
+                                                : "Access Denied"
+                                        }}
                                     </td>
                                     <td
                                         class="px-2 py-4 font-medium whitespace-nowrap"
@@ -194,7 +199,7 @@ import MakeToast from "../../Services/MakeToast.vue";
 <script>
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
-TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 export default {
@@ -202,8 +207,8 @@ export default {
     props: ["attrs"],
     data() {
         return {
-            lastEventId: null,
-            isEventNew: false,
+            lastEventTime: null,
+            isEventNew: true,
             showHello: true,
             events: {},
             localAttrs: this.attrs,
@@ -218,20 +223,22 @@ export default {
                 .then((response) => {
                     this.events = response.data;
 
-                    // if(this.lastEventId!=null){
-                    //
-                    //     if(this.lastEventId!==this.events[this.events.length]){
-                    //
-                    //     }
-                    //
-                    // } else {
-                    //
-                    // }
+                    if (this.lastEventTime === null && this.events.length > 0) {
+                        this.lastEventTime = this.events[0].scan_time;
+                        this.isEventNew = true;
+                        return;
+                    }
+                    if (this.lastEventTime !== this.events[0].scan_time) {
+                        this.isEventNew = true;
+                    } else {
+                        this.isEventNew = false;
+                    }
+                    console.log(this.isEventNew);
+                    this.lastEventTime = this.events[0].scan_time;
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot load Events", "error");
                 });
-
         },
         isSafari() {
             return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -250,11 +257,11 @@ export default {
 }
 
 .rotation-enter-active,
-.rotation-leave-active{
+.rotation-leave-active {
     transition: all 1s ease-out;
 }
 
-.rotation-leave-to{
+.rotation-leave-to {
     transform: rotate(-360deg);
 }
 
@@ -263,12 +270,11 @@ export default {
 }
 
 .appear-enter-active,
-.appear-leave-active{
+.appear-leave-active {
     transition: all 3s cubic-bezier(0.68, 0.38, 0.68, 0.39);
 }
 
-.appear-leave-to{
+.appear-leave-to {
     opacity: 0;
 }
-
 </style>
