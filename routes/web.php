@@ -14,23 +14,29 @@ use App\Http\Controllers\VirtualTicketController;
 
 // Main page
 Route::get('/', function () {
-    if(Auth::user())
-    {
-            return Inertia::render('Dashboard', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (Auth::user()) {
+        return Inertia::render('Dashboard', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
     } else {
-            return Inertia::render('Auth/Login', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-            ]);
-        }
+        return Inertia::render('Auth/Login', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    }
+});
 
+Route::get('/landing', function () {
+    return Inertia::render('Onboarding/Landing');
+});
+
+Route::get('/setup/teamName', function () {
+    return Inertia::render('Onboarding/Setup/TeamName');
 });
 
 
