@@ -1,3 +1,6 @@
+<script setup>
+import Link from '@inertiajs/inertia-vue3';
+</script>
 <template>
   <section class="first flex flex-col items-center pb-32">
     <div class="flex items-center">
@@ -16,6 +19,7 @@
           keys together. To create a new workspace, click the button below.
         </p>
         <button
+            @click="createTeam"
           class="
             image
             bg-gradient-to-r
@@ -52,6 +56,29 @@
     </div>
   </section>
 </template>
+
+<script>
+export default{
+    data() {
+        return {
+            attrs: this.$attrs,
+        }
+    },
+    methods: {
+        async createTeam(){
+            await axios
+                .post(`/teams`, {'name': "nazwa"})
+                .then((response)=>{
+                    this.renderSetup();
+                });
+        },
+        renderSetup(){
+            axios
+                .get('/setup/teamName');
+        }
+    }
+}
+</script>
 
 <style scoped>
 * {

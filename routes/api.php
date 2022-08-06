@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\KeyUsageController;
 use App\Http\Controllers\MagicCodeUsageController;
 use App\Models\User;
@@ -54,3 +55,5 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
+
+Route::post('/teams/personal/{userId}', [CreateNewUser::class, 'createTeam']);

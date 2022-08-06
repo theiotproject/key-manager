@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -14,13 +15,20 @@ use App\Http\Controllers\VirtualTicketController;
 
 // Main page
 Route::get('/', function () {
+    if(Auth::user()->current_team_id === null){
+        return Inertia::render('Onboarding/Landing');
+    }
     if (Auth::user()) {
-        return Inertia::render('Dashboard', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+        return redirect()->route('dashboard');
+//        return Inertia::render('Dashboard', [
+//            'canLogin' => Route::has('login'),
+//            'canRegister' => Route::has('register'),
+//            'laravelVersion' => Application::VERSION,
+//            'phpVersion' => PHP_VERSION,
+//        ])->middleware('auth:sanctum',
+//            config('jetstream.auth_session'),
+//            'verified',
+//            'team');
     } else {
         return Inertia::render('Auth/Login', [
             'canLogin' => Route::has('login'),
@@ -30,6 +38,8 @@ Route::get('/', function () {
         ]);
     }
 });
+
+
 
 Route::get('/landing', function () {
     return Inertia::render('Onboarding/Landing');
@@ -45,6 +55,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'team'
 ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
