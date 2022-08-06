@@ -15,10 +15,10 @@ use App\Http\Controllers\VirtualTicketController;
 
 // Main page
 Route::get('/', function () {
-    if(Auth::user()->current_team_id === null){
-        return Inertia::render('Onboarding/Landing');
-    }
     if (Auth::user()) {
+        if(Auth::user()->current_team_id === null){
+            return Inertia::render('Onboarding/Landing');
+        }
         return redirect()->route('dashboard');
 //        return Inertia::render('Dashboard', [
 //            'canLogin' => Route::has('login'),
