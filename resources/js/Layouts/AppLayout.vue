@@ -198,13 +198,24 @@ const logout = () => {
                                                     Team Settings
                                                 </JetDropdownLink>
 
-                                                <JetDropdownLink
+                                                <!-- <JetDropdownLink
                                                     v-if="
                                                         $page.props.jetstream
                                                             .canCreateTeams
                                                     "
                                                     :href="
                                                         route('teams.create')
+                                                    "
+                                                >
+                                                    Create New Team
+                                                </JetDropdownLink> -->
+                                                                                                <JetDropdownLink
+                                                    v-if="
+                                                        $page.props.jetstream
+                                                            .canCreateTeams
+                                                    "
+                                                    :href="
+                                                        route('onboarding.landing')
                                                     "
                                                 >
                                                     Create New Team
