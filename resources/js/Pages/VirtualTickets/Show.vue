@@ -196,7 +196,9 @@ const removeVirtualTicket = () => {
                                                 >
                                                     {{ virtualTicket.label }}
                                                 </td>
-                                                <td>
+                                                <td
+                                                    class="lg:px-3 md:px-0 py-4 font-medium whitespace-nowrap"
+                                                >
                                                     {{
                                                         timeAgo.format(
                                                             new Date(
