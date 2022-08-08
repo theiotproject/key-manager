@@ -13,6 +13,8 @@ use App\Http\Resources\GateResource;
 use App\Models\User;
 use App\Http\Resources\VirtualTicketResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use PhpMqtt\Client\Facades\MQTT;
+use VirtualKey;
 
 class VirtualTicketController extends Controller
 {
@@ -125,7 +127,9 @@ class VirtualTicketController extends Controller
      */
     public function destroy($id)
     {
-        // try {
+
+
+        try {
 
             $virtualTicket = VirtualTicket::findOrFail($id);
             $gates = $virtualTicket->gates;
@@ -137,10 +141,35 @@ class VirtualTicketController extends Controller
             }
 
             $virtualTicket->delete();
+            $oldVirtualTickets = VirtualTicket::whereDate("valid_to","<=", date("Y-m-d H:i:s"))->withTrashed()->get();
 
-        // } catch (\Exception $e) {
-        //     throw new HttpException(500, $e->getMessage());
-        // }
+            foreach($oldVirtualTickets as $oldTicket) {
+
+                $gates = $oldTicket->gates;
+
+                if($gates!=null) {
+                    foreach ($gates as $gate) {
+                        $oldTicket->gates()->detach($gate->id);
+                    }
+                }
+                    $oldTicket->forceDelete();
+                }
+
+            $tickets = VirtualTicket::onlyTrashed()->get();
+
+            $ticketsGUID=array();
+            foreach($tickets as $ticket) {
+                array_push($ticketsGUID, $ticket->GUID);
+            }
+
+            $ticketsGUIDMessage = implode(";", $ticketsGUID);
+             MQTT::publish('blacklist/9238420983', $ticketsGUIDMessage);
+
+        } catch (\Exception $e) {
+             return response()->json([
+                'message' => $e->getMessage()
+            ], 404);
+        }
         return Inertia::render('VirtualTickets/Show');
 
     }
@@ -158,6 +187,7 @@ class VirtualTicketController extends Controller
     {
         $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
             $query->where('team_id', $teamId);
+            $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
         })->get();
 
         $virtualTicketsData = array();
@@ -182,12 +212,18 @@ class VirtualTicketController extends Controller
         return $virtualTicketsData;
     }
 
-    // public function indexByTeamIdForLoggedUser(Request $request, $teamId)
-    // {
-    //     $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-    //         $query->where('team_id', $teamId);
-    //     })->get();
+    public function indexByTeamIdForLoggedUser(Request $request, $teamId)
+    {
+        try {
+            $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+                $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
+            })->get();
 
-    //     return $virtualKeys->where('user_id', $request->user()->id)->values();
-    // }
+            return $virtualTickets->where('email', $request->user()->email)->values();
+
+          } catch (\Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
+    }
 }

@@ -13,6 +13,7 @@
         "laravel/jetstream": "^2.9",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
+        "php-mqtt/laravel-client": "^1.0",
         "simplesoftwareio/simple-qrcode": "~4",
         "tightenco/ziggy": "^1.0"
     },
