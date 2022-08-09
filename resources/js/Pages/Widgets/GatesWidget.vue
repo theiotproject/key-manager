@@ -114,12 +114,13 @@ import { Link } from "@inertiajs/inertia-vue3";
 <script>
 export default {
     name: "GatesWidget",
-    props: ["attrs"],
+    props: ["attrs", "team"],
     data() {
         return {
             gates: {},
             permission: 0,
             localAttrs: this.attrs,
+            team: this.team
         };
     },
     methods: {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -9,28 +10,42 @@ use PhpParser\Node\Expr\AssignOp\Plus;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GateController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\VirtualTicketController;
 
 // Main page
 Route::get('/', function () {
-    if(Auth::user())
-    {
-            return Inertia::render('Dashboard', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-    } else {
-            return Inertia::render('Auth/Login', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-            ]);
+    if (Auth::user()) {
+        if (Auth::user()->current_team_id === null) {
+            return redirect()->route('onboarding.landing');
         }
+        return redirect()->route('dashboard');
+        //        return Inertia::render('Dashboard', [
+        //            'canLogin' => Route::has('login'),
+        //            'canRegister' => Route::has('register'),
+        //            'laravelVersion' => Application::VERSION,
+        //            'phpVersion' => PHP_VERSION,
+        //        ])->middleware('auth:sanctum',
+        //            config('jetstream.auth_session'),
+        //            'verified',
+        //            'team');
+    } else {
+        return Inertia::render('Auth/Login', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    }
+});
 
+Route::get('/landing', function () {
+    return Inertia::render('Onboarding/Landing');
+});
+
+Route::get('/setup/teamName', function () {
+    return Inertia::render('Onboarding/Setup/TeamName');
 });
 
 
@@ -39,6 +54,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'team'
 ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -61,6 +77,11 @@ Route::middleware([
     Route::put('/gates/{gate}', [GateController::class, 'update']);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
 });
+Route::get('/teams/invitations/{userId}', [TeamController::class, 'getUserInvitations']);
+
+Route::get('/onboarding/landing', function () {
+    return Inertia::render('Onboarding/Landing');
+})->name('onboarding.landing');
 
 // Routes with administrator permission
 Route::group(['middleware' => 'isAdmin'], function () {

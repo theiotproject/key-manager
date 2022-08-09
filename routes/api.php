@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\KeyUsageController;
 use App\Http\Controllers\MagicCodeUsageController;
 use App\Models\User;
@@ -36,9 +37,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('/virtualTickets', VirtualTicketController::class);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
-
+    Route::post('/teams/join', [TeamController::class, 'joinTeam']);
+    Route::post('teams/create', [TeamController::class, 'store']);
+    Route::get('/teams/roles', [TeamController::class, 'getRoles']);
+    Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
 });
-
 //Public routes
 Route::post('/auth/token', [AuthController::class, 'getToken']);
 
@@ -54,3 +57,5 @@ Route::post('/auth/token', [AuthController::class, 'getToken']);
 
 Route::post('/sendemail/send', [SendEmailController::class, 'send']);
 // Route::post('/sendemail2/send', [SendMail::class, 'send']);
+
+Route::post('/teams/personal/{userId}', [CreateNewUser::class, 'createTeam']);
