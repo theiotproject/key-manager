@@ -33,7 +33,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     >
                     <span v-else class="absolute"></span>
                 </transition>
-
                 <transition name="rotation" @after-leave="showHello = true">
                     <svg
                         v-if="showHello"
@@ -237,7 +236,8 @@ export default {
                     this.lastEventTime = this.events[0].scan_time;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load Events", "error");
+                    // MakeToast.create("Cannot load Events", "error");
+                    this.isEventNew = false;
                 });
         },
         isSafari() {
