@@ -24,7 +24,6 @@ const removeVirtualTicket = () => {
             preserveState: true,
             onSuccess: () => {
                 virtualTicketBeingRemoved.value = null;
-                MakeToast.create("Deleted Virtual Ticket", "info");
             },
             onError: () => {
                 MakeToast.create("Failed to delete Virtual Ticket", "error");
@@ -64,7 +63,7 @@ const removeVirtualTicket = () => {
                             <p class="ml-3">Virtual Tickets</p>
                         </h2>
                         <Link
-                            v-if="permission"
+                            v-if="role === 'admin' || role === 'owner'"
                             :href="route('virtualTicket.create')"
                             class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
                         >
@@ -103,12 +102,20 @@ const removeVirtualTicket = () => {
                                                 >
                                                     User
                                                 </th>
+
                                                 <th
                                                     scope="col"
                                                     class="lg:px-3 md:px-0"
                                                 >
                                                     Label
                                                 </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0"
+                                                >
+                                                    Expiration
+                                                </th>
+
                                                 <th
                                                     scope="col"
                                                     class="lg:px-3 md:px-0 sm:rounded-r-lg rounded-none"
@@ -131,6 +138,12 @@ const removeVirtualTicket = () => {
                                                     class="lg:px-3 md:px-0 border-none"
                                                 >
                                                     Label
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0"
+                                                >
+                                                    Expiration
                                                 </th>
                                                 <th
                                                     scope="col"
@@ -183,17 +196,49 @@ const removeVirtualTicket = () => {
                                                     {{ virtualTicket.label }}
                                                 </td>
                                                 <td
+                                                    class="lg:px-3 md:px-0 py-4 font-medium whitespace-nowrap"
+                                                >
+                                                    {{
+                                                        timeAgo.format(
+                                                            new Date(
+                                                                virtualTicket.validTo
+                                                            ),
+                                                            { future: true }
+                                                        )
+                                                    }}
+                                                </td>
+                                                <td
                                                     class="lg:px-3 md:px-0 py-4 text-right font-medium text-gray-900 whitespace-nowrap"
                                                 >
                                                     <button
-                                                        class="cursor-pointer ml-6 text-sm text-red-500"
+                                                        v-if="
+                                                            role === 'owner' ||
+                                                            role === 'admin'
+                                                        "
+                                                        class="cursor-pointer ml-6 text-sm text-red-500 hover:text-red-700"
                                                         @click="
                                                             confirmVirtualTicketRemoval(
                                                                 virtualTicket
-                                                            )
+                                                            );
+                                                            selectTicketIndex(
+                                                                virtualTicket.id
+                                                            );
                                                         "
                                                     >
-                                                        Remove
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            class="h-6 w-6"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                            />
+                                                        </svg>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -229,7 +274,10 @@ const removeVirtualTicket = () => {
                             'opacity-25': removeVirtualTicketForm.processing,
                         }"
                         :disabled="removeVirtualTicketForm.processing"
-                        @click="removeVirtualTicket"
+                        @click="
+                            removeVirtualTicket();
+                            deleteVirtualTicket();
+                        "
                     >
                         Remove
                     </JetDangerButton>
@@ -240,16 +288,33 @@ const removeVirtualTicket = () => {
 </template>
 
 <script>
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+TimeAgo.addLocale(en);
+const timeAgo = new TimeAgo("en-US");
+
 export default {
     name: "VirtualTicketShow",
     data() {
         return {
+            virtualTicketIndex: 0,
             virtualTickets: {},
-            permission: 0,
+            role: "",
             attrs: this.$attrs,
         };
     },
     methods: {
+        selectTicketIndex(index) {
+            this.virtualTicketIndex = index;
+        },
+        deleteVirtualTicket() {
+            this.virtualTickets = this.virtualTickets.filter(
+                (virtualTicket) => {
+                    return virtualTicket.id !== this.virtualTicketIndex;
+                }
+            );
+            MakeToast.create("Deleted Virtual Ticket", "info");
+        },
         getVirtualTickets() {
             axios
                 .get(
@@ -262,16 +327,14 @@ export default {
                     MakeToast.create("Cannot load Virtual Tickets", "error");
                 });
         },
-        getPermission() {
+        getRole() {
             axios
-                .get(
-                    `/auth/permission/teamId/${this.attrs.user.current_team_id}`
-                )
+                .get(`/auth/role/teamId/${this.attrs.user.current_team_id}`)
                 .then((response) => {
-                    this.permission = response.data;
+                    this.role = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Failed to get permission", "error");
+                    MakeToast.create("Failed to get role", "error");
                 });
         },
         isSafari() {
@@ -281,7 +344,7 @@ export default {
     created() {
         this.isSafari();
         this.getVirtualTickets();
-        this.getPermission();
+        this.getRole();
     },
 };
 </script>

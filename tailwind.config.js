@@ -19,6 +19,10 @@ module.exports = {
                 '100': '26rem',
                 '200': '60rem',
             },
+            width: {
+                '128': '34rem',
+                '200': '50rem'
+            }
         },
         screens: {
             xs: "320px",

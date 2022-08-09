@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VirtualTicket extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
       protected $fillable = [
         'GUID', 'label', 'email', 'valid_from', "valid_to"

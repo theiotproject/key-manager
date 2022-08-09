@@ -4,9 +4,21 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'error' => 'Entry for '.str_replace('App\\', '', $exception->getMessage()).' not found'], 404);
+        }
+
+        return parent::render($request, $exception);
+    }
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -47,4 +59,5 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
 }

@@ -33,7 +33,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     >
                     <span v-else class="absolute"></span>
                 </transition>
-
                 <transition name="rotation" @after-leave="showHello = true">
                     <svg
                         v-if="showHello"
@@ -166,14 +165,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                                                 "twitter-minute-now"
                                             )
                                         }}
-                                        {{
+                                        <!-- {{
                                             timeAgo.format(
                                                 new Date(event.scan_time),
                                                 "twitter-minute-now"
                                             ) == "now"
                                                 ? ""
                                                 : " ago"
-                                        }}
+                                        }} -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -237,7 +236,8 @@ export default {
                     this.lastEventTime = this.events[0].scan_time;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load Events", "error");
+                    // MakeToast.create("Cannot load Events", "error");
+                    this.isEventNew = false;
                 });
         },
         isSafari() {
@@ -257,8 +257,7 @@ export default {
 }
 
 .rotation-enter-active,
-
-.rotation-leave-active{
+.rotation-leave-active {
     transition: all 0.5s ease-out;
 }
 
