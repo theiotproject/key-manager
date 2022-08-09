@@ -1,3 +1,5 @@
+@import "../../node_modules/intro.js/introjs.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
