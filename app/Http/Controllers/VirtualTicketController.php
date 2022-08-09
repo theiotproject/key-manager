@@ -188,6 +188,7 @@ class VirtualTicketController extends Controller
         $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
             $query->where('team_id', $teamId);
             $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
+            $query->where("deleted_at", null);
         })->get();
 
         $virtualTicketsData = array();

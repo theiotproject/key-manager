@@ -298,6 +298,9 @@ export default {
         };
     },
     methods: {
+        deleteVirtualTicket() {
+
+        }
         getVirtualTickets() {
             axios
                 .get(
