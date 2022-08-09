@@ -44,7 +44,7 @@ class VirtualKeyController extends Controller
     {
         $users = $request->users;
         $virtualKeys = array();
-        foreach($users as $user){
+        foreach ($users as $user) {
             $virtualKey = new VirtualKey();
             $virtualKey->label = $user['label'];
             $virtualKey->user_id = $user['id'];
@@ -53,9 +53,9 @@ class VirtualKeyController extends Controller
             array_push($virtualKeys, $virtualKey);
         }
 
-        foreach($virtualKeys as $virtualKey){
+        foreach ($virtualKeys as $virtualKey) {
             $gateIds = array();
-            foreach($request->gates as $gateId){
+            foreach ($request->gates as $gateId) {
                 $gate = Gate::find($gateId);
                 array_push($gateIds, $gate->id);
             }
@@ -83,7 +83,7 @@ class VirtualKeyController extends Controller
     public function edit($id)
     {
         $virtualKey = VirtualKey::find($id);
-        return Inertia::render('VirtualKeys/Edit', ["virtualKey"=>$virtualKey]);
+        return Inertia::render('VirtualKeys/Edit', ["virtualKey" => $virtualKey]);
     }
 
     /**
@@ -100,12 +100,12 @@ class VirtualKeyController extends Controller
         $virtualKey->valid_days = $request->validDays;
         $gateIds = array();
         $gateNames = array();
-        foreach($request->gates as $gate){
+        foreach ($request->gates as $gate) {
             array_push($gateIds, $gate['id']);
             array_push($gateNames, $gate['name']);
         }
         $virtualKey->gates()->sync($gateIds);
-        $virtualKey->label = 'Key opens ' . implode(', ', $gateNames );
+        $virtualKey->label = 'Key opens ' . implode(', ', $gateNames);
         $virtualKey->save();
         return Inertia::render('VirtualKeys/Show');
     }
@@ -120,7 +120,7 @@ class VirtualKeyController extends Controller
     {
         $virtualKey = VirtualKey::find($id);
         $gates = $virtualKey->gates;
-        if($gates!=null) {
+        if ($gates != null) {
             foreach ($gates as $gate) {
                 $virtualKey->gates()->detach($gate->id);
             }
@@ -163,10 +163,7 @@ class VirtualKeyController extends Controller
 
     public function generateCode(Request $request, $teamId)
     {
-        // $mytime = Carbon::now();
-        // $mytime->toDateTimeString();
-        $randomString = strtoupper(Str::random(10));
-        // return $mytime . '/' . $randomString;
-        return $randomString;
+        $team = Team::findOrFail($teamId);
+        return $team->team_code;
     }
 }

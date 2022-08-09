@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\TeamInvitation;
+use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -49,8 +50,9 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         $creator = app(CreatesTeams::class);
-
         $team = $creator->create($request->user(), $request->all());
+        $team->team_code = random_str();
+        $team->save();
         Auth::user()->switchTeam($team);
         return $team;
     }
@@ -65,4 +67,16 @@ class TeamController extends Controller
         $teamInvitations = TeamInvitation::where('team_id', $teamId)->get();
         return $teamInvitations;
     }
+}
+
+function random_str(
+    int $length = 10,
+    string $keyspace = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+): string {
+    $pieces = [];
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $pieces []= $keyspace[random_int(0, $max)];
+    }
+    return implode('', $pieces);
 }
