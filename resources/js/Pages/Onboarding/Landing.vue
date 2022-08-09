@@ -4,7 +4,7 @@ import Setup from "./Setup/Setup.vue";
 </script>
 <template>
   <section class="first flex flex-col items-center pb-32">
-    <div class="flex items-center">
+    <div class="flex items-center z-10">
       <img
         src="../../../../public/images/key_manager_logo.svg"
         class="mr-3 h-6 sm:h-9 scale-125"
@@ -48,18 +48,16 @@ import Setup from "./Setup/Setup.vue";
             <button
               @click="createTeam"
               class="
-                image
-                bg-gradient-to-r
-                from-blue-500
-                to-sky-400
-                p-2
-                px-4
-                my-3
-                font-bold
-                rounded
+                mt-5
+                bg-blue-500
+                hover:bg-blue-400
                 text-white
-                flex
-                items-center
+                font-bold
+                py-2
+                px-4
+                border-b-4 border-blue-700
+                hover:border-blue-500
+                rounded
               "
             >
               Create a Team
@@ -83,10 +81,13 @@ import Setup from "./Setup/Setup.vue";
           w-screen
           absolute
           teamNameContainer
-          -z-10
         "
       >
-        <Setup></Setup>
+        <Setup
+          :attrs="attrs"
+          :team="createdTeam"
+          :goToDashboard="goToDashboard"
+        ></Setup>
       </div>
     </transition>
   </section>
@@ -163,19 +164,27 @@ export default {
       invitationHover: false,
       setup: false,
       setupStep: 1,
+      createdTeam: Object,
     };
   },
   methods: {
     async createTeam() {
-      //   await axios.post(`/teams`, { name: "nazwa" }).then((response) => {
-      //     this.renderSetup();
-      //   });
-      this.renderSetup();
-      document.body.style.backgroundColor = "#f7f7f7";
+      await axios
+        .post(`/api/teams/create`, {
+          name: this.attrs.user.name.split(" ", 2)[0] + "'s" + " team",
+        })
+        .then((response) => {
+          this.renderSetup();
+          this.createdTeam = response.data;
+          this.attrs.user.current_team = response.data;
+        });
     },
     renderSetup() {
-      //   this.$inertia.get(this.route("dashboard"));
+      document.body.style.backgroundColor = "#f7f7f7";
       this.setup = true;
+      setTimeout(function () {
+        document.body.style.backgroundColor = "white";
+      }, 2000);
     },
     getInvitations() {
       axios.get(`/teams/invitations/${this.attrs.user.id}`).then((response) => {
@@ -188,6 +197,9 @@ export default {
     },
     logout() {
       this.$inertia.post(route("logout"));
+    },
+    goToDashboard() {
+      this.$inertia.get(this.route("dashboard"));
     },
   },
   created() {

@@ -1,18 +1,30 @@
 <script setup>
 import TeamName from "./TeamName.vue";
-import InviteTeamMember from "./InviteTeamMembers.vue";
+import InviteTeamMembers from "./InviteTeamMembers.vue";
 </script>
 <template>
   <transition name="slide" mode="out-in">
-    <TeamName v-if="step === 1" :nextStep="nextStep"></TeamName>
-    <InviteTeamMember v-else-if="step === 2"></InviteTeamMember>
+    <TeamName
+      v-if="step === 1"
+      :nextStep="nextStep"
+      :attrs="attrs"
+      :team="team"
+    ></TeamName>
+    <InviteTeamMembers
+      v-else-if="step === 2"
+      :attrs="attrs"
+      :team="team"
+    ></InviteTeamMembers>
   </transition>
 </template>
 <script>
 export default {
+  props: ["attrs", "team"],
   data() {
     return {
       step: 1,
+      attrs: this.attrs,
+      team: this.team,
     };
   },
   methods: {

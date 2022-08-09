@@ -1,15 +1,15 @@
+
 <template>
-
-
-  <div class="w-200">
-    <p class="py-5">Step 1 of 3</p>
-    <h1 class="text-4xl">What's the name of your company or team?</h1>
-    <p class="py-3">
-      This will be the name of your Key Manager workspace — choose something
-      that your team will recognize.
-    </p>
-    <form @submit.prevent="$emit('submit')">
+  <form @submit.prevent="$emit('submit')">
+    <div class="w-200 px-4 py-5 bg-white sm:p-6 shadow">
+      <p class="py-5">Step 1 of 3</p>
+      <h1 class="text-4xl">What's the name of your company or team?</h1>
+      <p class="py-3">
+        This will be the name of your Key Manager workspace — choose something
+        that your team will recognize.
+      </p>
       <input
+        v-model="team.name"
         class="
           border-gray-300
           focus:border-indigo-300
@@ -22,6 +22,20 @@
         "
         type="text"
       />
+    </div>
+    <div
+      class="
+        flex
+        items-center
+        justify-end
+        text-right
+        bg-gray-50
+        shadow
+        pb-5
+        px-6
+        sm:rounded-bl-md sm:rounded-br-md
+      "
+    >
       <button
         @click="nextStep"
         class="
@@ -49,15 +63,27 @@
       >
         Next
       </button>
-    </form>
-  </div>
+    </div>
+  </form>
 </template>
 <script>
 export default {
-  props: ["nextStep"],
+  props: ["nextStep", "attrs", "team"],
+  data() {
+    return {
+      attrs: this.attrs,
+      team: this.team,
+    };
+  },
   methods: {
     nextStep() {
       this.nextStep();
+    },
+    updateTeamName() {
+      form.put(route("teams.update", this.team), {
+        errorBag: "updateTeamName",
+        preserveScroll: true,
+      });
     },
   },
 };

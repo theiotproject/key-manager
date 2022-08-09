@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
     Route::post('/teams/join', [TeamController::class, 'joinTeam']);
+    Route::post('teams/create', [TeamController::class, 'store']);
+    Route::get('/teams/roles', [TeamController::class, 'getRoles']);
+    Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
 });
 //Public routes
 Route::post('/auth/token', [AuthController::class, 'getToken']);
