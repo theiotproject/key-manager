@@ -166,14 +166,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                                                 "twitter-minute-now"
                                             )
                                         }}
-                                        {{
+                                        <!-- {{
                                             timeAgo.format(
                                                 new Date(event.scan_time),
                                                 "twitter-minute-now"
                                             ) == "now"
                                                 ? ""
                                                 : " ago"
-                                        }}
+                                        }} -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -257,8 +257,7 @@ export default {
 }
 
 .rotation-enter-active,
-
-.rotation-leave-active{
+.rotation-leave-active {
     transition: all 0.5s ease-out;
 }
 
