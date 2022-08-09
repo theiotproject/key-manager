@@ -213,6 +213,19 @@ export default {
         },
 
         submitForm() {
+            if (this.form.checkedDays <= 0) {
+                MakeToast.create("Choose at least 1 Day", "warning");
+                return;
+            }
+            if (this.form.checkedUsers.length <= 0) {
+                MakeToast.create("Choose at least 1 User", "warning");
+                return;
+            }
+            if (this.form.checkedGates <= 0) {
+                MakeToast.create("Choose at least 1 Gate", "warning");
+                return;
+            }
+
             let str = "";
             this.form.checkedDays.forEach((day) => {
                 str += this.daysLetter[day];

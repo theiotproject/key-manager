@@ -411,7 +411,7 @@ export default {
                     this.events = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load Events", "error");
+                    // MakeToast.create("Cannot load Events", "error");
                 });
         },
         getScanAttempts() {
