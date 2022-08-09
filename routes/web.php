@@ -13,6 +13,7 @@ use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\VirtualTicketController;
+use App\Models\VirtualTicket;
 
 // Main page
 Route::get('/', function () {
@@ -64,6 +65,7 @@ Route::middleware([
     Route::get('/auth/role/teamId/{team_id}', [AuthController::class, 'getAuthUserRoleByTeamId']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/virtualTickets', VirtualTicketController::class);
+    Route::get("/virtualTickets", [VirtualTicketController::class, 'index'])->name('virtualTickets.index');
     Route::resource('/gates', GateController::class);
     Route::resource('/events', EventController::class);
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);

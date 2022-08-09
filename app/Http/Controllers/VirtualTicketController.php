@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
 use App\Models\User;
 use App\Http\Resources\VirtualTicketResource;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use PhpMqtt\Client\Facades\MQTT;
 use VirtualKey;
@@ -170,7 +171,8 @@ class VirtualTicketController extends Controller
                 'message' => $e->getMessage()
             ], 404);
         }
-        return Inertia::render('VirtualTickets/Show');
+        // return Redirect::render('');
+         return redirect()->route('virtualTickets.index');
 
     }
 

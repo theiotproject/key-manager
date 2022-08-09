@@ -24,7 +24,6 @@ const removeVirtualTicket = () => {
             preserveState: true,
             onSuccess: () => {
                 virtualTicketBeingRemoved.value = null;
-                MakeToast.create("Deleted Virtual Ticket", "info");
             },
             onError: () => {
                 MakeToast.create("Failed to delete Virtual Ticket", "error");
@@ -220,7 +219,10 @@ const removeVirtualTicket = () => {
                                                         @click="
                                                             confirmVirtualTicketRemoval(
                                                                 virtualTicket
-                                                            )
+                                                            );
+                                                            selectTicketIndex(
+                                                                virtualTicket.id
+                                                            );
                                                         "
                                                     >
                                                         <svg
@@ -272,7 +274,10 @@ const removeVirtualTicket = () => {
                             'opacity-25': removeVirtualTicketForm.processing,
                         }"
                         :disabled="removeVirtualTicketForm.processing"
-                        @click="removeVirtualTicket"
+                        @click="
+                            removeVirtualTicket();
+                            deleteVirtualTicket();
+                        "
                     >
                         Remove
                     </JetDangerButton>
@@ -292,15 +297,24 @@ export default {
     name: "VirtualTicketShow",
     data() {
         return {
+            virtualTicketIndex: 0,
             virtualTickets: {},
             role: "",
             attrs: this.$attrs,
         };
     },
     methods: {
+        selectTicketIndex(index) {
+            this.virtualTicketIndex = index;
+        },
         deleteVirtualTicket() {
-
-        }
+            this.virtualTickets = this.virtualTickets.filter(
+                (virtualTicket) => {
+                    return virtualTicket.id !== this.virtualTicketIndex;
+                }
+            );
+            MakeToast.create("Deleted Virtual Ticket", "info");
+        },
         getVirtualTickets() {
             axios
                 .get(
