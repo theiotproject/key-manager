@@ -171,7 +171,7 @@ export default {
     async createTeam() {
       await axios
         .post(`/api/teams/create`, {
-          name: this.attrs.user.name.split(" ", 2)[0] + "'s" + " team",
+          name: this.attrs.user.name.split(" ", 2)[0] + "'s" + " team"
         })
         .then((response) => {
           this.renderSetup();
