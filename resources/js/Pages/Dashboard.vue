@@ -6,6 +6,7 @@ import VirtualKeysWidget from "./Widgets/VirtualKeysWidget.vue";
 import UsersWidget from "./Widgets/UsersWidget.vue";
 import EventsWidget from "./Widgets/EventsWidget.vue";
 import HomeHeader from "../Components/Home/HomeHeader.vue";
+import VirtualTicketsWidget from "./Widgets/VirtualTicketsWidget.vue";
 </script>
 
 <template>
@@ -20,10 +21,24 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
                 <div class="parent gap-x-5 gap-y-5">
                     <GatesWidget class="max-h-100 area1" v-bind:attrs="attrs" />
                     <UsersWidget class="max-h-100 area2" v-bind:attrs="attrs" />
-                    <VirtualKeysWidget
-                        class="max-h-100 area3"
-                        v-bind:attrs="attrs"
-                    />
+
+                    <transition name="slide" mode="out-in">
+                        <VirtualKeysWidget
+                            v-if="showKeyList"
+                            class="max-h-100 area3"
+                            v-bind:attrs="attrs"
+                            v-on:switch="switchKeyList"
+                        />
+                    </transition>
+
+                    <transition name="slide" mode="out-in">
+                        <VirtualTicketsWidget
+                            v-if="!showKeyList"
+                            class="max-h-100 area3"
+                            v-bind:attrs="attrs"
+                            v-on:switch="switchKeyList"
+                        />
+                    </transition>
                     <EventsWidget
                         class="max-h-200 area4"
                         v-bind:attrs="attrs"
@@ -45,11 +60,15 @@ export default {
     },
     data() {
         return {
+            showKeyList: true,
             component: "GateShow",
             attrs: this.$attrs,
         };
     },
     methods: {
+        switchKeyList() {
+            this.showKeyList = !this.showKeyList;
+        },
         toggle() {
             if (this.component === "GateShow") {
                 this.component = "CreateGateForm";
@@ -124,9 +143,14 @@ export default {
         grid-area: 1 / 3 / 3 / 4;
     }
 }
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.3s ease;
+}
 
-/*.area1  gates*/
-/*.area2  users*/
-/*.area3  virtual keys*/
-/*.area4  events*/
+.slide-enter-from,
+.slide-leave-to {
+    transform: translate(-10px, 10px);
+    opacity: 0;
+}
 </style>
