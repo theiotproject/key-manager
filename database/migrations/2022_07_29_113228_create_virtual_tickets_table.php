@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('valid_from');
             $table->string('valid_to');
             $table->timestamps();
-
+            $table->softDeletes();
         });
     }
 
