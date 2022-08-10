@@ -172,8 +172,8 @@ class VirtualTicketController extends Controller
         //     ], 404);
         // }
         // return Redirect::render('');
-        //  return redirect()->route('virtualTickets.index');
-          return Inertia::render('VirtualTickets/Show');
+         return redirect()->route('virtualTickets.index');
+        //   return Inertia::render('VirtualTickets/Show');
 
     }
 
