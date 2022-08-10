@@ -24,13 +24,14 @@ const addTeamMemberForm = useForm({
   role: null,
 });
 
-const addTeamMember = () => {
-  addTeamMemberForm.post(route("team-members.store", props.team), {
+const addTeamMember = async () => {
+  await addTeamMemberForm.post(route("team-members.store", props.team), {
     errorBag: "addTeamMember",
     preserveScroll: true,
-    onSuccess: () => addTeamMemberForm.reset(),
+      onSuccess: () => getTeamInvitations(),
+    // onSuccess: () => addTeamMemberForm.reset(),
   });
-  getTeamInvitations();
+  // getTeamInvitations();
 };
 
 const getTeamInvitations = () => {
