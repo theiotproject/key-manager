@@ -28,15 +28,14 @@ const addTeamMember = () => {
   addTeamMemberForm.post(route("team-members.store", props.team), {
     errorBag: "addTeamMember",
     preserveScroll: true,
-    onSuccess: () => addTeamMemberForm.reset(),
+    onSuccess: () => getTeamInvitations(),
   });
-  getTeamInvitations();
 };
 
 const getTeamInvitations = () => {
   axios.get(`/api/teams/data/${props.team.id}`).then((response) => {
     invitations.value = response.data;
-  });
+  });addTeamMemberForm.reset()
 };
 
 const cancelTeamInvitation = (invitation) => {
