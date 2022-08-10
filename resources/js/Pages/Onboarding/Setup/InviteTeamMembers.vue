@@ -42,7 +42,7 @@ const getTeamInvitations = () => {
 };
 
 const getInvitationsLength = () => {
-        axios.get(`/api/teams/data/${this.team.id}`).then((response) => {
+        axios.get(`/api/teams/data/${props.team.id}`).then((response) => {
             invitationsLength.value = response.data.length;
         });
         return invitationsLength;
