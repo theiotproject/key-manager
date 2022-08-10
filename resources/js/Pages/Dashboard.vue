@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
 import GatesWidget from "./Widgets/GatesWidget.vue";
 import VirtualKeysWidget from "./Widgets/VirtualKeysWidget.vue";
 import UsersWidget from "./Widgets/UsersWidget.vue";
@@ -10,6 +10,11 @@ import HomeHeader from "../Components/Home/HomeHeader.vue";
 import introJs from "intro.js";
 
 onMounted(() => {
+    const user = usePage().props.value.user;
+    if(user.tours?.dashboard === true){
+        return;
+    }
+
   let tour = introJs();
   tour.setOptions({
     steps: [
@@ -20,12 +25,43 @@ onMounted(() => {
       {
         intro: `Here you can add your first gate by clicking this button`,
         element: document.querySelector("#firstStepTour"),
+          onchange: function(){
+            console.log("dziala");
+          }
       },
       {
         intro: `Then you can give your teammates access to your gates by creating Virtual Keys`,
         element: document.querySelector("#secondStepTour"),
       },
     ],
+  });
+
+    createStepEvents: function( tourObject, eventList ){
+
+        //underscore loop used here, foreach would work just as well
+        _.each( eventList, function( event ){
+
+            //for the guid object's <event> attribute...
+            guideObject[event]( function(){
+
+                //get its steps and current step value
+                var steps       = this._options.steps,
+                    currentStep = this._currentStep;
+
+                //if it's a function, execute the specified <event> type
+                if( _.isFunction(steps[currentStep][event]) ){
+                    steps[currentStep][event]();
+                }
+            });
+
+        }, this );
+    }
+
+//setup the events per step you care about for this guide
+    createStepEvents( guide, ['onchange','onbeforechange']);
+
+  tour.onexit(() => {
+    axios.put(`/tours`, { tour: `dashboard` });
   });
   tour.start();
 });

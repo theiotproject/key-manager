@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\ToursController;
 use App\Http\Controllers\VirtualKeyController;
 use App\Http\Controllers\VirtualTicketController;
 use App\Models\VirtualTicket;
@@ -60,7 +61,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
     Route::get('/auth/permission/teamId/{team_id}', [AuthController::class, 'getAuthUserPermissionByTeamId']);
     Route::get('/auth/role/teamId/{team_id}', [AuthController::class, 'getAuthUserRoleByTeamId']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
@@ -78,7 +78,10 @@ Route::middleware([
     Route::get('/gates/{gate}/edit', [GateController::class, 'edit'])->name('gates.edit');
     Route::put('/gates/{gate}', [GateController::class, 'update']);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
+    Route::put('/tours', [ToursController::class, 'update']);
 });
+
+
 Route::get('/teams/invitations/{userId}', [TeamController::class, 'getUserInvitations']);
 
 Route::get('/onboarding/landing', function () {
