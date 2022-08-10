@@ -163,8 +163,8 @@ class VirtualTicketController extends Controller
                 array_push($ticketsGUID, $ticket->GUID);
             }
 
-            $ticketsGUIDMessage = implode(";", $ticketsGUID);
-             MQTT::publish('blacklist/9238420983', $ticketsGUIDMessage);
+            // $ticketsGUIDMessage = implode(";", $ticketsGUID);
+            //  MQTT::publish('blacklist/9238420983', $ticketsGUIDMessage);
 
         // } catch (\Exception $e) {
         //      return response()->json([
