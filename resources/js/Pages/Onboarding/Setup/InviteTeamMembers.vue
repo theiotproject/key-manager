@@ -61,7 +61,7 @@ const displayableRole = (role) => {
 </script>
 
 <template>
-  <div class="w-200">
+  <div class="w-200 mt-24">
     <!-- Add Team Member -->
     <FormSection
       @submitted="
