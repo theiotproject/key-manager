@@ -13,15 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('virtual_tickets', function (Blueprint $table) {
-            $table->id();
-            $table->string('GUID');
-            $table->string('label');
-            $table->string('email');
-            $table->string('valid_from');
-            $table->string('valid_to');
-            $table->timestamps();
-
+        Schema::table('virtual_tickets', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -32,6 +25,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('virtual_tickets');
+        Schema::table('virtual_tickets', function (Blueprint $table) {
+            //
+        });
+
+         Schema::table('teams', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

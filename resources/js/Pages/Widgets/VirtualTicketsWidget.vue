@@ -21,17 +21,17 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                         clip-rule="evenodd"
                     />
                 </svg>
-                <p class="ml-3">Virtual Keys</p>
+                <p class="ml-3">Virtual Tickets</p>
                 <button
                     @click="switchList"
                     class="ml-2 text-gray-500 text-sm hover:text-gray-700"
                 >
-                    / Virtual Tickets
+                    / Virtual Keys
                 </button>
             </h2>
             <Link
                 v-if="permission"
-                :href="route('virtualKey.create')"
+                :href="route('virtualTicket.create')"
                 class="mr-10 mt-4 hover:text-black text-gray-600 flex items-center gap-2"
             >
                 <svg
@@ -46,7 +46,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                         clip-rule="evenodd"
                     />
                 </svg>
-                Create New Virtual Key
+                Create New Virtual Ticket
             </Link>
         </div>
         <div class="pb-5">
@@ -106,9 +106,9 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                 <tr
                                     class="bg-white border-b"
                                     v-for="(
-                                        virtualKey, index
-                                    ) in usersVirtualkeys"
-                                    :key="virtualKey.id"
+                                        virtualTicket, index
+                                    ) in usersVirtualtickets"
+                                    :key="virtualTicket.id"
                                 >
                                     <td
                                         v-if="index <= 2"
@@ -118,17 +118,19 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                             <img
                                                 class="h-8 w-8 rounded-full object-cover mr-3"
                                                 :src="
-                                                    virtualKey.user
+                                                    virtualTicket.user
                                                         .profile_photo_url
                                                 "
-                                                :alt="virtualKey.user.name"
+                                                :alt="virtualTicket.user.name"
                                             />
                                             <div>
-                                                {{ virtualKey.user.name }}
+                                                {{ virtualTicket.user.name }}
                                                 <p
                                                     class="text-gray-400 text-xs"
                                                 >
-                                                    {{ virtualKey.user.email }}
+                                                    {{
+                                                        virtualTicket.user.email
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -137,7 +139,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                         v-if="index <= 2"
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                        {{ virtualKey.label }}
+                                        {{ virtualTicket.label }}
                                     </td>
                                     <td
                                         v-if="index <= 2"
@@ -145,7 +147,9 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                     >
                                         <button
                                             class="ml-6 text-sm text-blue-500 hover:text-blue-700 flex items-center"
-                                            @click="generateQrCode(virtualKey)"
+                                            @click="
+                                                generateQrCode(virtualTicket)
+                                            "
                                         >
                                             <p>Generate QR Code</p>
                                             <svg
@@ -168,13 +172,14 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                 <tr
                                     class="bg-white border-b"
                                     v-for="(
-                                        virtualKey, index
-                                    ) in notUsersVirtualKeys"
-                                    :key="virtualKey.id"
+                                        virtualTicket, index
+                                    ) in notUsersVirtualTickets"
+                                    :key="virtualTicket.id"
                                 >
                                     <td
                                         v-if="
-                                            usersVirtualkeys.length + index < 3
+                                            usersVirtualtickets.length + index <
+                                            3
                                         "
                                         class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
@@ -182,28 +187,31 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                             <img
                                                 class="h-8 w-8 rounded-full object-cover mr-3"
                                                 :src="
-                                                    virtualKey.user
+                                                    virtualTicket.user
                                                         .profile_photo_url
                                                 "
-                                                :alt="virtualKey.user.name"
+                                                :alt="virtualTicket.user.name"
                                             />
                                             <div>
-                                                {{ virtualKey.user.name }}
+                                                {{ virtualTicket.user.name }}
                                                 <p
                                                     class="text-gray-400 text-xs"
                                                 >
-                                                    {{ virtualKey.user.email }}
+                                                    {{
+                                                        virtualTicket.user.email
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td
                                         v-if="
-                                            usersVirtualkeys.length + index < 3
+                                            usersVirtualtickets.length + index <
+                                            3
                                         "
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                        {{ virtualKey.label }}
+                                        {{ virtualTicket.label }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -212,10 +220,10 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                 </div>
                 <div
                     class="mt-5 w-full flex justify-center"
-                    v-if="virtualKeys.length > 3"
+                    v-if="virtualTickets.length > 3"
                 >
                     <Link
-                        :href="route('virtualKeys.index')"
+                        :href="route('virtualTickets.index')"
                         class="text-gray-600 hover:text-black py-2 px-4 rounded"
                     >
                         Show more
@@ -231,7 +239,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                 qrCodeReady = false;
             "
         >
-            <template #title> {{ usedVirtualKey }} </template>
+            <template #title> {{ usedVirtualTicket }} </template>
 
             <template #content v-if="qrCodeReady && validDay">
                 <p class="py-5">
@@ -263,7 +271,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 <script>
 import QrcodeVue from "qrcode.vue";
 export default {
-    name: "VirtualKeyWidget",
+    name: "VirtualTicketWidget",
     props: ["attrs"],
     data() {
         return {
@@ -276,24 +284,28 @@ export default {
             showQrCode: false,
             timer: false,
             countDown: 60,
-            usedVirtualKey: "",
+            usedVirtualTicket: "",
             gates: {},
-            virtualKeys: {},
+            virtualTickets: {},
             permission: 0,
             localAttrs: this.attrs,
         };
     },
     methods: {
         switchList() {
-            this.$emit("switch", false);
+            this.$emit("switch", true);
         },
-        getVirtualKeys() {
+        getVirtualTickets() {
             axios
                 .get(
-                    `/virtualKeys/teamId/${this.localAttrs.user.current_team_id}/users/gates`
+                    `/virtualTickets/teamId/${this.localAttrs.user.current_team_id}/users/gates`
                 )
                 .then((response) => {
-                    this.virtualKeys = response.data;
+                    this.virtualTickets = response.data;
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
         getPermission() {
@@ -308,28 +320,13 @@ export default {
         isSafari() {
             return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         },
-        async generateQrCode(virtualKey) {
-            this.usedVirtualKey = virtualKey.label;
+        async generateQrCode(virtualTicket) {
+            this.usedVirtualTicket = virtualTicket.label;
             this.countDown = 60;
             this.showQrCode = true;
-            const currentDate = new Date();
-            const weekday = currentDate.getDay();
-            const weekdayMap = new Map();
-            weekdayMap.set(0, "U");
-            weekdayMap.set(1, "M");
-            weekdayMap.set(2, "T");
-            weekdayMap.set(3, "W");
-            weekdayMap.set(4, "R");
-            weekdayMap.set(5, "F");
-            weekdayMap.set(6, "S");
-            this.validDay = virtualKey.valid_days.includes(
-                weekdayMap.get(weekday)
-            );
-            if (!this.validDay) {
-                return 0;
-            }
+
             await axios
-                .get(`/api/gates/virtualKeyId/${virtualKey.id}`)
+                .get(`/api/gates/virtualTicketId/${virtualTicket.id}`)
                 .then((response) => {
                     this.gates = response.data;
                 })
@@ -337,29 +334,7 @@ export default {
                     MakeToast.create("Cannot load gates", "error");
                 });
             this.qrCodeReady = true;
-            const validFrom =
-                currentDate.toISOString().slice(0, 10) +
-                " " +
-                currentDate.getHours() +
-                ":" +
-                (currentDate.getMinutes() < 10 ? "0" : "") +
-                currentDate.getMinutes() +
-                ":" +
-                (currentDate.getSeconds() < 10 ? "0" : "") +
-                currentDate.getSeconds();
-            const validTo =
-                currentDate.toISOString().slice(0, 10) +
-                " " +
-                currentDate.getHours() +
-                ":" +
-                (currentDate.getMinutes() < 9
-                    ? "0" + (currentDate.getMinutes() + 1)
-                    : currentDate.getMinutes() === 59
-                    ? "00"
-                    : currentDate.getMinutes() + 1) +
-                ":" +
-                (currentDate.getSeconds() < 10 ? "0" : "") +
-                currentDate.getSeconds();
+
             const gateSerialNumbers = Array.from(this.gates)
                 .map((gate) => gate.serial_number)
                 .toString();
@@ -368,9 +343,9 @@ export default {
                 "OPEN:ID:" +
                 guid +
                 ";VF:" +
-                validFrom +
+                virtualTicket.valid_from +
                 ";VT:" +
-                validTo +
+                virtualTicket.valid_to +
                 ";L:" +
                 gateSerialNumbers +
                 ";;";
@@ -378,18 +353,18 @@ export default {
             this.countDownTimer();
             const data = {
                 id: guid,
-                virtual_key_id: virtualKey.id,
+                virtual_ticket_id: virtualTicket.id,
                 access_granted: 1,
                 message: "ACCESS GRANTED",
             };
-            axios
-                .post("/api/keyUsages", data)
-                .then((response) => {
-                    this.dataId = response.data.id;
-                })
-                .catch((err) => {
-                    MakeToast.create("Cannot create key usage", "error");
-                });
+            // axios
+            //     .post("/api/keyUsages", data)
+            //     .then((response) => {
+            //         this.dataId = response.data.id;
+            //     })
+            //     .catch((err) => {
+            //         MakeToast.create("Cannot create key usage", "error");
+            //     });
         },
         generateGuid() {
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -410,20 +385,20 @@ export default {
         },
     },
     computed: {
-        usersVirtualkeys: function () {
-            return Array.from(this.virtualKeys).filter((virtualKey) => {
-                return virtualKey.user_id === this.localAttrs.user.id;
+        usersVirtualtickets: function () {
+            return Array.from(this.virtualTickets).filter((virtualTicket) => {
+                return virtualTicket.user_id === this.localAttrs.user.id;
             });
         },
-        notUsersVirtualKeys: function () {
-            return Array.from(this.virtualKeys).filter((virtualKey) => {
-                return virtualKey.user_id !== this.localAttrs.user.id;
+        notUsersVirtualTickets: function () {
+            return Array.from(this.virtualTickets).filter((virtualTicket) => {
+                return virtualTicket.user_id !== this.localAttrs.user.id;
             });
         },
     },
     created() {
         this.isSafari();
-        this.getVirtualKeys();
+        this.getVirtualTickets();
         this.getPermission();
     },
 };
