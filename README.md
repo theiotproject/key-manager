@@ -133,10 +133,12 @@ Here is how you can run the project locally:
 You can check out API documentation <a href="https://keymanager.theiotproject.com/api/documentation">here</a>
 
 ## Testing
-Will be addedd in the future...
+    ```
+    php artisan test
+    ```
 
 ## Contributing
 Pull requests are welcome.
 
 ## License
-key-manager is an open-sourced software
+key-manager is under MIT Licence
