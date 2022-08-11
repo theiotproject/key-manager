@@ -1,4 +1,20 @@
+<script setup>
 
+import {useForm} from "@inertiajs/inertia-vue3";
+
+const props = defineProps(["team"]);
+
+const form = useForm({
+    name: props.team.name
+});
+
+const updateTeamName = () => {
+    form.put(route("teams.update", props.team), {
+        errorBag: "updateTeamName",
+        preserveScroll: true,
+    })
+};
+</script>
 <template>
   <form @submit.prevent="$emit('submit')">
     <div class="w-200 mt-44 py-5 bg-white sm:p-6 shadow">
@@ -9,7 +25,7 @@
         that your team will recognize.
       </p>
       <input
-        v-model="team.name"
+        v-model="form.name"
         class="
           border-gray-300
           focus:border-indigo-300
@@ -37,7 +53,7 @@
       "
     >
       <button
-        @click="nextStep"
+        @click="updateTeamName();nextStep()"
         class="
           mt-5
           inline-flex
@@ -68,23 +84,24 @@
 </template>
 <script>
 export default {
-  props: ["nextStep", "attrs", "team"],
+  props: ["attrs", "team"],
   data() {
     return {
       attrs: this.attrs,
-      team: this.team,
+      // team: this.team,
     };
   },
   methods: {
     nextStep() {
-      this.nextStep();
+      this.$emit('nextStep');
     },
-    updateTeamName() {
-      form.put(route("teams.update", this.team), {
-        errorBag: "updateTeamName",
-        preserveScroll: true,
-      });
-    },
+    // updateTeamName() {
+    //     console.log(this.team);
+    //   form.put(route("teams.update", this.team), {
+    //     errorBag: "updateTeamName",
+    //     preserveScroll: true,
+    //   });
+    // },
   },
 };
 </script>

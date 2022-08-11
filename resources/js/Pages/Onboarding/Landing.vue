@@ -12,7 +12,7 @@ import Setup from "./Setup/Setup.vue";
       />
       <p class="text-2xl font-bold py-10 mb-2">Key Manager</p>
     </div>
-    <transition name="slide" mode="out-in">
+    <transition name="smooth" mode="out-in">
       <div v-if="!setup">
         <div
           class="
@@ -231,13 +231,13 @@ export default {
   bottom: 31px;
 }
 
-.slide-enter-active,
-.slide-leave-active {
+.smooth-enter-active,
+.smooth-leave-active {
   transition: all 0.3s ease;
 }
 
-.slide-enter-from,
-.slide-leave-to {
+.smooth-enter-from,
+.smooth-leave-to {
   opacity: 0;
 }
 </style>
