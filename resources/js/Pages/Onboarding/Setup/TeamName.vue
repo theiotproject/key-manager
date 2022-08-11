@@ -17,7 +17,7 @@ const updateTeamName = () => {
 </script>
 <template>
   <form @submit.prevent="$emit('submit')">
-    <div class="w-200 mt-44 py-5 bg-white sm:p-6 shadow">
+    <div class="w-200 mt-44 py-5 bg-white sm:p-6 shadow white-element">
       <p class="py-5">Step 1 of 3</p>
       <h1 class="text-4xl">What's the name of your company or team?</h1>
       <p class="py-3">
@@ -108,5 +108,9 @@ export default {
 <style scoped>
 * {
   font-family: "montserrat";
+}
+
+.white-element{
+    background-color: white;
 }
 </style>

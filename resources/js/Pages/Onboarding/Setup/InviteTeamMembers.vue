@@ -298,3 +298,8 @@ export default {
   },
 };
 </script>
+<style>
+.white-element{
+    background-color: white;
+}
+</style>
