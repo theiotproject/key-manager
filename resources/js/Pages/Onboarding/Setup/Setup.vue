@@ -9,11 +9,13 @@ import InviteTeamMembers from "./InviteTeamMembers.vue";
       @nextStep="nextStepFromChild"
       :attrs="attrs"
       :team="team"
+      @newTeamName="getTeam"
     ></TeamName>
     <InviteTeamMembers
       v-else-if="step === 2"
       :attrs="attrs"
       :team="team"
+      :newTeamName="newTeamName"
     ></InviteTeamMembers>
   </transition>
 </template>
@@ -25,12 +27,16 @@ export default {
       step: 1,
       attrs: this.attrs,
       team: this.team,
+        newTeamName: ''
     };
   },
   methods: {
     nextStepFromChild() {
       this.step++;
     },
+      getTeam(teamName){
+        this.newTeamName = teamName;
+      }
   },
 };
 </script>

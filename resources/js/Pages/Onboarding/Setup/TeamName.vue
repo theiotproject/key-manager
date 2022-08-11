@@ -1,6 +1,9 @@
 <script setup>
 
 import {useForm} from "@inertiajs/inertia-vue3";
+import { defineEmits } from 'vue'
+
+const emit = defineEmits(['newTeamName']);
 
 const props = defineProps(["team"]);
 
@@ -13,6 +16,7 @@ const updateTeamName = () => {
         errorBag: "updateTeamName",
         preserveScroll: true,
     })
+    emit('newTeamName', form.name);
 };
 </script>
 <template>
@@ -53,7 +57,7 @@ const updateTeamName = () => {
       "
     >
       <button
-        @click="updateTeamName();nextStep()"
+        @click="updateTeamName();nextStep(form.name)"
         class="
           mt-5
           inline-flex
@@ -84,16 +88,17 @@ const updateTeamName = () => {
 </template>
 <script>
 export default {
-  props: ["attrs", "team"],
+  props: ["attrs"],
   data() {
     return {
       attrs: this.attrs,
-      // team: this.team,
+      team: this.team,
     };
   },
   methods: {
-    nextStep() {
+    nextStep(teamName) {
       this.$emit('nextStep');
+      this.team.name = teamName;
     },
     // updateTeamName() {
     //     console.log(this.team);

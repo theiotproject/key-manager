@@ -109,7 +109,7 @@ import Setup from "./Setup/Setup.vue";
           <div
             v-for="invitation in invitations"
             :key="invitation.id"
-            @click="joinTeam(invitation.id)"
+            @click="joinTeam(invitation.id); switchTeam(invitation.team_id)"
             class="
               p-7
               text-sm
@@ -193,6 +193,7 @@ export default {
     },
     joinTeam(invitationId) {
       axios.post(`/api/teams/join`, { invitationId: invitationId });
+
       this.$inertia.get(this.route("dashboard"));
     },
     logout() {

@@ -73,7 +73,7 @@ const displayableRole = (role) => {
         <div class="col-span-6">
           <div class="text-sm text-gray-600">
             <p class="pb-3">Step 2 of 3</p>
-            <h1 class="text-4xl">Who else is on the {{ team.name }}?</h1>
+            <h1 class="text-4xl">Who else is on the {{ team.name}}?</h1>
             <p class="pt-3">
               Please provide the email address of the person you would like to
               add to this team.
@@ -277,10 +277,11 @@ const displayableRole = (role) => {
 </template>
 <script>
 export default {
-  props: ["attrs", "team"],
+  props: ["attrs", "team", "newTeamName"],
   data() {
     return {
       availableRoles: Object,
+        newTeamName: this.newTeamName
     };
   },
   methods: {
