@@ -124,12 +124,15 @@ import Setup from "./Setup/Setup.vue";
             @mouseover="invitationHover = true"
             @mouseout="invitationHover = false"
           >
-            <p>{{ invitation.team.name }}</p>
-            <div class="flex items-center">
-              <p v-if="invitationHover" class="font-bold text-orange-400">
+            <p @mouseover="invitationHover = true">{{ invitation.team.name }}</p>
+            <div class="flex items-center"             @mouseover="invitationHover = true"
+                 >
+              <p v-if="invitationHover" class="font-bold text-orange-400" @mouseover="invitationHover = true"
+                >
                 Join team
               </p>
               <svg
+                  
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 scale-125 transition-margin duration-75"
                 :class="invitationHover ? '-mr-2 text-orange-400' : 'mr-0'"
