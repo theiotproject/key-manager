@@ -75,11 +75,11 @@ import Setup from "./Setup/Setup.vue";
         v-else
         class="
           flex
-          items-center
           justify-center
           h-screen
+          p-0
+          m-0
           w-screen
-          absolute
           teamNameContainer
         "
       >

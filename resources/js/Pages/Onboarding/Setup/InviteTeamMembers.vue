@@ -18,6 +18,7 @@ import JetSectionBorder from "@/Jetstream/SectionBorder.vue";
 const props = defineProps(["team"]);
 
 const invitations = ref(Array);
+const invitationsLength = ref(0);
 
 const addTeamMemberForm = useForm({
   email: "",
@@ -28,15 +29,23 @@ const addTeamMember = () => {
   addTeamMemberForm.post(route("team-members.store", props.team), {
     errorBag: "addTeamMember",
     preserveScroll: true,
-    onSuccess: () => addTeamMemberForm.reset(),
+    onSuccess: () => getTeamInvitations(),
   });
-  getTeamInvitations();
 };
 
 const getTeamInvitations = () => {
   axios.get(`/api/teams/data/${props.team.id}`).then((response) => {
     invitations.value = response.data;
   });
+  addTeamMemberForm.reset();
+  getInvitationsLength();
+};
+
+const getInvitationsLength = () => {
+        axios.get(`/api/teams/data/${props.team.id}`).then((response) => {
+            invitationsLength.value = response.data.length;
+        });
+        return invitationsLength;
 };
 
 const cancelTeamInvitation = (invitation) => {
@@ -52,7 +61,7 @@ const displayableRole = (role) => {
 </script>
 
 <template>
-  <div class="w-200">
+  <div class="w-200 mt-24">
     <!-- Add Team Member -->
     <FormSection
       @submitted="
@@ -272,7 +281,6 @@ export default {
   data() {
     return {
       availableRoles: Object,
-      invitationsLength: 0,
     };
   },
   methods: {
@@ -283,12 +291,6 @@ export default {
       axios.get(`/api/teams/roles`).then((response) => {
         this.availableRoles = response.data;
       });
-    },
-    getInvitationsLength() {
-      axios.get(`/api/teams/data/${this.team.id}`).then((response) => {
-        this.invitationsLength = response.data.length;
-      });
-      return this.invitationsLength;
     },
   },
   created() {

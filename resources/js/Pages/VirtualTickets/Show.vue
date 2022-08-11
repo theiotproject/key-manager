@@ -324,7 +324,7 @@ export default {
                     this.virtualTickets = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load Virtual Tickets", "error");
+                    // MakeToast.create("Cannot load Virtual Tickets", "error");
                 });
         },
         getRole() {
@@ -334,7 +334,7 @@ export default {
                     this.role = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Failed to get role", "error");
+                    // MakeToast.create("Failed to get role", "error");
                 });
         },
         isSafari() {

@@ -120,7 +120,7 @@ export default {
             gates: {},
             permission: 0,
             localAttrs: this.attrs,
-            team: this.team
+            localTeam: this.team,
         };
     },
     methods: {

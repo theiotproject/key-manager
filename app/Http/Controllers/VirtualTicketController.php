@@ -130,7 +130,7 @@ class VirtualTicketController extends Controller
     {
 
 
-        try {
+        // try {
 
             $virtualTicket = VirtualTicket::findOrFail($id);
             $gates = $virtualTicket->gates;
@@ -166,13 +166,14 @@ class VirtualTicketController extends Controller
             $ticketsGUIDMessage = implode(";", $ticketsGUID);
              MQTT::publish('blacklist/9238420983', $ticketsGUIDMessage);
 
-        } catch (\Exception $e) {
-             return response()->json([
-                'message' => $e->getMessage()
-            ], 404);
-        }
+        // } catch (\Exception $e) {
+        //      return response()->json([
+        //         'message' => $e->getMessage()
+        //     ], 404);
+        // }
         // return Redirect::render('');
          return redirect()->route('virtualTickets.index');
+        //   return Inertia::render('VirtualTickets/Show');
 
     }
 

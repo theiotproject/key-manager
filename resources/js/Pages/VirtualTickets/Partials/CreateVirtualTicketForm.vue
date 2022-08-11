@@ -307,6 +307,24 @@ export default {
             }
         },
         submitForm() {
+            console.log(this.form.date);
+            if (
+                this.form.date.start === "" ||
+                this.form.date.end === "" ||
+                this.form.date.end < new Date()
+            ) {
+                MakeToast.create("Choose valid Date", "warning");
+                return;
+            }
+
+            if (this.form.checkedGates <= 0) {
+                MakeToast.create("Choose at least 1 Gate", "warning");
+                return;
+            }
+            if (this.form.checkedEmails.length <= 0) {
+                MakeToast.create("Choose at least 1 User", "warning");
+                return;
+            }
             let users = [];
             let gates = [];
 
@@ -349,7 +367,6 @@ export default {
                 valid_from: validDateStart,
                 valid_to: validDateEnd,
             };
-            console.log(data);
             axios
                 .post("/api/virtualTickets", data)
                 .then((result) => {
