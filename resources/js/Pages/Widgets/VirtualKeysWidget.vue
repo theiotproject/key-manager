@@ -2,6 +2,7 @@
 import { Link } from "@inertiajs/inertia-vue3";
 import JetModal from "@/Jetstream/DialogModal.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import MakeToast from "../../Services/MakeToast.vue";
 </script>
 <template>
     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -334,7 +335,7 @@ export default {
                     this.gates = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load gates", "error");
+                    // MakeToast.create("Cannot load gates", "error");
                 });
             this.qrCodeReady = true;
             const validFrom =

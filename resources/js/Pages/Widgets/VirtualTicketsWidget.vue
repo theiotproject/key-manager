@@ -2,6 +2,7 @@
 import { Link } from "@inertiajs/inertia-vue3";
 import JetModal from "@/Jetstream/DialogModal.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import MakeToast from "../../Services/MakeToast.vue";
 </script>
 <template>
     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -107,7 +108,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualTicket, index
-                                    ) in usersVirtualtickets"
+                                    ) in virtualTickets"
                                     :key="virtualTicket.id"
                                 >
                                     <td
@@ -118,19 +119,19 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                             <img
                                                 class="h-8 w-8 rounded-full object-cover mr-3"
                                                 :src="
-                                                    virtualTicket.user
-                                                        .profile_photo_url
+                                                    virtualTicket.name !=
+                                                    'unregistered'
+                                                        ? virtualTicket.profile_photo_url
+                                                        : 'https://ui-avatars.com/api/?name=?&color=7F9CF5&background=EBF4FF&font-size=0.6'
                                                 "
-                                                :alt="virtualTicket.user.name"
+                                                :alt="virtualTicket.name"
                                             />
                                             <div>
-                                                {{ virtualTicket.user.name }}
+                                                {{ virtualTicket.name }}
                                                 <p
                                                     class="text-gray-400 text-xs"
                                                 >
-                                                    {{
-                                                        virtualTicket.user.email
-                                                    }}
+                                                    {{ virtualTicket.email }}
                                                 </p>
                                             </div>
                                         </div>
@@ -151,7 +152,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                                 generateQrCode(virtualTicket)
                                             "
                                         >
-                                            <p>Generate QR Code</p>
+                                            <p>Show QR Code</p>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 class="h-5 w-5 mx-1"
@@ -173,42 +174,33 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualTicket, index
-                                    ) in notUsersVirtualTickets"
+                                    ) in virtualTickets"
                                     :key="virtualTicket.id"
                                 >
                                     <td
-                                        v-if="
-                                            usersVirtualtickets.length + index <
-                                            3
-                                        "
+                                        v-if="virtualTickets.length + index < 3"
                                         class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         <div class="flex items-center">
                                             <img
                                                 class="h-8 w-8 rounded-full object-cover mr-3"
                                                 :src="
-                                                    virtualTicket.user
-                                                        .profile_photo_url
+                                                    virtualTicket.profile_photo_url
                                                 "
-                                                :alt="virtualTicket.user.name"
+                                                :alt="virtualTicket.name"
                                             />
                                             <div>
-                                                {{ virtualTicket.user.name }}
+                                                {{ virtualTicket.name }}
                                                 <p
                                                     class="text-gray-400 text-xs"
                                                 >
-                                                    {{
-                                                        virtualTicket.user.email
-                                                    }}
+                                                    {{ virtualTicket.email }}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td
-                                        v-if="
-                                            usersVirtualtickets.length + index <
-                                            3
-                                        "
+                                        v-if="virtualTickets.length + index < 3"
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         {{ virtualTicket.label }}
@@ -243,7 +235,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 
             <template #content v-if="qrCodeReady && validDay">
                 <p class="py-5">
-                    This code will expire in: {{ countDown.toFixed(1) }}
+                    This code will expire in: {{ usedVirtualTicketDate }}
                 </p>
                 <qrcode-vue :value="qrCode.value" :size="300" level="H" />
             </template>
@@ -279,12 +271,13 @@ export default {
                 value: "",
                 size: 250,
             },
-            validDay: false,
+            validDay: true,
             qrCodeReady: false,
             showQrCode: false,
             timer: false,
             countDown: 60,
             usedVirtualTicket: "",
+            usedVirtualTicketDate: "",
             gates: {},
             virtualTickets: {},
             permission: 0,
@@ -302,7 +295,8 @@ export default {
                 )
                 .then((response) => {
                     this.virtualTickets = response.data;
-                    console.log(response);
+                    console.log(response.data);
+                    console.log(this.virtualTickets);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -322,6 +316,8 @@ export default {
         },
         async generateQrCode(virtualTicket) {
             this.usedVirtualTicket = virtualTicket.label;
+            console.log(virtualTicket.validTo);
+            this.usedVirtualTicketDate = virtualTicket.validTo;
             this.countDown = 60;
             this.showQrCode = true;
 
@@ -331,7 +327,7 @@ export default {
                     this.gates = response.data;
                 })
                 .catch((err) => {
-                    MakeToast.create("Cannot load gates", "error");
+                    // MakeToast.create("Cannot load gates", "error");
                 });
             this.qrCodeReady = true;
 
@@ -349,8 +345,6 @@ export default {
                 ";L:" +
                 gateSerialNumbers +
                 ";;";
-            this.timer = true;
-            this.countDownTimer();
             const data = {
                 id: guid,
                 virtual_ticket_id: virtualTicket.id,
@@ -374,14 +368,6 @@ export default {
                         (15 >> (c / 4)))
                 ).toString(16)
             );
-        },
-        countDownTimer() {
-            if (this.countDown > 0 && this.timer === true) {
-                setTimeout(() => {
-                    this.countDown -= 0.1;
-                    this.countDownTimer();
-                }, 100);
-            }
         },
     },
     computed: {

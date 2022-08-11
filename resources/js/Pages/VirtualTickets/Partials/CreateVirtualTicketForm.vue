@@ -366,7 +366,9 @@ export default {
                 gates: gates,
                 valid_from: validDateStart,
                 valid_to: validDateEnd,
+                team_name: this.attrs.user.current_team.name,
             };
+            console.log(data);
             axios
                 .post("/api/virtualTickets", data)
                 .then((result) => {
