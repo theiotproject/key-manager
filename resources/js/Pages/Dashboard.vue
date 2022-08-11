@@ -45,6 +45,7 @@ onMounted(() => {
       {
         title: `Virtual Tickets! 🎫`,
         intro: `If you want to give access to your gates by sharing time limited qr code via e-mail you can also create Virtual Ticket available here or in "Virtual Tickets" card`,
+          element: document.querySelector("#secondStepTour"),
       },
     ],
   });
