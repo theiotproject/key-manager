@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
 use App\Http\Resources\VirtualKeyResource;
+use PhpMqtt\Client\Facades\MQTT;
+
 
 class VirtualKeyController extends Controller
 {
@@ -161,9 +163,41 @@ class VirtualKeyController extends Controller
         return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
-    public function generateCode(Request $request, $teamId)
+    public function getTeamCode(Request $request, $teamId, $virtualKeyId)
     {
+        $userId = $request->user()->id;
+        $userVirtualKey = VirtualKey::where("user_id", $userId)->firstOrFail();
+
+        //check if user has the key in order to get team_code
+        if($virtualKeyId == $userVirtualKey->id)
+        {
+            $team = Team::findOrFail($teamId);
+            return ($team->team_code)
+                ->response()
+                ->setStatusCode(201);
+        }
+
+        abort(403, 'Cannot access Team Code' );
+        // abort(404);
+    }
+
+    public function openGateRemotely(Request $request)
+    {
+        $guid = $request->id;
+        $validFrom = $request->valid_from;
+        $validTo= $request->valid_to;
+        $gateSerialNumber = $request->gate;
+        $teamId = $request->team_id;
+
+        //check if valid first
         $team = Team::findOrFail($teamId);
-        return $team->team_code;
+        $teamCode = $team->team_code;
+
+        $qrcode = `OPEN:ID:${guid};VF:${validFrom};VT:${validTo};L:${gateSerialNumber};;`;
+        $qrcodeFinal = $qrcode . $teamCode;
+        return $qrcodeFinal;
+        $hashQrcode = hash('sha256', $qrcode . $teamCode);
+
+        MQTT::publish(`iotlock/v1/${teamId}/control/${gateSerialNumber}`,$qrcode . $hashQrcode . ';');
     }
 }

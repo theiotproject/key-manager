@@ -6,6 +6,10 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+
 class Handler extends ExceptionHandler
 {
 
@@ -18,7 +22,6 @@ class Handler extends ExceptionHandler
 
         return parent::render($request, $exception);
     }
-
     /**
      * A list of exception types with their corresponding custom log levels.
      *
