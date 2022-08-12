@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "@syncfusion/ej2-vue-inputs": "^20.2.38",
+        "intro.js": "^6.0.0",
         "javascript-time-ago": "^2.5.7",
         "openapi": "^1.0.1",
         "qrcode.vue": "^3.3.3",

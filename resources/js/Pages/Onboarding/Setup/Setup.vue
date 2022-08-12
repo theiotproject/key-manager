@@ -6,14 +6,16 @@ import InviteTeamMembers from "./InviteTeamMembers.vue";
   <transition name="slide" mode="out-in">
     <TeamName
       v-if="step === 1"
-      :nextStep="nextStep"
+      @nextStep="nextStepFromChild"
       :attrs="attrs"
       :team="team"
+      @newTeamName="getTeam"
     ></TeamName>
     <InviteTeamMembers
       v-else-if="step === 2"
       :attrs="attrs"
       :team="team"
+      :newTeamName="newTeamName"
     ></InviteTeamMembers>
   </transition>
 </template>
@@ -25,12 +27,16 @@ export default {
       step: 1,
       attrs: this.attrs,
       team: this.team,
+        newTeamName: ''
     };
   },
   methods: {
-    nextStep() {
+    nextStepFromChild() {
       this.step++;
     },
+      getTeam(teamName){
+        this.newTeamName = teamName;
+      }
   },
 };
 </script>

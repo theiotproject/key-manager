@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('virtual_tickets', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('users', function (Blueprint $table) {
+            $table->json('tours')->nullable();
         });
     }
 
@@ -25,12 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('virtual_tickets', function (Blueprint $table) {
-            //
-        });
-
-         Schema::table('teams', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['tours']);
         });
     }
 };

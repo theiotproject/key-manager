@@ -12,7 +12,7 @@ import Setup from "./Setup/Setup.vue";
       />
       <p class="text-2xl font-bold py-10 mb-2">Key Manager</p>
     </div>
-    <transition name="slide" mode="out-in">
+    <transition name="smooth" mode="out-in">
       <div v-if="!setup">
         <div
           class="
@@ -75,11 +75,11 @@ import Setup from "./Setup/Setup.vue";
         v-else
         class="
           flex
-          items-center
           justify-center
           h-screen
+          p-0
+          m-0
           w-screen
-          absolute
           teamNameContainer
         "
       >
@@ -109,7 +109,7 @@ import Setup from "./Setup/Setup.vue";
           <div
             v-for="invitation in invitations"
             :key="invitation.id"
-            @click="joinTeam(invitation.id)"
+            @click="joinTeam(invitation.id); switchTeam(invitation.team_id)"
             class="
               p-7
               text-sm
@@ -124,12 +124,15 @@ import Setup from "./Setup/Setup.vue";
             @mouseover="invitationHover = true"
             @mouseout="invitationHover = false"
           >
-            <p>{{ invitation.team.name }}</p>
-            <div class="flex items-center">
-              <p v-if="invitationHover" class="font-bold text-orange-400">
+            <p @mouseover="invitationHover = true">{{ invitation.team.name }}</p>
+            <div class="flex items-center"             @mouseover="invitationHover = true"
+                 >
+              <p v-if="invitationHover" class="font-bold text-orange-400" @mouseover="invitationHover = true"
+                >
                 Join team
               </p>
               <svg
+                  
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 scale-125 transition-margin duration-75"
                 :class="invitationHover ? '-mr-2 text-orange-400' : 'mr-0'"
@@ -193,6 +196,7 @@ export default {
     },
     joinTeam(invitationId) {
       axios.post(`/api/teams/join`, { invitationId: invitationId });
+
       this.$inertia.get(this.route("dashboard"));
     },
     logout() {
@@ -231,13 +235,13 @@ export default {
   bottom: 31px;
 }
 
-.slide-enter-active,
-.slide-leave-active {
+.smooth-enter-active,
+.smooth-leave-active {
   transition: all 0.3s ease;
 }
 
-.slide-enter-from,
-.slide-leave-to {
+.smooth-enter-from,
+.smooth-leave-to {
   opacity: 0;
 }
 </style>

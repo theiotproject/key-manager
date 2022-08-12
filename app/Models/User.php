@@ -31,7 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'tours'
     ];
 
     /**
@@ -53,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'tours' => 'json'
     ];
 
     /**
@@ -79,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(VirtualKey::class);
     }
 
-      public function virtualTickets()
+    public function virtualTickets()
     {
         return $this->belongsToMany(VirtualTicket::class);
     }

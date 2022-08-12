@@ -218,7 +218,7 @@ const logout = () => {
                                                         route('onboarding.landing')
                                                     "
                                                 >
-                                                    Create New Team
+                                                    Create Or Join new Team
                                                 </JetDropdownLink>
 
                                                 <div
