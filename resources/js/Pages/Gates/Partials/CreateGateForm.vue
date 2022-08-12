@@ -11,7 +11,14 @@ import MakeToast from "../../../Services/MakeToast.vue";
     <JetFormSection v-on:submit.prevent="submitForm">
         <template #title> Gate Details </template>
 
-        <template #description> Create a new Gate by serial number </template>
+        <template #description> Create a new Gate by complete this form
+            <br><br>
+            <b>Serial Number</b> is a unique number that each gate has
+            <br><br>
+            Automatically generated <b>Magic Code</b> is used as a backup opening code for the administrator
+            <br><br>
+            You can copy it and keep it in a safe place
+        </template>
 
         <template #form>
             <div class="col-span-6">
