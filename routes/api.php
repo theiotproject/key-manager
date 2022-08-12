@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/virtualKeys/teamId/{team_id}', [VirtualKeyController::class, 'indexVirtualKeysByTeamId']);
     Route::get('/teams/userId/{user_id}', [TeamController::class, 'indexTeamsByUser']);
     Route::get('/virtualKeys/teamId/{team_id}/token', [VirtualKeyController::class, 'indexByTeamIdForLoggedUser']);
-    Route::get('/virtualKeys/code/{team_id}', [VirtualKeyController::class, 'generateCode']); // do zmienienia na key_id
+    Route::get('/virtualKeys/code/{team_id}/{virtual_key_id}', [VirtualKeyController::class, 'getTeamCode']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/keyUsages', KeyUsageController::class);
     Route::resource('/magicCodeUsages', MagicCodeUsageController::class);
@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
     Route::post('/teams/join', [TeamController::class, 'joinTeam']);
     Route::post('teams/create', [TeamController::class, 'store']);
+    Route::post('/remoteOpen', [VirtualKeyController::class, 'openGateRemotely']);
     Route::get('/teams/roles', [TeamController::class, 'getRoles']);
     Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
 });

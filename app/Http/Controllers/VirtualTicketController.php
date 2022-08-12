@@ -83,6 +83,7 @@ class VirtualTicketController extends Controller
             ]);
 
             app(SendEmailController::class)->sendQrCode($mailContent);
+            return response()->json(['message' => 'Virtual Ticket created successfully'],201);
         }
     }
 
@@ -130,7 +131,7 @@ class VirtualTicketController extends Controller
     {
 
 
-        // try {
+        try {
 
             $virtualTicket = VirtualTicket::findOrFail($id);
             $gates = $virtualTicket->gates;
@@ -167,11 +168,9 @@ class VirtualTicketController extends Controller
              MQTT::publish('iotlock/v1/V7JWQE92BS/blacklist', $ticketsGUIDMessage);
             //  MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017");
 
-        // } catch (\Exception $e) {
-        //      return response()->json([
-        //         'message' => $e->getMessage()
-        //     ], 404);
-        // }
+        } catch (\Exception $e) {
+             abort(400, $e->getMessage());
+        }
         // return Redirect::render('');
          return redirect()->route('virtualTickets.index');
         //   return Inertia::render('VirtualTickets/Show');
