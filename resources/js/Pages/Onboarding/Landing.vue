@@ -73,20 +73,11 @@ import Setup from "./Setup/Setup.vue";
       </div>
       <div
         v-else
-        class="
-          flex
-          justify-center
-          h-screen
-          p-0
-          m-0
-          w-screen
-          teamNameContainer
-        "
+        class="flex justify-center h-screen p-0 m-0 w-screen teamNameContainer"
       >
         <Setup
           :attrs="attrs"
           :team="createdTeam"
-          :goToDashboard="goToDashboard"
         ></Setup>
       </div>
     </transition>
@@ -109,8 +100,11 @@ import Setup from "./Setup/Setup.vue";
           <div
             v-for="invitation in invitations"
             :key="invitation.id"
-            @click="joinTeam(invitation.id); switchTeam(invitation.team_id)"
+            @click="
+              joinTeam(invitation.id);
+            "
             class="
+              z-20
               p-7
               text-sm
               border-b border-gray-200
@@ -121,21 +115,31 @@ import Setup from "./Setup/Setup.vue";
               hover:bg-gray-50
               cursor-pointer
             "
-            @mouseover="invitationHover = true"
-            @mouseout="invitationHover = false"
+            @mouseover="invitationHover = invitation.id"
+            @mouseleave="invitationHover = null"
           >
-            <p @mouseover="invitationHover = true">{{ invitation.team.name }}</p>
-            <div class="flex items-center"             @mouseover="invitationHover = true"
-                 >
-              <p v-if="invitationHover" class="font-bold text-orange-400" @mouseover="invitationHover = true"
-                >
+            <p @mouseover="invitationHover = invitation.id">
+              {{ invitation.team.name }}
+            </p>
+            <div
+              class="flex items-center"
+              @mouseover="invitationHover = invitation.id"
+            >
+              <p
+                v-if="invitationHover === invitation.id"
+                class="font-bold text-orange-400 z-30"
+                @mouseover="invitationHover = invitation.id"
+              >
                 Join team
               </p>
               <svg
-                  
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 scale-125 transition-margin duration-75"
-                :class="invitationHover ? '-mr-2 text-orange-400' : 'mr-0'"
+                :class="
+                  invitationHover === invitation.id
+                    ? '-mr-2 text-orange-400'
+                    : 'mr-0'
+                "
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -148,9 +152,6 @@ import Setup from "./Setup/Setup.vue";
                 />
               </svg>
             </div>
-            <!-- <button class="py-2 px-5 border border-gray-200 shadow rounded">
-              Join
-            </button> -->
           </div>
         </div>
       </div>
@@ -164,7 +165,7 @@ export default {
     return {
       attrs: this.$attrs,
       invitations: {},
-      invitationHover: false,
+      invitationHover: null,
       setup: false,
       setupStep: 1,
       createdTeam: Object,
@@ -174,7 +175,7 @@ export default {
     async createTeam() {
       await axios
         .post(`/api/teams/create`, {
-          name: this.attrs.user.name.split(" ", 2)[0] + "'s" + " team"
+          name: this.attrs.user.name.split(" ", 2)[0] + "'s" + " team",
         })
         .then((response) => {
           this.renderSetup();
@@ -196,14 +197,10 @@ export default {
     },
     joinTeam(invitationId) {
       axios.post(`/api/teams/join`, { invitationId: invitationId });
-
       this.$inertia.get(this.route("dashboard"));
     },
     logout() {
       this.$inertia.post(route("logout"));
-    },
-    goToDashboard() {
-      this.$inertia.get(this.route("dashboard"));
     },
   },
   created() {

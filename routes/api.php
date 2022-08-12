@@ -3,6 +3,7 @@
 use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\KeyUsageController;
 use App\Http\Controllers\MagicCodeUsageController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\ToursController;
 use App\Models\User;
 use Illuminate\Http\Request;

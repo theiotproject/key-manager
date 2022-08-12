@@ -33,6 +33,7 @@ export default {
   methods: {
     nextStepFromChild() {
       this.step++;
+
     },
       getTeam(teamName){
         this.newTeamName = teamName;

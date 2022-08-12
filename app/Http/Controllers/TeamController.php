@@ -7,6 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\TeamInvitation;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Laravel\Jetstream\Actions\ValidateTeamDeletion;
+use Laravel\Jetstream\Contracts\DeletesTeams;
+use Laravel\Jetstream\Contracts\UpdatesTeamNames;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +47,7 @@ class TeamController extends Controller
             $invitation->email,
             $invitation->role
         );
-
+        Auth::user()->switchTeam($invitation->team);
         $invitation->delete();
     }
 

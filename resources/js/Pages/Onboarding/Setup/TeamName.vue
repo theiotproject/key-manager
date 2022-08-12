@@ -1,7 +1,6 @@
 <script setup>
 
 import {useForm} from "@inertiajs/inertia-vue3";
-import { defineEmits } from 'vue'
 
 const emit = defineEmits(['newTeamName']);
 
@@ -57,7 +56,7 @@ const updateTeamName = () => {
       "
     >
       <button
-        @click="updateTeamName();nextStep(form.name)"
+        @click="nextStep(form.name); updateTeamName()"
         class="
           mt-5
           inline-flex
@@ -97,6 +96,7 @@ export default {
   },
   methods: {
     nextStep(teamName) {
+        console.log('emit');
       this.$emit('nextStep');
       this.team.name = teamName;
     },
