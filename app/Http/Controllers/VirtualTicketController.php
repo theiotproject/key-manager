@@ -62,21 +62,27 @@ class VirtualTicketController extends Controller
 
             $gateSerialNumbers = "";
             $gatesData=array();
+            $teamId=0;
 
             foreach($request->gates as $gateId){
                 $gate = Gate::find($gateId);
+                $teamId = $gate->team_id;
                 $virtualTicket->gates()->attach($gate);
                 array_push($gatesData, $gate->serial_number);
             }
-
             $gateSerialNumbers = implode (",", $gatesData);
 
-            $qrcode = "OPEN:ID:" . $guid . ";VF:" . $valid_from . ";VT:" . $valid_to . ";L:" . $gateSerialNumbers . ";;";
+            $team = Team::findOrFail($teamId);
+            $teamCode = $team->team_code;
+
+            $qrcode = "OPEN:ID:{$guid};VF:{$valid_from};VT:{$valid_to};L:{$gateSerialNumbers};;";
+            $hashQrcode = hash('sha256', $qrcode . $teamCode);
+            $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
             $mailContent = new Request( [
                 'team_name' => $request->team_name,
                 'email' => $user['email'],
-                'code' => $qrcode,
+                'code' => $finalQrcode,
                 'valid_from' => $valid_from,
                 'valid_to' => $valid_to,
                 'label' => $user['label']
