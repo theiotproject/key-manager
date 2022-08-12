@@ -74,7 +74,7 @@ class VirtualTicketController extends Controller
             $qrcode = "OPEN:ID:" . $guid . ";VF:" . $valid_from . ";VT:" . $valid_to . ";L:" . $gateSerialNumbers . ";;";
 
             $mailContent = new Request( [
-                'team_name' => 'Biuro',
+                'team_name' => $request->team_name,
                 'email' => $user['email'],
                 'code' => $qrcode,
                 'valid_from' => $valid_from,
@@ -164,7 +164,8 @@ class VirtualTicketController extends Controller
             }
 
             $ticketsGUIDMessage = implode(";", $ticketsGUID);
-             MQTT::publish('blacklist/9238420983', $ticketsGUIDMessage);
+             MQTT::publish('iotlock/v1/V7JWQE92BS/blacklist', $ticketsGUIDMessage);
+            //  MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017");
 
         // } catch (\Exception $e) {
         //      return response()->json([
