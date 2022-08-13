@@ -26,7 +26,7 @@ const addTeamMemberForm = useForm({
 });
 
 const addTeamMember = () => {
-  addTeamMemberForm.post(route("team-members.store", props.team), {
+  addTeamMemberForm.post(route("team-members.store", props.team.id), {
     errorBag: "addTeamMember",
     preserveScroll: true,
     onSuccess: () => getTeamInvitations(),
@@ -219,7 +219,7 @@ const displayableRole = (role) => {
             cursor-pointer
           "
           :disabled="addTeamMemberForm.processing"
-          @click="nextStep"
+          @click="goToDashboard"
         >
           {{ invitationsLength > 0 ? "NEXT" : "SKIP" }}
         </div>
@@ -285,7 +285,8 @@ export default {
     };
   },
   methods: {
-    nextStep() {
+    goToDashboard() {
+        console.log('funkcja ladujaca dashboard');
       this.$inertia.get(this.route("dashboard"));
     },
     getRoles() {
