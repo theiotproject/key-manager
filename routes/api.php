@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/virtualKeys/teamId/{team_id}/token', [VirtualKeyController::class, 'indexByTeamIdForLoggedUser']);
     Route::get('/teams/code/{team_id}/{virtual_key_id}', [TeamController::class, 'getTeamCode']);
     Route::get('/teams/code/{team_id}', [TeamController::class, 'getAdminTeamCode']);
+    Route::get('/teams/code/ticket/{team_id}/{virtual_ticket_id}', [TeamController::class, 'getTeamCodeByTicket']);
     Route::resource('/virtualKeys', VirtualKeyController::class);
     Route::resource('/keyUsages', KeyUsageController::class);
     Route::resource('/magicCodeUsages', MagicCodeUsageController::class);
