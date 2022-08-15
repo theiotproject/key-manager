@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Contracts\AddsTeamMembers;
 use App\Models\VirtualKey;
+use App\Models\VirtualTicket;
 
 class TeamController extends Controller
 {
@@ -73,15 +74,36 @@ class TeamController extends Controller
         return $teamInvitations;
     }
 
+    public function getTeamCodeByTicket(Request $request, $teamId, $virtualTicketId)
+    {
+        $userEmail = $request->user()->email;
+        $userVirtualTickets = VirtualTicket::where("email", $userEmail)->get();
+
+        //check if user has the key in order to get team_code
+        foreach($userVirtualTickets as $userVirtualTicket)
+        {
+            if ($virtualTicketId == $userVirtualTicket->id) {
+                $team = Team::findOrFail($teamId);
+                return $team->team_code;
+            }
+        }
+
+
+        abort(403, 'Cannot access Team Code');
+    }
+
     public function getTeamCode(Request $request, $teamId, $virtualKeyId)
     {
         $userId = $request->user()->id;
-        $userVirtualKey = VirtualKey::where("user_id", $userId)->firstOrFail();
+        $userVirtualKeys = VirtualKey::where("user_id", $userId)->get();
 
         //check if user has the key in order to get team_code
-        if ($virtualKeyId == $userVirtualKey->id) {
-            $team = Team::findOrFail($teamId);
-            return $team->team_code;
+          foreach($userVirtualKeys as $userVirtualKey)
+        {
+            if ($virtualKeyId == $userVirtualKey->id) {
+                $team = Team::findOrFail($teamId);
+                return $team->team_code;
+            }
         }
 
         abort(403, 'Cannot access Team Code');

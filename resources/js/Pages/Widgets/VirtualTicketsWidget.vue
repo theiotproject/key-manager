@@ -74,6 +74,9 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     >
                                         Label
                                     </th>
+                                    <th scope="col" class="lg:px-3 md:px-0">
+                                        Expiration
+                                    </th>
                                     <th
                                         scope="col"
                                         class="lg:px-3 md:px-0 py-3 px-5 sm:rounded-r-lg rounded-none"
@@ -97,6 +100,9 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     >
                                         Label
                                     </th>
+                                    <th scope="col" class="lg:px-3 md:px-0">
+                                        Expiration
+                                    </th>
                                     <th
                                         scope="col"
                                         class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none"
@@ -108,7 +114,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualTicket, index
-                                    ) in virtualTickets"
+                                    ) in usersVirtualTickets"
                                     :key="virtualTicket.id"
                                 >
                                     <td
@@ -144,6 +150,17 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     </td>
                                     <td
                                         v-if="index <= 2"
+                                        class="lg:px-3 md:px-0 py-4 font-medium whitespace-nowrap"
+                                    >
+                                        {{
+                                            timeAgo.format(
+                                                new Date(virtualTicket.validTo),
+                                                { future: true }
+                                            )
+                                        }}
+                                    </td>
+                                    <td
+                                        v-if="index <= 2"
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         <button
@@ -174,11 +191,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualTicket, index
-                                    ) in virtualTickets"
+                                    ) in notUsersVirtualTickets"
                                     :key="virtualTicket.id"
                                 >
                                     <td
-                                        v-if="virtualTickets.length + index < 3"
+                                        v-if="
+                                            usersVirtualTickets.length + index <
+                                            3
+                                        "
                                         class="lg:px-3 md:px-0 px-5 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         <div class="flex items-center">
@@ -200,7 +220,10 @@ import MakeToast from "../../Services/MakeToast.vue";
                                         </div>
                                     </td>
                                     <td
-                                        v-if="virtualTickets.length + index < 3"
+                                        v-if="
+                                            usersVirtualTickets.length + index <
+                                            3
+                                        "
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         {{ virtualTicket.label }}
@@ -261,7 +284,14 @@ import MakeToast from "../../Services/MakeToast.vue";
     </div>
 </template>
 <script>
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+TimeAgo.addLocale(en);
+const timeAgo = new TimeAgo("en-US");
+
 import QrcodeVue from "qrcode.vue";
+import sha256 from "js-sha256";
+
 export default {
     name: "VirtualTicketWidget",
     props: ["attrs"],
@@ -295,8 +325,6 @@ export default {
                 )
                 .then((response) => {
                     this.virtualTickets = response.data;
-                    console.log(response.data);
-                    console.log(this.virtualTickets);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -316,49 +344,27 @@ export default {
         },
         async generateQrCode(virtualTicket) {
             this.usedVirtualTicket = virtualTicket.label;
-            console.log(virtualTicket.validTo);
             this.usedVirtualTicketDate = virtualTicket.validTo;
-            this.countDown = 60;
             this.showQrCode = true;
 
-            await axios
-                .get(`/api/gates/virtualTicketId/${virtualTicket.id}`)
-                .then((response) => {
-                    this.gates = response.data;
-                })
-                .catch((err) => {
-                    // MakeToast.create("Cannot load gates", "error");
-                });
             this.qrCodeReady = true;
 
-            const gateSerialNumbers = Array.from(this.gates)
+            const gateSerialNumbers = Array.from(virtualTicket.gates)
                 .map((gate) => gate.serial_number)
                 .toString();
-            const guid = this.generateGuid();
-            this.qrCode.value =
-                "OPEN:ID:" +
-                guid +
-                ";VF:" +
-                virtualTicket.valid_from +
-                ";VT:" +
-                virtualTicket.valid_to +
-                ";L:" +
-                gateSerialNumbers +
-                ";;";
             const data = {
-                id: guid,
+                id: virtualTicket.guid,
                 virtual_ticket_id: virtualTicket.id,
                 access_granted: 1,
                 message: "ACCESS GRANTED",
             };
-            // axios
-            //     .post("/api/keyUsages", data)
-            //     .then((response) => {
-            //         this.dataId = response.data.id;
-            //     })
-            //     .catch((err) => {
-            //         MakeToast.create("Cannot create key usage", "error");
-            //     });
+
+            var qrCode = `OPEN:ID:${virtualTicket.guid};VF:${virtualTicket.validFrom};VT:${virtualTicket.validTo};L:${gateSerialNumbers};;`;
+            var hashQrCode = sha256(qrCode + "123123");
+            var finalQrCode = qrCode + "S:" + hashQrCode + ";";
+            this.qrCode.value = finalQrCode;
+
+            console.log(this.qrCode.value);
         },
         generateGuid() {
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -371,14 +377,14 @@ export default {
         },
     },
     computed: {
-        usersVirtualtickets: function () {
+        usersVirtualTickets: function () {
             return Array.from(this.virtualTickets).filter((virtualTicket) => {
-                return virtualTicket.user_id === this.localAttrs.user.id;
+                return virtualTicket.email === this.localAttrs.user.email;
             });
         },
         notUsersVirtualTickets: function () {
             return Array.from(this.virtualTickets).filter((virtualTicket) => {
-                return virtualTicket.user_id !== this.localAttrs.user.id;
+                return virtualTicket.email !== this.localAttrs.user.email;
             });
         },
     },

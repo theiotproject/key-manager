@@ -19,7 +19,7 @@ class VirtualTicketResource extends JsonResource
             'id' => $this['id'],
             'profile_photo_url' => $this['0']['profile_photo_url'],
             'name' => $this['0']['name'],
-            // 'message' => $this['message'],
+            'guid' => $this['GUID'],
             'label' => $this['label'],
             'email' => $this['email'],
             'validFrom' => $this['valid_from'],

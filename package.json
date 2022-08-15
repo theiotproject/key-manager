@@ -24,6 +24,7 @@
         "@syncfusion/ej2-vue-inputs": "^20.2.38",
         "intro.js": "^6.0.0",
         "javascript-time-ago": "^2.5.7",
+        "js-sha256": "^0.9.0",
         "openapi": "^1.0.1",
         "qrcode.vue": "^3.3.3",
         "v-calendar": "^3.0.0-alpha.8",
