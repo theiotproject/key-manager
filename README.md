@@ -71,7 +71,28 @@
 - Update Password
 - Enable Two Factor Authentication
 
-## Requirements
+## Setup
+
+### Docker
+- If you would like to run the project via Docker, follow these steps:
+
+1. Copy `.env.example` to `.env`
+1. Install composer dependencies (in order to pull the Laravel Sail bash files, needed only once)
+   - `docker run -it -v "$PWD:/app" composer composer install --ignore-platform-reqs`
+2. Run the project
+   - `./vendor/bin/sail up -d`
+3. Run DB migrations (needed only once or on migration addition)
+   - `./vendor/bin/sail artisan migrate`
+4. Link storage (needed only once)
+   - `./vendor/bin/sail artisan storage:link`
+5. Install NPM dependencies (needed only once or on package changes)
+   - `./vendor/bin/sail npm install`
+6. Run the NPM dev build
+   - `./vendor/bin/sail npm run dev`
+
+## Setup (without Docker)
+
+### Requirements
 
 Package | Version
 --- | ---
@@ -81,7 +102,7 @@ Package | Version
 [Php](https://www.php.net/)  | V8.0.2+
 [Mysql](https://www.mysql.com/)  |V 8.0.27+
 
-## Installation
+### Installation
 
 > **Warning**
 > Make sure to follow the requirements first.
@@ -133,9 +154,9 @@ Here is how you can run the project locally:
 You can check out API documentation <a href="https://keymanager.theiotproject.com/api/documentation">here</a>
 
 ## Testing
-    ```
+    
     php artisan test
-    ```
+   
 
 ## Contributing
 Pull requests are welcome.

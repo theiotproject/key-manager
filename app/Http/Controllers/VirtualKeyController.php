@@ -163,23 +163,6 @@ class VirtualKeyController extends Controller
         return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
-    public function getTeamCode(Request $request, $teamId, $virtualKeyId)
-    {
-        $userId = $request->user()->id;
-        $userVirtualKey = VirtualKey::where("user_id", $userId)->firstOrFail();
-
-        //check if user has the key in order to get team_code
-        if($virtualKeyId == $userVirtualKey->id)
-        {
-            $team = Team::findOrFail($teamId);
-            return ($team->team_code)
-                ->response()
-                ->setStatusCode(201);
-        }
-
-        abort(403, 'Cannot access Team Code' );
-    }
-
     public function openGateRemotely(Request $request)
     {
         $userId = $request->user()->id;
