@@ -4,7 +4,7 @@ import CreateVirtualKeyForm from "./Partials/CreateVirtualKeyForm.vue";
 </script>
 
 <template>
-    <AppLayout title="Create Team">
+    <AppLayout title="Create Virtual Key">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Create New Virtual Key

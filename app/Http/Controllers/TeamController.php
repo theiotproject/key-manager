@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Contracts\AddsTeamMembers;
+use App\Models\VirtualKey;
 
 class TeamController extends Controller
 {
@@ -70,6 +71,47 @@ class TeamController extends Controller
     {
         $teamInvitations = TeamInvitation::where('team_id', $teamId)->get();
         return $teamInvitations;
+    }
+
+        public function getTeamCode(Request $request, $teamId, $virtualKeyId)
+    {
+        $userId = $request->user()->id;
+        $userVirtualKey = VirtualKey::where("user_id", $userId)->firstOrFail();
+
+        //check if user has the key in order to get team_code
+        if($virtualKeyId == $userVirtualKey->id)
+        {
+            $team = Team::findOrFail($teamId);
+            return ($team->team_code)
+                ->response()
+                ->setStatusCode(201);
+        }
+
+        abort(403, 'Cannot access Team Code' );
+    }
+
+     public function getAdminTeamCode(Request $request, $teamId)
+    {
+        $userId = $request->user()->id;
+
+        $team = Team::find($teamId);
+        $user_role = "";
+        if($team->user_id == $userId){
+            $user_role = "owner";
+        }
+        else {
+        $user_role = $team->users->where('id', $userId)->first()->membership->role;
+        }
+
+        //check if user is the admin in order to get team_code
+        if($user_role == 'owner' || $user_role == 'admin')
+        {
+            return ($team->team_code)
+                ->response()
+                ->setStatusCode(201);
+        }
+
+        abort(403, 'Cannot access Team Code' );
     }
 }
 
