@@ -97,6 +97,14 @@ import { Link } from "@inertiajs/inertia-vue3";
                     </div>
                 </div>
                 <div
+                    class="h-64 w-full flex justify-center items-center"
+                    v-if="gates.length <= 0"
+                >
+                    <p class="text-xl text-gray-600">
+                        You don't have any Gates
+                    </p>
+                </div>
+                <div
                     class="mt-5 w-full flex justify-center"
                     v-if="gates.length > 4"
                 >

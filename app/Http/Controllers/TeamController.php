@@ -128,6 +128,20 @@ class TeamController extends Controller
 
         abort(403, 'Cannot access Team Code');
     }
+
+    public function getUserRole($teamId, $userId)
+    {
+        $userId = auth()->user()->id;
+
+        $team = Team::find($teamId);
+        $user_role = "";
+        if ($team->user_id == $userId) {
+            $user_role = "owner";
+        } else {
+            $user_role = $team->users->where('id', $userId)->first()->membership->role;
+        }
+        return $user_role;
+    }
 }
 
 function random_str(

@@ -194,32 +194,60 @@ class VirtualTicketController extends Controller
 
     public function indexVirtualTicketsByTeamIdWithUsersAndGatesData($teamId)
     {
-        $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-            $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
-            $query->where("deleted_at", null);
-        })->get();
+        try {
+            $userAuth = auth()->user();
 
-        $virtualTicketsData = array();
+            $user_role = app(TeamController::class)->getUserRole($teamId, $userAuth->id);
 
-        foreach ($virtualTickets as $virtualTicket) {
-            $user = User::where('email', $virtualTicket->email)->get();
+            //check if user is the admin\owner in order to get all data, else get data of user only
+            if ($user_role == 'owner' || $user_role == 'admin')
+            {
+                $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                    $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
+                    $query->where("deleted_at", null);
+                })->get();
 
-            //check if user with this email exists, if not create temporary user
-            if ($user->isEmpty()) {
-                $user = array(new User(['name'=>'unregistered', 'profile_photo_url'=>'https://ui-avatars.com/api/?name=s&color=7F9CF5&background=EBF4FF']));
-                $virtualTicket->gates;
-                $merge = array_merge($virtualTicket->toArray(), $user);
-                array_push($virtualTicketsData, new VirtualTicketResource($merge));
-             }
-             else {
-                $virtualTicket->gates;
-                $merge = array_merge($virtualTicket->toArray(), $user->toArray());
-                array_push($virtualTicketsData, new VirtualTicketResource($merge));
-             }
+                $virtualTicketsData = array();
+
+                foreach ($virtualTickets as $virtualTicket) {
+                    $user = User::where('email', $virtualTicket->email)->get();
+
+                    //check if user with this email exists, if not create temporary user
+                    if ($user->isEmpty()) {
+                        $user = array(new User(['name'=>'unregistered', 'profile_photo_url'=>'https://ui-avatars.com/api/?name=s&color=7F9CF5&background=EBF4FF']));
+                        $virtualTicket->gates;
+                        $merge = array_merge($virtualTicket->toArray(), $user);
+                        array_push($virtualTicketsData, new VirtualTicketResource($merge));
+                    }
+                    else {
+                        $virtualTicket->gates;
+                        $merge = array_merge($virtualTicket->toArray(), $user->toArray());
+                        array_push($virtualTicketsData, new VirtualTicketResource($merge));
+                    }
+                }
+            } else {
+                $virtualTickets = VirtualTicket::whereHas('gates', function ($query) use ($teamId,$userAuth) {
+                    $query->where('team_id', $teamId);
+                    $query->whereDate("valid_to",">", date("Y-m-d H:i:s"));
+                    $query->where("deleted_at", null);
+                    $query->where("email", $userAuth->email);
+                })->get();
+
+                $virtualTicketsData = array();
+
+                foreach ($virtualTickets as $virtualTicket) {
+                    $user = User::where('email', $userAuth->email)->get();
+                    $virtualTicket->gates;
+                    $merge = array_merge($virtualTicket->toArray(), $user->toArray());
+                    array_push($virtualTicketsData, new VirtualTicketResource($merge));
+                }
+            }
+                return $virtualTicketsData;
+
+        } catch (\Exception $e) {
+            throw new HttpException(400, $e->getMessage());
         }
-
-        return $virtualTicketsData;
     }
 
     public function indexByTeamIdForLoggedUser(Request $request, $teamId)

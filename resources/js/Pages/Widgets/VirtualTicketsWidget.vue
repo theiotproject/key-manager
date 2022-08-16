@@ -111,6 +111,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                             </thead>
                             <tbody>
                                 <tr
+                                    v-if="virtualTickets.length > 0"
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualTicket, index
@@ -234,6 +235,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                 </div>
                 <div
+                    class="h-64 w-full flex justify-center items-center"
+                    v-if="virtualTickets.length <= 0"
+                >
+                    <p class="text-xl text-gray-600">
+                        You don't have any Virtual Tickets
+                    </p>
+                </div>
+                <div
                     class="mt-5 w-full flex justify-center"
                     v-if="virtualTickets.length > 3"
                 >
@@ -256,11 +265,14 @@ import MakeToast from "../../Services/MakeToast.vue";
         >
             <template #title> {{ usedVirtualTicket }} </template>
 
-            <template #content v-if="qrCodeReady && validDay">
+            <template #content v-if="qrCodeReady && validDay && qrCodeValid">
                 <p class="py-5">
                     This code will expire in: {{ usedVirtualTicketDate }}
                 </p>
                 <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+            </template>
+            <template #content v-else-if="!qrCodeValid">
+                <p class="py-5">Cannot generate QR Code</p>
             </template>
             <template #content v-else-if="!validDay">
                 <p class="py-5">Day is not valid</p>
@@ -304,6 +316,7 @@ export default {
             validDay: true,
             qrCodeReady: false,
             showQrCode: false,
+            qrCodeValid: false,
             timer: false,
             countDown: 60,
             usedVirtualTicket: "",
@@ -359,12 +372,26 @@ export default {
                 message: "ACCESS GRANTED",
             };
 
-            var qrCode = `OPEN:ID:${virtualTicket.guid};VF:${virtualTicket.validFrom};VT:${virtualTicket.validTo};L:${gateSerialNumbers};;`;
-            var hashQrCode = sha256(qrCode + "123123");
-            var finalQrCode = qrCode + "S:" + hashQrCode + ";";
-            this.qrCode.value = finalQrCode;
+            var teamCode;
 
-            console.log(this.qrCode.value);
+            await axios
+                .get(
+                    `/api/teams/code/ticket/${this.localAttrs.user.current_team_id}/${virtualTicket.id}`
+                )
+                .then((response) => {
+                    teamCode = response.data;
+
+                    var qrCode = `OPEN:ID:${virtualTicket.guid};VF:${virtualTicket.validFrom};VT:${virtualTicket.validTo};L:${gateSerialNumbers};;`;
+                    var hashQrCode = sha256(qrCode + teamCode);
+                    var finalQrCode = qrCode + "S:" + hashQrCode + ";";
+                    this.qrCode.value = finalQrCode;
+                    this.qrCodeValid = true;
+                })
+                .catch((err) => {
+                    MakeToast.create("Cannot generate QR Code", "error");
+                    this.qrCodeValid = false;
+                    return;
+                });
         },
         generateGuid() {
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
