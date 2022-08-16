@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "@syncfusion/ej2-vue-inputs": "^20.2.38",
+        "gsap": "^3.10.4",
         "intro.js": "^6.0.0",
         "javascript-time-ago": "^2.5.7",
         "js-sha256": "^0.9.0",
