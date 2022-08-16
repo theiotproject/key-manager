@@ -16,13 +16,18 @@ module.exports = {
                 sans: ["Nunito", ...defaultTheme.fontFamily.sans],
             },
             maxHeight: {
-                '100': '26rem',
-                '200': '60rem',
+                100: "26rem",
+                200: "60rem",
             },
             width: {
-                '128': '34rem',
-                '200': '50rem'
-            }
+                128: "34rem",
+                200: "50rem",
+            },
+            height: {
+                200: "50rem",
+                128: "34rem",
+                156: "40rem",
+            },
         },
         screens: {
             xs: "320px",

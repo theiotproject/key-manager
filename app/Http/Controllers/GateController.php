@@ -10,6 +10,7 @@ use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Http\Controllers\TeamController;
 
 class GateController extends Controller
 {
@@ -154,12 +155,49 @@ class GateController extends Controller
 
     public function indexGatesByTeamId($teamId)
     {
-        return Team::find($teamId)->gates;
+            return Team::find($teamId)->gates;
+
+
     }
 
     public function indexGatesByTeamIdResource($teamId)
     {
-        return GateResource::collection(Team::find($teamId)->gates);
+         // check user permission
+        $userAuth = auth()->user();
+        $user_role = app(TeamController::class)->getUserRole($teamId, $userAuth->id);
+
+        if ($user_role == 'owner' || $user_role == 'admin') {
+            return GateResource::collection(Team::find($teamId)->gates);
+        } else {
+
+            $gates = Gate::whereHas('virtualKeys', function($query) use ($userAuth,$teamId){
+                $query->where("team_id", $teamId);
+                $query->where('user_id', $userAuth->id);
+            })->get();
+
+            $gatesTickets = Gate::whereHas("virtualTickets", function($query) use ($userAuth, $teamId) {
+                $query->where("team_id", $teamId);
+                $query->where("email", $userAuth->email);
+            })->get();
+
+            // if(count($gatesTickets) < count($gates))
+            // {
+                // foreach($gates as $key=>$gate) {
+                //     if($gate->id != $gatesTickets[$key]->id)
+                //     {
+                //         $gates[] = $gatesTickets[$key];
+                //     }
+                // }
+            // } else {
+            //      foreach($gatesTickets as $key=>$gateTicket) {
+            //         if($gateTicket->id != $gates[$key]->id)
+            //         {
+            //             $gates[] = $gateTicket;
+            //         }
+            //     }
+            // }
+            return GateResource::collection($gates);
+        }
     }
 
     public function indexGatesByUserTeam($userId)

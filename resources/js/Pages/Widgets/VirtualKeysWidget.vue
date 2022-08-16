@@ -105,6 +105,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                             </thead>
                             <tbody>
                                 <tr
+                                    v-if="virtualKeys.length > 0"
                                     class="bg-white border-b"
                                     v-for="(
                                         virtualKey, index
@@ -210,6 +211,14 @@ import MakeToast from "../../Services/MakeToast.vue";
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div
+                    class="h-64 w-full flex justify-center items-center"
+                    v-if="virtualKeys.length <= 0"
+                >
+                    <p class="text-xl text-gray-600">
+                        You don't have any Virtual Keys
+                    </p>
                 </div>
                 <div
                     class="mt-5 w-full flex justify-center"
