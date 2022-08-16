@@ -99,71 +99,154 @@ const switchToTeam = (team) => {
   </div>
   <section v-if="!setup" class="second flex flex-col items-center pb-32">
     <div class="w-128">
-      <p class="font-semibold my-5">Open a team</p>
-      <div
-        class="
-          w-full
-          h-96
-          border border-gray-200
-          shadow-lg
-          rounded
-          overflow-y-scroll
-        "
-      >
-        <div class="p-5 text-sm border-b border-gray-200">
-          Teams for <b>{{ attrs.user.email }}</b>
-        </div>
-        <div v-if="teams == 0" class="text-center mt-20 font-bold">
-          You don't have any teams
-        </div>
-        <div>
-          <div
-            v-for="team in $page.props.user.all_teams"
-            :key="team.id"
-            @click="switchToTeam(team)"
-            class="
-              z-20
-              p-7
-              text-sm
-              border-b border-gray-200
-              font-bold
-              flex
-              items-center
-              justify-between
-              hover:bg-gray-50
-              cursor-pointer
-            "
-            @mouseover="teamHover = team.id"
-            @mouseleave="teamHover = null"
-          >
-            <p @mouseover="teamHover = team.id">
-              {{ team.name }}
-            </p>
-            <div class="flex items-center" @mouseover="teamHover = team.id">
-              <p
-                v-if="teamHover === team.id"
-                class="font-bold text-orange-400 z-30"
-                @mouseover="teamHover = team.id"
-              >
-                Open
-              </p>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 scale-125 transition-margin duration-75"
-                :class="
-                  teamHover === team.id ? '-mr-2 text-orange-400' : 'mr-0'
+      <div v-if="$page.props.user.all_teams.length > 0">
+        <p class="font-semibold my-5">Open a team</p>
+        <div
+          class="
+            w-full
+            border border-gray-200
+            shadow-lg
+            rounded
+            overflow-hidden
+          "
+        >
+          <div class="p-5 text-sm border-b border-gray-200">
+            Teams for <b>{{ attrs.user.email }}</b>
+          </div>
+          <div>
+            <template
+              v-for="(team, index) in $page.props.user.all_teams"
+              :key="team.id"
+            >
+              <div
+                v-if="index < 3 && showAllTeams === false"
+                @click="switchToTeam(team)"
+                class="
+                  z-20
+                  p-7
+                  text-sm
+                  border-b border-gray-200
+                  font-bold
+                  flex
+                  items-center
+                  justify-between
+                  hover:bg-gray-50
+                  cursor-pointer
                 "
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
+                @mouseover="teamHover = team.id"
+                @mouseleave="teamHover = null"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
+                <p @mouseover="teamHover = team.id">
+                  {{ team.name }}
+                </p>
+                <div class="flex items-center" @mouseover="teamHover = team.id">
+                  <p
+                    v-if="teamHover === team.id"
+                    class="font-bold text-orange-400 z-30"
+                    @mouseover="teamHover = team.id"
+                  >
+                    Open
+                  </p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 scale-125 transition-margin duration-75"
+                    :class="
+                      teamHover === team.id ? '-mr-2 text-orange-400' : 'mr-0'
+                    "
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                v-else-if="showAllTeams === true"
+                @click="switchToTeam(team)"
+                class="
+                  z-20
+                  p-7
+                  text-sm
+                  border-b border-gray-200
+                  font-bold
+                  flex
+                  items-center
+                  justify-between
+                  hover:bg-gray-50
+                  cursor-pointer
+                "
+                @mouseover="teamHover = team.id"
+                @mouseleave="teamHover = null"
+              >
+                <p @mouseover="teamHover = team.id">
+                  {{ team.name }}
+                </p>
+                <div class="flex items-center" @mouseover="teamHover = team.id">
+                  <p
+                    v-if="teamHover === team.id"
+                    class="font-bold text-orange-400 z-30"
+                    @mouseover="teamHover = team.id"
+                  >
+                    Open
+                  </p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 scale-125 transition-margin duration-75"
+                    :class="
+                      teamHover === team.id ? '-mr-2 text-orange-400' : 'mr-0'
+                    "
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </template>
+            <div
+              @click="showAllTeams = !showAllTeams"
+              v-if="$page.props.user.all_teams.length > 3"
+              class="
+                pl-7
+                py-5
+                font-light
+                cursor-pointer
+                text-sm
+                hover:underline
+              "
+            >
+              <div v-if="showAllTeams === false" class="flex items-center">
+                <p>
+                  Show {{ $page.props.user.all_teams.length - 3 }} more teams
+                </p>
+                <!-- <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg> -->
+              </div>
+              <div v-else>Show fewer teams</div>
             </div>
           </div>
         </div>
@@ -248,6 +331,7 @@ export default {
       setup: false,
       setupStep: 1,
       createdTeam: Object,
+      showAllTeams: false,
     };
   },
   methods: {
