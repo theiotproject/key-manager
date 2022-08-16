@@ -416,7 +416,7 @@ export default {
                     teamCode = response.data;
 
                     var hashQrCode = sha256(qrCode + teamCode);
-                    var finalQrCode = qrCode + "S:" + hashQrCode + ";";
+                    var finalQrCode = qrCode + "S:" + hashQrCode;
                     this.qrCode.value = finalQrCode;
                     this.qrCodeValid = true;
                 })
