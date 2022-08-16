@@ -27,14 +27,40 @@ Route::get('/', function () {
             return redirect()->route('dashboard');
         }
     } else {
-        return Inertia::render('Auth/Login', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+        return redirect('/login');
     }
 });
+
+
+// Route::get('/', function () {
+//     if (Auth::user()) {
+//         if (Auth::user()->current_team_id === null) {
+//             return redirect()->route('onboarding.landing');
+//         } else {
+//             return redirect()->route('dashboard');
+//         }
+//     } else {
+//         return redirect()->route('login');
+//     }
+// });
+// Route::get('/login', function () {
+//     if (Auth::user()) {
+//         if (Auth::user()->current_team_id === null) {
+//             return redirect()->route('onboarding.landing');
+//         } else {
+//             return redirect()->route('dashboard');
+//         }
+//     } else {
+//         return Inertia::render('Auth/Login', [
+//             'canLogin' => Route::has('login'),
+//             'canRegister' => Route::has('register'),
+//             'laravelVersion' => Application::VERSION,
+//             'phpVersion' => PHP_VERSION,
+//         ]);
+//     }
+// })->name('login');
+
+
 
 // Routes with verified/logged users
 Route::middleware([

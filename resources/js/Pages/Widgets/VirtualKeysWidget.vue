@@ -234,11 +234,14 @@ import MakeToast from "../../Services/MakeToast.vue";
         >
             <template #title> {{ usedVirtualKey }} </template>
 
-            <template #content v-if="qrCodeReady && validDay">
+            <template #content v-if="qrCodeReady && validDay && qrCodeValid">
                 <p class="py-5">
                     This code will expire in: {{ countDown.toFixed(1) }}
                 </p>
                 <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+            </template>
+            <template #content v-else-if="!qrCodeValid">
+                <p class="py-5">Cannot generate QR Code</p>
             </template>
             <template #content v-else-if="!validDay">
                 <p class="py-5">Day is not valid</p>
@@ -262,6 +265,7 @@ import MakeToast from "../../Services/MakeToast.vue";
     </div>
 </template>
 <script>
+import sha256 from "js-sha256";
 import QrcodeVue from "qrcode.vue";
 export default {
     name: "VirtualKeyWidget",
@@ -274,6 +278,7 @@ export default {
             },
             validDay: false,
             qrCodeReady: false,
+            qrCodeValid: false,
             showQrCode: false,
             timer: false,
             countDown: 60,
@@ -365,7 +370,7 @@ export default {
                 .map((gate) => gate.serial_number)
                 .toString();
             const guid = this.generateGuid();
-            this.qrCode.value =
+            var qrCode =
                 "OPEN:ID:" +
                 guid +
                 ";VF:" +
@@ -390,6 +395,26 @@ export default {
                 })
                 .catch((err) => {
                     MakeToast.create("Cannot create key usage", "error");
+                });
+
+            var teamCode = "";
+
+            await axios
+                .get(
+                    `/api/teams/code/${this.localAttrs.user.current_team_id}/${virtualKey.id}`
+                )
+                .then((response) => {
+                    teamCode = response.data;
+
+                    var hashQrCode = sha256(qrCode + teamCode);
+                    var finalQrCode = qrCode + "S:" + hashQrCode + ";";
+                    this.qrCode.value = finalQrCode;
+                    this.qrCodeValid = true;
+                })
+                .catch((err) => {
+                    MakeToast.create("Failed to access Code", "error");
+                    this.qrCodeValid = false;
+                    return;
                 });
         },
         generateGuid() {
