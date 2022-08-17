@@ -183,12 +183,13 @@ const timeAgo = new TimeAgo("en-US");
 
 export default {
   name: "EventsWidget",
-  props: ["attrs"],
+  props: ["attrs", "gate"],
   data() {
     return {
       lastEventTime: null,
       isEventNew: true,
       showHello: true,
+      gate: this.gate,
       events: {},
       localAttrs: this.attrs,
     };
@@ -196,10 +197,12 @@ export default {
   methods: {
     getEvents() {
       axios
-        .get(`/events/teamId/${this.localAttrs.user.current_team_id}/limit/10`)
+        .get(
+          `/events/teamId/${this.localAttrs.user.current_team_id}/gateId/${this.gate.id}/limit/12`
+        )
         .then((response) => {
           this.events = response.data;
-
+          console.log(this.gate.id);
           if (this.lastEventTime === null && this.events.length > 0) {
             this.lastEventTime = this.events[0].scan_time;
             this.isEventNew = true;

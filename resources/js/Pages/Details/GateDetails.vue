@@ -86,6 +86,7 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
       <events-widget
         class="max-h-200 div2 secondColor stagger"
         :attrs="attrs"
+        :gate="gate"
       />
       <multi-axis-line-chart
         class="div3 secondColor shadow-xl rounded-lg stagger"
@@ -119,7 +120,6 @@ export default {
     getVirtualKeys() {
       axios.get(`/virtualKeys/gate/${this.gate.id}`).then((response) => {
         this.virtualKeys = response.data;
-        console.log(this.virtualKeys);
       });
     },
   },

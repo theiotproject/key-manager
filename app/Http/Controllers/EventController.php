@@ -58,7 +58,7 @@ class EventController extends Controller
         // $post->save();
         // return redirect('/posts');
 
-       $event = Event::create($data);
+        $event = Event::create($data);
 
         return $event;
     }
@@ -109,28 +109,29 @@ class EventController extends Controller
         //
     }
 
-    public function indexEventsByTeamId($teamId, $limit) {
+    public function indexEventsByTeamId($teamId, $limit)
+    {
 
         $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
             $query->where('team_id', $teamId);
         })->get();
 
         $virtualKeyIds = array();
-        foreach($virtualKeys as $virtualKey){
+        foreach ($virtualKeys as $virtualKey) {
             array_push($virtualKeyIds, $virtualKey->id);
         }
 
         $keyUsages = KeyUsage::all()->whereIn('virtual_key_id', $virtualKeyIds)->where('access_granted', 1);
 
         $keyUsageIds = array();
-        foreach($keyUsages as $keyUsage){
+        foreach ($keyUsages as $keyUsage) {
             array_push($keyUsageIds, $keyUsage->id);
         }
 
         $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take($limit)->values();
 
         $result = array();
-        foreach ($events as $event){
+        foreach ($events as $event) {
             $virtualKeyId = $event->keyUsage->virtual_key_id;
             $virtualKey = VirtualKey::find($virtualKeyId);
             $user = $virtualKey->user;
@@ -141,17 +142,52 @@ class EventController extends Controller
         return $result;
     }
 
-    public function indexRejectedEventsByTeamId($teamId, $limit) {
+    public function indexRejectedEventsByTeamId($teamId, $limit)
+    {
 
-        $events = Event::whereHas('gate', function($q) use($teamId){
+        $events = Event::whereHas('gate', function ($q) use ($teamId) {
             $q->where('team_id', $teamId);
         })->orderBy('scan_time', 'DESC')->get();
 
         $result = array();
-        foreach ($events as $event){
+        foreach ($events as $event) {
             $gate = Gate::where('serial_number', $event->serial_number)->get();
             $merge = array_merge($event->toArray(), $gate->toArray());
             array_push($result, $merge);
+        }
+        return $result;
+    }
+
+    public function indexEventsByGate($teamId, $gateId, $limit)
+    {
+        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+            $query->where('team_id', $teamId);
+        })->get();
+
+        $virtualKeyIds = array();
+        foreach ($virtualKeys as $virtualKey) {
+            array_push($virtualKeyIds, $virtualKey->id);
+        }
+
+        $keyUsages = KeyUsage::all()->whereIn('virtual_key_id', $virtualKeyIds)->where('access_granted', 1);
+
+        $keyUsageIds = array();
+        foreach ($keyUsages as $keyUsage) {
+            array_push($keyUsageIds, $keyUsage->id);
+        }
+
+        $gateSerialNumber = Gate::findOrFail($gateId)->serial_number;
+
+        $events = Event::where('serial_number', $gateSerialNumber)->whereIn('GUID', $keyUsageIds)->orderBy('scan_time', 'desc')->limit($limit)->get();
+
+        $result = array();
+        foreach ($events as $event) {
+            $virtualKeyId = $event->keyUsage->virtual_key_id;
+            $virtualKey = VirtualKey::find($virtualKeyId);
+            $user = $virtualKey->user;
+            $gate = Gate::where('serial_number', $event->serial_number)->get();
+            $merge = array_merge($event->toArray(), $user->toArray(), $gate->toArray());
+            array_push($result, new EventResource($merge));
         }
         return $result;
     }
