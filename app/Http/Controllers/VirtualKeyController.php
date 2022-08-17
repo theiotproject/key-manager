@@ -140,6 +140,17 @@ class VirtualKeyController extends Controller
         return $virtualKeys;
     }
 
+    public function indexVirtualKeysByGate($gateId)
+    {
+        $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
+            $q->where('gate_id', $gateId);
+        })->get();
+        foreach ($virtualKeys as $virtualKey) {
+            $virtualKey->user;
+        }
+        return $virtualKeys;
+    }
+
     public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
     {
         $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
@@ -168,13 +179,13 @@ class VirtualKeyController extends Controller
         $userId = $request->user()->id;
         $guid = $request->id;
         $validFrom = $request->valid_from;
-        $validTo= $request->valid_to;
+        $validTo = $request->valid_to;
         $gateSerialNumber = $request->gate;
         $teamId = $request->team_id;
 
         //check if user has access to key, then give team code
         try {
-            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId,$gateSerialNumber,$userId) {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $gateSerialNumber, $userId) {
                 $query->where('team_id', $teamId);
                 $query->where("serial_number", $gateSerialNumber);
                 $query->where('user_id', $userId);
@@ -187,11 +198,11 @@ class VirtualKeyController extends Controller
             $finalQrcode = $qrcode . "S:" . $hashQrcode;
 
             MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
-             return response()
+            return response()
                 ->json(['message' => 'Sent request to open the Gate'])
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-             abort(404, $e->getMessage());
+            abort(404, $e->getMessage());
         }
     }
 }

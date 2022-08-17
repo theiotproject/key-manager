@@ -72,6 +72,7 @@ Route::middleware([
     Route::get('/gates/{gate}/edit', [GateController::class, 'edit'])->name('gates.edit');
     Route::put('/gates/{gate}', [GateController::class, 'update']);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
+    Route::get('/virtualKeys/gate/{gateId}', [VirtualKeyController::class, 'indexVirtualKeysByGate']);
     Route::put('/tours', [ToursController::class, 'update']);
 });
 

@@ -70,7 +70,7 @@ class GateController extends Controller
     public function edit($id)
     {
         $gate = Gate::find($id);
-        return Inertia::render('Gates/Edit', ["gate"=>$gate]);
+        return Inertia::render('Gates/Edit', ["gate" => $gate]);
     }
 
     /**
@@ -88,14 +88,14 @@ class GateController extends Controller
         $gate->magic_code = $request->input('magic_code');
         $gate->save();
         $virtualKeys = $gate->virtualKeys;
-        if($virtualKeys!=null) {
+        if ($virtualKeys != null) {
             foreach ($virtualKeys as $virtualKey) {
                 $gates = $virtualKey->gates;
                 $gatesArray = array();
-                foreach($gates as $gate2){
+                foreach ($gates as $gate2) {
                     array_push($gatesArray, $gate2->name);
                 }
-                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray);
                 $virtualKey->save();
             }
         }
@@ -113,32 +113,32 @@ class GateController extends Controller
         $virtualKeys = $gate->virtualKeys;
         $virtualTickets = $gate->virtualTickets;
 
-        if($virtualKeys!=null) {
+        if ($virtualKeys != null) {
             foreach ($virtualKeys as $virtualKey) {
                 $gate->virtualKeys()->detach($virtualKey->id);
             }
             foreach ($virtualKeys as $virtualKey) {
                 $gates = $virtualKey->gates;
                 $gatesArray = array();
-                foreach($gates as $gate2){
+                foreach ($gates as $gate2) {
                     array_push($gatesArray, $gate2->name);
                 }
-                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray);
                 $virtualKey->save();
             }
         }
 
-         if($virtualTickets!=null) {
+        if ($virtualTickets != null) {
             foreach ($virtualTickets as $virtualTicket) {
                 $gate->virtualTickets()->detach($virtualTicket->id);
             }
             foreach ($virtualTickets as $virtualTicket) {
                 $gates = $virtualTicket->gates;
                 $gatesArray = array();
-                foreach($gates as $gate2){
+                foreach ($gates as $gate2) {
                     array_push($gatesArray, $gate2->name);
                 }
-                $virtualTicket->label = 'Key opens ' . implode(', ', $gatesArray );
+                $virtualTicket->label = 'Key opens ' . implode(', ', $gatesArray);
                 $virtualTicket->save();
             }
         }
@@ -174,11 +174,11 @@ class GateController extends Controller
         return $result;
     }
 
-    public function indexGatesByVirtualKey($virtualKeyId){
-        $gates = Gate::whereHas('virtualKeys', function($q) use ($virtualKeyId){
+    public function indexGatesByVirtualKey($virtualKeyId)
+    {
+        $gates = Gate::whereHas('virtualKeys', function ($q) use ($virtualKeyId) {
             $q->where('virtual_key_id', $virtualKeyId);
         })->get();
         return $gates;
     }
 }
-

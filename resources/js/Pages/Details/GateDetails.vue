@@ -80,11 +80,12 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
     <section class="mb-72 flex space-x-20 mt-10 p-10 parent">
       <gate-virtual-keys
         class="div1 secondColor stagger"
-        v-bind:attrs="attrs"
+        :attrs="attrs"
+        :virtualKeys="virtualKeys"
       />
       <events-widget
         class="max-h-200 div2 secondColor stagger"
-        v-bind:attrs="attrs"
+        :attrs="attrs"
       />
       <multi-axis-line-chart
         class="div3 secondColor shadow-xl rounded-lg stagger"
@@ -99,6 +100,7 @@ export default {
   data() {
     return {
       gate: this.gate,
+      virtualKeys: {},
       localAttrs: this.attrs,
       role: "",
     };
@@ -114,9 +116,16 @@ export default {
           MakeToast.create("Cannot load role", "error");
         });
     },
+    getVirtualKeys() {
+      axios.get(`/virtualKeys/gate/${this.gate.id}`).then((response) => {
+        this.virtualKeys = response.data;
+        console.log(this.virtualKeys);
+      });
+    },
   },
   created() {
     this.getRole();
+    this.getVirtualKeys();
   },
   mounted() {
     gsap.from(".stagger", {
