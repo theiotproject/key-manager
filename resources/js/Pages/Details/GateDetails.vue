@@ -1,5 +1,8 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
+import MultiAxisLineChart from "../Chart/MultiAxisLineChart";
+import EventsWidget from "./GateEvents.vue";
+import GateVirtualKeys from "./GateVirtualKeys.vue";
 </script>
 <template>
   <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -74,9 +77,14 @@ import { Link } from "@inertiajs/inertia-vue3";
         </button>
       </div>
     </div>
-    <section class="mb-96 flex items-center">
-      <div>chart</div>
-      <div>Events</div>
+    <section class="mb-96 flex space-x-20 mt-10 p-10 parent">
+      <multi-axis-line-chart class="mt-8 div1" />
+      <events-widget
+        id="thirdStepTour"
+        class="max-h-200 area4 div2"
+        v-bind:attrs="attrs"
+      />
+      <gate-virtual-keys class="div3 mt-20" v-bind:attrs="attrs" />
     </section>
   </div>
 </template>
@@ -107,3 +115,22 @@ export default {
   },
 };
 </script>
+<style scoped>
+.parent {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.div1 {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.div2 {
+  grid-area: 1 / 2 / 3 / 3;
+}
+.div3 {
+  grid-area: 2 / 1 / 3 / 2;
+}
+</style>

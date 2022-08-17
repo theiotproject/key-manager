@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "@syncfusion/ej2-vue-inputs": "^20.2.38",
+        "chart.js": "^3.9.1",
         "gsap": "^3.10.4",
         "intro.js": "^6.0.0",
         "javascript-time-ago": "^2.5.7",
@@ -30,6 +31,7 @@
         "qrcode.vue": "^3.3.3",
         "v-calendar": "^3.0.0-alpha.8",
         "v-smooth-scroll": "^2.0.0-beta.2",
+        "vue-chartjs": "^4.1.1",
         "vue-gtag": "^2.0.1",
         "vue-router": "^4.1.2",
         "vue-toast-notification": "^3.0.4",
