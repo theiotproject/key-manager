@@ -184,35 +184,5 @@ class VirtualKeyController extends Controller
         return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
-    public function openGateRemotely(Request $request)
-    {
-        $userId = $request->user()->id;
-        $guid = $request->id;
-        $validFrom = $request->valid_from;
-        $validTo= $request->valid_to;
-        $gateSerialNumber = $request->gate;
-        $teamId = $request->team_id;
 
-        //check if user has access to key, then give team code
-        try {
-            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId,$gateSerialNumber,$userId) {
-                $query->where('team_id', $teamId);
-                $query->where("serial_number", $gateSerialNumber);
-                $query->where('user_id', $userId);
-            })->firstOrFail();
-
-            $team = Team::findOrFail($teamId);
-            $teamCode = $team->team_code;
-            $qrcode = "OPEN:ID:{$guid};VF:{$validFrom};VT:{$validTo};L:{$gateSerialNumber};;";
-            $hashQrcode = hash('sha256', $qrcode . $teamCode);
-            $finalQrcode = $qrcode . "S:" . $hashQrcode;
-
-            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
-             return response()
-                ->json(['message' => 'Sent request to open the Gate'])
-                ->setStatusCode(200);
-        } catch (\Exception $e) {
-             abort(404, $e->getMessage());
-        }
-    }
 }

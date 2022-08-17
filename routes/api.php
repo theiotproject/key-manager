@@ -43,7 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
     Route::post('/teams/join', [TeamController::class, 'joinTeam']);
     Route::post('teams/create', [TeamController::class, 'store']);
-    Route::post('/remoteOpen', [VirtualKeyController::class, 'openGateRemotely']);
+    Route::post('/remoteOpen', [GateController::class, 'openGateRemotely']);
+    Route::post('/remoteOpen/web', [GateController::class, 'openGateRemotelyByWebsite'])->name('gates.open');
     Route::get('/teams/roles', [TeamController::class, 'getRoles']);
     Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
 });
