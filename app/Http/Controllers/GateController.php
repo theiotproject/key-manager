@@ -287,7 +287,20 @@ class GateController extends Controller
                     $validFrom = $virtualTicket->valid_from;
                     $validTo = $virtualTicket->valid_to;
                 } else {
-                    abort(404, "Cannot access Gate");
+                    $user_role = app(TeamController::class)->getUserRole($teamId, $user->id);
+
+                    //check if user is the admin\owner in order to get all data, else get data of user only
+                    if($user_role == 'owner' || $user_role == 'admin') {
+                        $gateMagic = Gate::findOrFail($request->gate['id'])->magic_code;
+
+                    $team = Team::findOrFail($teamId);
+                    $teamCode = $team->team_code;
+                    MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
+                    return back(303);
+                    // MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017;");
+                    } else {
+                        abort(404, "Cannot access Gate");
+                    }
                 }
             }
 
@@ -298,9 +311,7 @@ class GateController extends Controller
             $finalQrcode = $qrcode . "S:" . $hashQrcode;
 
             MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
-             return response()
-                ->json(['message' => 'Sent request to open the Gate'])
-                ->setStatusCode(200);
+            return back(303);
         } catch (\Exception $e) {
              abort(404, $e->getMessage());
         }

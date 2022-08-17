@@ -172,7 +172,6 @@ class VirtualTicketController extends Controller
 
             $ticketsGUIDMessage = implode(";", $ticketsGUID);
              MQTT::publish('iotlock/v1/V7JWQE92BS/blacklist', $ticketsGUIDMessage);
-            //  MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017");
 
         } catch (\Exception $e) {
              abort(400, $e->getMessage());
