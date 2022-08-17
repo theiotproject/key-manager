@@ -6,6 +6,8 @@ import JetConfirmationModal from "@/Jetstream/ConfirmationModal.vue";
 import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import MakeToast from "../../Services/MakeToast.vue";
+import RemoteOpenModal from "../../Components/Modals/RemoteOpenModal.vue";
+import JetWarningButton from "@/Jetstream/WarningButton.vue";
 
 const removeGateForm = useForm();
 
@@ -28,6 +30,62 @@ const removeGate = () => {
             MakeToast.create("Cannot delete Gate", "error");
         },
     });
+};
+
+const openGateForm = useForm();
+
+const gateBeingOpened = ref(null);
+
+const confirmOpenRemotely = (gate) => {
+    gateBeingOpened.value = gate;
+};
+
+const openGate = () => {
+    const currentDate = new Date();
+    const validFrom =
+        currentDate.toISOString().slice(0, 10) +
+        " " +
+        currentDate.getHours() +
+        ":" +
+        (currentDate.getMinutes() < 10 ? "0" : "") +
+        currentDate.getMinutes() +
+        ":" +
+        (currentDate.getSeconds() < 10 ? "0" : "") +
+        currentDate.getSeconds();
+    const validTo =
+        currentDate.toISOString().slice(0, 10) +
+        " " +
+        currentDate.getHours() +
+        ":" +
+        (currentDate.getMinutes() < 9
+            ? "0" + (currentDate.getMinutes() + 1)
+            : currentDate.getMinutes() === 59
+            ? "00"
+            : currentDate.getMinutes() + 1) +
+        ":" +
+        (currentDate.getSeconds() < 10 ? "0" : "") +
+        currentDate.getSeconds();
+    openGateForm.post(
+        route("gates.open", [
+            {
+                gate: gateBeingOpened.value,
+                valid_from: validFrom,
+                valid_to: validTo,
+            },
+        ]),
+        {
+            errorBag: "openGate",
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                gateBeingOpened.value = null;
+                MakeToast.create("Request to Open the Gate sent", "info");
+            },
+            onError: () => {
+                MakeToast.create("Cannot open the Gate", "error");
+            },
+        }
+    );
 };
 </script>
 <template>
@@ -139,6 +197,30 @@ const removeGate = () => {
                                                 <td
                                                     class="lg:px-6 md:px-3 py-4 font-medium text-right text-gray-900 whitespace-nowrap flex items-center justify-end"
                                                 >
+                                                    <button
+                                                        class="text-xs text-orange-500 hover:text-orange-700 flex items-center"
+                                                        @click="
+                                                            confirmOpenRemotely(
+                                                                gate
+                                                            )
+                                                        "
+                                                    >
+                                                        <p>Remote Open</p>
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            class="ml-1 h-4 w-4"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                                            />
+                                                        </svg>
+                                                    </button>
                                                     <Link
                                                         v-if="
                                                             role === 'owner' ||
@@ -230,6 +312,33 @@ const removeGate = () => {
                     </JetDangerButton>
                 </template>
             </JetConfirmationModal>
+            <RemoteOpenModal
+                :show="gateBeingOpened !== null"
+                @close="gateBeingOpened = null"
+            >
+                <template #title>
+                    Open Gate Remotely - {{ gateBeingOpened.name }}</template
+                >
+
+                <template #content>
+                    Are you sure you would like to Open this gate?
+                </template>
+
+                <template #footer>
+                    <JetSecondaryButton @click="gateBeingOpened = null">
+                        Cancel
+                    </JetSecondaryButton>
+
+                    <JetWarningButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': openGateForm.processing }"
+                        :disabled="openGateForm.processing"
+                        @click="openGate"
+                    >
+                        Open
+                    </JetWarningButton>
+                </template>
+            </RemoteOpenModal>
         </div>
     </AppLayout>
 </template>
