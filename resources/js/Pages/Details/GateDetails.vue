@@ -5,7 +5,7 @@ import EventsWidget from "./GateEvents.vue";
 import GateVirtualKeys from "./GateVirtualKeys.vue";
 </script>
 <template>
-  <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+  <div class="overflow-hidden shadow-xl sm:rounded-lg container">
     <div class="flex justify-between bg-gradient-to-r from-blue-500 to-sky-400">
       <h2
         class="
@@ -77,18 +77,24 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
         </button>
       </div>
     </div>
-    <section class="mb-96 flex space-x-20 mt-10 p-10 parent">
-      <multi-axis-line-chart class="mt-8 div1" />
-      <events-widget
-        id="thirdStepTour"
-        class="max-h-200 area4 div2"
-        v-bind:attrs="attrs"
-      />
-      <gate-virtual-keys class="div3 mt-20" v-bind:attrs="attrs" />
+    <section class="mb-72 flex space-x-20 mt-10 p-10 parent">
+      <transition appear @before-enter="beforeEnter" @enter="enter1">
+        <gate-virtual-keys class="div1 secondColor" v-bind:attrs="attrs" />
+      </transition>
+      <transition appear @before-enter="beforeEnter" @enter="enter2">
+        <events-widget
+          class="max-h-200 div2 secondColor"
+          v-bind:attrs="attrs"
+        />
+      </transition>
+      <transition appear @before-enter="beforeEnter" @enter="enter3">
+        <multi-axis-line-chart class="div3 secondColor shadow-xl rounded-lg" />
+      </transition>
     </section>
   </div>
 </template>
 <script>
+import gsap from "gsap";
 export default {
   props: ["attrs", "gate"],
   data() {
@@ -99,6 +105,37 @@ export default {
     };
   },
   methods: {
+    beforeEnter(el) {
+      el.style.opacity = 0;
+      el.style.transform = "translateY(40px)";
+    },
+    enter1(el, done) {
+      gsap.to(el, {
+        delay: 0.5,
+        duration: 0.4,
+        opacity: 1,
+        transform: "translateY(0)",
+        onComplete: done,
+      });
+    },
+    enter2(el, done) {
+      gsap.to(el, {
+        delay: 0.7,
+        duration: 0.4,
+        opacity: 1,
+        transform: "translateY(0)",
+        onComplete: done,
+      });
+    },
+    enter3(el, done) {
+      gsap.to(el, {
+        delay: 0.9,
+        duration: 0.4,
+        opacity: 1,
+        transform: "translateY(0)",
+        onComplete: done,
+      });
+    },
     getRole() {
       axios
         .get(`/auth/role/teamId/${this.localAttrs.user.current_team_id}`)
@@ -116,12 +153,20 @@ export default {
 };
 </script>
 <style scoped>
+.container {
+  background-color: #f7f7f7f;
+}
+
+.secondColor {
+  background-color: white;
+}
+
 .parent {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
 }
 
 .div1 {
@@ -129,8 +174,11 @@ export default {
 }
 .div2 {
   grid-area: 1 / 2 / 3 / 3;
+  margin-left: 0 !important;
 }
 .div3 {
   grid-area: 2 / 1 / 3 / 2;
+  margin-left: 0 !important;
+  padding: 20px;
 }
 </style>

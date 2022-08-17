@@ -5,9 +5,11 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import MakeToast from "../../Services/MakeToast.vue";
 </script>
 <template>
-  <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+  <div class="overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
-      <h2 class="py-2 text-gray-900 font-bold text-xl mb-2 flex items-center">
+      <h2
+        class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5 ml-2"
@@ -23,38 +25,11 @@ import MakeToast from "../../Services/MakeToast.vue";
         <p class="ml-3">Virtual Keys</p>
         <button
           @click="switchList"
-          class="ml-2 text-gray-500 text-sm hover:text-gray-700"
+          class="ml-2 text-gray-500 text-xs hover:text-gray-700"
         >
           / Virtual Tickets
         </button>
       </h2>
-      <Link
-        v-if="permission"
-        :href="route('virtualKey.create')"
-        class="
-          mr-10
-          mt-4
-          hover:text-black
-          text-gray-600
-          flex
-          items-center
-          gap-2
-        "
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        Create New Virtual Key
-      </Link>
     </div>
     <div class="pb-5">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -78,7 +53,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                   >
                     User
                   </th>
-                  <th scope="col" class="lg:px-3 md:px-0 py-3 px-5">Label</th>
                   <th
                     scope="col"
                     class="
@@ -89,7 +63,9 @@ import MakeToast from "../../Services/MakeToast.vue";
                       sm:rounded-r-lg
                       rounded-none
                     "
-                  ></th>
+                  >
+                    Label
+                  </th>
                 </tr>
               </thead>
               <thead
@@ -103,16 +79,17 @@ import MakeToast from "../../Services/MakeToast.vue";
                   >
                     User
                   </th>
-                  <th scope="col" class="lg:px-3 md:px-0 py-3">Label</th>
                   <th
                     scope="col"
                     class="lg:px-3 md:px-0 py-3 sm:rounded-r-lg rounded-none"
-                  ></th>
+                  >
+                    Label
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  class="bg-white border-b"
+                  class="bg-white border-b whiteBackground"
                   v-for="(virtualKey, index) in usersVirtualkeys"
                   :key="virtualKey.id"
                 >
@@ -154,44 +131,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     "
                   >
                     {{ virtualKey.label }}
-                  </td>
-                  <td
-                    v-if="index <= 2"
-                    class="
-                      lg:px-3
-                      md:px-0
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    <button
-                      class="
-                        ml-6
-                        text-sm text-blue-500
-                        hover:text-blue-700
-                        flex
-                        items-center
-                      "
-                      @click="generateQrCode(virtualKey)"
-                    >
-                      <p>Generate QR Code</p>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 mx-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                        />
-                      </svg>
-                    </button>
                   </td>
                 </tr>
                 <tr
@@ -454,3 +393,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.whiteBackground {
+  background-color: white;
+}
+</style>

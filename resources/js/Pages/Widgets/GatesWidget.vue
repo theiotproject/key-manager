@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 </script>
 <template>
-  <div class="bg-white overflow-hidden shadow sm:rounded-lg">
+  <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
     <div class="flex justify-between">
       <h2
         class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"

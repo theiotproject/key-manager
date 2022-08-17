@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 import MakeToast from "../../Services/MakeToast.vue";
 </script>
 <template>
-  <div class="verflow-hidden sm:rounded-lg">
+  <div class="overflow-hidden sm:rounded-lg shadow-lg">
     <div class="flex justify-between">
       <h2
         class="m-7 py-2 text-gray-900 font-bold text-xl mb-2 flex items-center"
@@ -171,18 +171,6 @@ import MakeToast from "../../Services/MakeToast.vue";
             </table>
           </div>
         </div>
-        <!--                <div class="mt-5 w-full flex justify-center">-->
-        <!--                    <Link-->
-        <!--                        :href="route('events.index')"-->
-        <!--                        class="-->
-        <!--                        text-gray-600-->
-        <!--                        hover:text-black-->
-        <!--                        py-2-->
-        <!--                        px-4-->
-        <!--                        rounded">-->
-        <!--                        Show all-->
-        <!--                    </Link>-->
-        <!--                </div>-->
       </div>
     </div>
   </div>

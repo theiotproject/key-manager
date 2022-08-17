@@ -99,19 +99,19 @@ onMounted(() => {
             v-bind:attrs="attrs"
           />
         </div>
-        <transition
+        <!-- <transition
           appear
           @before-enter="beforeEnter"
           @enter="enter"
           :css="false"
-        >
+        > -->
           <div
             v-if="details !== null"
             class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
           >
             <GateDetails :gate="details" v-bind:attrs="attrs" />
           </div>
-        </transition>
+        <!-- </transition> -->
       </div>
     </div>
   </AppLayout>
@@ -154,7 +154,7 @@ export default {
     },
     enter(el, done) {
       gsap.to(el, {
-        duration: 1,
+        duration: 0.7,
         height: "auto",
         width: "100%",
         onComplete: done,
