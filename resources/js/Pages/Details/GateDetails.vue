@@ -78,18 +78,17 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
       </div>
     </div>
     <section class="mb-72 flex space-x-20 mt-10 p-10 parent">
-      <transition appear @before-enter="beforeEnter" @enter="enter1">
-        <gate-virtual-keys class="div1 secondColor" v-bind:attrs="attrs" />
-      </transition>
-      <transition appear @before-enter="beforeEnter" @enter="enter2">
-        <events-widget
-          class="max-h-200 div2 secondColor"
-          v-bind:attrs="attrs"
-        />
-      </transition>
-      <transition appear @before-enter="beforeEnter" @enter="enter3">
-        <multi-axis-line-chart class="div3 secondColor shadow-xl rounded-lg" />
-      </transition>
+      <gate-virtual-keys
+        class="div1 secondColor stagger"
+        v-bind:attrs="attrs"
+      />
+      <events-widget
+        class="max-h-200 div2 secondColor stagger"
+        v-bind:attrs="attrs"
+      />
+      <multi-axis-line-chart
+        class="div3 secondColor shadow-xl rounded-lg stagger"
+      />
     </section>
   </div>
 </template>
@@ -105,36 +104,6 @@ export default {
     };
   },
   methods: {
-    beforeEnter(el) {
-      el.style.opacity = 0;
-      el.style.transform = "translateY(40px)";
-    },
-    enter1(el, done) {
-      gsap.to(el, {
-        duration: 0.3,
-        opacity: 1,
-        transform: "translateY(0)",
-        onComplete: done,
-      });
-    },
-    enter2(el, done) {
-      gsap.to(el, {
-        delay: 0.3,
-        duration: 0.3,
-        opacity: 1,
-        transform: "translateY(0)",
-        onComplete: done,
-      });
-    },
-    enter3(el, done) {
-      gsap.to(el, {
-        delay: 0.6,
-        duration: 0.3,
-        opacity: 1,
-        transform: "translateY(0)",
-        onComplete: done,
-      });
-    },
     getRole() {
       axios
         .get(`/auth/role/teamId/${this.localAttrs.user.current_team_id}`)
@@ -148,6 +117,15 @@ export default {
   },
   created() {
     this.getRole();
+  },
+  mounted() {
+    gsap.from(".stagger", {
+      duration: 0.3,
+      opacity: 0,
+      transform: "translateY(40px)",
+      ease: "power1",
+      stagger: 0.2,
+    });
   },
 };
 </script>
