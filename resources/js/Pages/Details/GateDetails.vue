@@ -111,8 +111,7 @@ export default {
     },
     enter1(el, done) {
       gsap.to(el, {
-        delay: 0.5,
-        duration: 0.4,
+        duration: 0.3,
         opacity: 1,
         transform: "translateY(0)",
         onComplete: done,
@@ -120,8 +119,8 @@ export default {
     },
     enter2(el, done) {
       gsap.to(el, {
-        delay: 0.7,
-        duration: 0.4,
+        delay: 0.3,
+        duration: 0.3,
         opacity: 1,
         transform: "translateY(0)",
         onComplete: done,
@@ -129,8 +128,8 @@ export default {
     },
     enter3(el, done) {
       gsap.to(el, {
-        delay: 0.9,
-        duration: 0.4,
+        delay: 0.6,
+        duration: 0.3,
         opacity: 1,
         transform: "translateY(0)",
         onComplete: done,
