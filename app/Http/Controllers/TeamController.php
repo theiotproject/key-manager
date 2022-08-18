@@ -72,7 +72,7 @@ class TeamController extends Controller
         $gates = $teamModel->gates;
 
         foreach ($gates as $gate) {
-            app(ControllersGateController::class)->destroy($gate->id);
+            app(GateController::class)->destroy($gate->id);
         }
 
         app(ValidateTeamDeletion::class)->validate($request->user(), $team);
@@ -81,7 +81,7 @@ class TeamController extends Controller
 
         $deleter->delete($team);
 
-        return $this->redirectPath($deleter);
+        return redirect('/');
     }
 
     public function getRoles()
