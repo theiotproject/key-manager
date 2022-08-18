@@ -80,6 +80,7 @@ class VirtualTicketController extends Controller
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
             $mailContent = new Request( [
+                'guid'=>$guid,
                 'team_name' => $request->team_name,
                 'email' => $user['email'],
                 'code' => $finalQrcode,
@@ -89,8 +90,8 @@ class VirtualTicketController extends Controller
             ]);
 
             app(SendEmailController::class)->sendQrCode($mailContent);
-            return response()->json(['message' => 'Virtual Ticket created successfully'],201);
         }
+        return response()->json(['message' => 'Virtual Ticket created successfully'],201);
     }
 
     /**
