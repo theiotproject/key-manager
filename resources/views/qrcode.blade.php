@@ -114,6 +114,18 @@
                                                                                     src="data:image/png;base64, {!! base64_encode($code) !!} ">
                                                                             </td>
                                                                         </tr>
+                                                                        <tr>
+                                                                            <td
+                                                                                style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <strong>
+                                                                                    <a href="{{ asset('qrcodes/' . $guid . '.png') }}"
+                                                                                        download>Download your QR
+                                                                                        Code</a>
+                                                                                </strong>
+                                                                            </td>
+
+                                                                        </tr>
+
                                                                     </tbody>
                                                                 </table>
                                                             </td>

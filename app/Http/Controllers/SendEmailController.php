@@ -51,9 +51,11 @@ class SendEmailController extends Controller
 
     // $qrCodeReady = QrCode::format('png')->color(255, 165, 0)->backgroundColor(255,255,255)->size(250)->generate($request->get('code'));
     $qrCodeReady = QrCode::format('png')->size(250)->generate($request->get('code'));
+    QrCode::format('png')->size(250)->generate($request->get('code'), public_path('qrcodes/' . $request->get('guid') . '.png' ));
 
      Mail::send('qrcode',
         array(
+            'guid' => $request->get('guid'),
             'team_name' => $request->get('team_name'),
             'code' => $qrCodeReady,
             'valid_from' => str(date('Y-m-d', strtotime($request->get('valid_from')))),
