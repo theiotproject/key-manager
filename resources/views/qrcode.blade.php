@@ -15,291 +15,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Key Manager - Virtual Ticket</title>
-    <style type="text/css">
-        p {
-            margin: 10px 0;
-            padding: 0;
-        }
 
-        table {
-            border-collapse: collapse;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-
-        img,
-        a img {
-            border: 0;
-            height: auto;
-            outline: none;
-            text-decoration: none;
-        }
-
-        body,
-        #bodyTable,
-        #bodyCell {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-
-        #outlook a {
-            padding: 0;
-        }
-
-        img {
-            -ms-interpolation-mode: bicubic;
-        }
-
-        table {
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-        }
-
-        .ReadMsgBody {
-            width: 100%;
-        }
-
-        .ExternalClass {
-            width: 100%;
-        }
-
-        p,
-        a,
-        li,
-        td,
-        blockquote {
-            mso-line-height-rule: exactly;
-        }
-
-        a[href^=tel],
-        a[href^=sms] {
-            color: inherit;
-            cursor: default;
-            text-decoration: none;
-        }
-
-        p,
-        a,
-        li,
-        td,
-        body,
-        table,
-        blockquote {
-            -ms-text-size-adjust: 100%;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        .ExternalClass,
-        .ExternalClass p,
-        .ExternalClass td,
-        .ExternalClass div,
-        .ExternalClass span,
-        .ExternalClass font {
-            line-height: 100%;
-        }
-
-        a[x-apple-data-detectors] {
-            color: inherit !important;
-            text-decoration: none !important;
-            font-size: inherit !important;
-            font-family: inherit !important;
-            font-weight: inherit !important;
-            line-height: inherit !important;
-        }
-
-        #bodyCell {
-            padding: 50px 50px;
-        }
-
-        .templateContainer {
-            max-width: 600px !important;
-            border: 0;
-        }
-
-        a.mcnButton {
-            display: block;
-        }
-
-        .mcnTextContent {
-            word-break: break-word;
-        }
-
-        .mcnTextContent img {
-            height: auto !important;
-        }
-
-        .mcnDividerBlock {
-            table-layout: fixed !important;
-        }
-
-        /***** Make theme edits below if needed *****/
-        /* Page - Background Style */
-        body,
-        #bodyTable {
-            background-color: #e9eaec;
-        }
-
-        /* Page - Heading 1 */
-        h1 {
-            color: #202020;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 26px;
-            font-style: normal;
-            font-weight: bold;
-            line-height: 125%;
-            letter-spacing: normal;
-        }
-
-        /* Page - Heading 2 */
-        h2 {
-            color: #202020;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 22px;
-            font-style: normal;
-            font-weight: bold;
-            line-height: 125%;
-            letter-spacing: normal;
-        }
-
-        /* Page - Heading 3 */
-        h3 {
-            color: #202020;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 20px;
-            font-style: normal;
-            font-weight: bold;
-            line-height: 125%;
-            letter-spacing: normal;
-        }
-
-        /* Page - Heading 4 */
-        h4 {
-            color: #202020;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 18px;
-            font-style: normal;
-            font-weight: bold;
-            line-height: 125%;
-            letter-spacing: normal;
-        }
-
-        /* Header - Header Style */
-        #templateHeader {
-            border-top: 0;
-            border-bottom: 0;
-            padding-top: 0;
-            padding-bottom: 20px;
-            text-align: center;
-        }
-
-        /* Body - Body Style */
-        #templateBody {
-            background-color: #FFFFFF;
-            border-top: 0;
-            border: 1px solid #c1c1c1;
-            padding-top: 0;
-            padding-bottom: 0px;
-        }
-
-        /* Body -Body Text */
-        #templateBody .mcnTextContent,
-        #templateBody .mcnTextContent p {
-            color: #555555;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 14px;
-            line-height: 150%;
-        }
-
-        /* Body - Body Link */
-        #templateBody .mcnTextContent a,
-        #templateBody .mcnTextContent p a {
-            color: #ff7f50;
-            font-weight: normal;
-            text-decoration: underline;
-        }
-
-        /* Footer - Footer Style */
-        #templateFooter {
-            background-color: #e9eaec;
-            border-top: 0;
-            border-bottom: 0;
-            padding-top: 12px;
-            padding-bottom: 12px;
-        }
-
-        /* Footer - Footer Text */
-        #templateFooter .mcnTextContent,
-        #templateFooter .mcnTextContent p {
-            color: #cccccc;
-            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-            font-size: 12px;
-            line-height: 150%;
-            text-align: center;
-        }
-
-        /* Footer - Footer Link */
-        #templateFooter .mcnTextContent a,
-        #templateFooter .mcnTextContent p a {
-            color: #cccccc;
-            font-weight: normal;
-            text-decoration: underline;
-        }
-
-        @media only screen and (min-width:768px) {
-            .templateContainer {
-                width: 600px !important;
-            }
-        }
-
-        @media only screen and (max-width: 480px) {
-
-            body,
-            table,
-            td,
-            p,
-            a,
-            li,
-            blockquote {
-                -webkit-text-size-adjust: none !important;
-            }
-        }
-
-        @media only screen and (max-width: 480px) {
-            body {
-                width: 100% !important;
-                min-width: 100% !important;
-            }
-        }
-
-        @media only screen and (max-width: 680px) {
-            #bodyCell {
-                padding: 20px 20px !important;
-            }
-        }
-
-        @media only screen and (max-width: 480px) {
-            .mcnTextContentContainer {
-                max-width: 100% !important;
-                width: 100% !important;
-            }
-        }
-    </style>
 </head>
 
 <body
     style="height: 100%;margin: 0;padding: 0;width: 100%;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #e9eaec;">
-    <!-- Don't forget to run final template through http://templates.mailchimp.com/resources/inline-css/ -->
     <center>
         <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%"
             id="bodyTable"
@@ -332,61 +52,66 @@
                                                     <tbody>
                                                         <tr>
                                                             <td valign="top"
-                                                                style="padding-top: 30px;padding-right: 30px;padding-bottom: 30px;padding-left: 30px;"
+                                                                style="padding-top: 30px;padding-right: 30px;padding-bottom: 30px;padding-left: 30px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #555555;font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;font-size: 14px;line-height: 150%;"
                                                                 class="mcnTextContent">
                                                                 <table align="left" border="0" cellpadding="0"
                                                                     cellspacing="0" width="100%"
-                                                                    style=" display:block;min-width: 100%;border-collapse: collapse;width:100%;">
+                                                                    style="display: block;min-width: 100%;border-collapse: collapse;width: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                                     <tbody>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#333333;padding-top: 20px;padding-bottom: 3px;">
+                                                                                style="color: #333333;padding-top: 20px;padding-bottom: 3px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                                                 <strong>Sent from Team:</strong>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#555555;padding-top: 3px;padding-bottom: 20px;">
+                                                                                style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                                                 {{ $team_name }}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
                                                                 <table align="left" border="0" cellpadding="0"
                                                                     cellspacing="0" width="100%"
-                                                                    style="border-top:1px solid #dddddd; display:block;min-width: 100%;border-collapse: collapse;width:100%;">
+                                                                    style="border-top: 1px solid #dddddd;display: block;min-width: 100%;border-collapse: collapse;width: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                                     <tbody>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#333333;padding-top: 20px;padding-bottom: 3px;">
-                                                                                <strong>Open Gates:</strong>
+                                                                                style="color: #333333;padding-top: 20px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <strong>{{ $label }}</strong>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#555555;padding-top: 3px;padding-bottom: 20px;">
-                                                                                {{ $label }}</td>
+                                                                                style="color: #555555;padding-top: 3px;padding-bottom: 10px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <strong>Valid from:
+                                                                                    {{ $valid_from }}</strong>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td
+                                                                                style="color: #555555;margin-left:15px;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <strong>Valid to:
+                                                                                    {{ $valid_to }}</strong>
+                                                                            </td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
                                                                 <table align="left" border="0" cellpadding="0"
                                                                     cellspacing="0" width="100%"
-                                                                    style="border-top:1px solid #dddddd; display:block;min-width: 100%;border-collapse: collapse;width:100%;">
+                                                                    style="border-top: 1px solid #dddddd;display: block;min-width: 100%;border-collapse: collapse;width: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                                     <tbody>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#333333;padding-top: 20px;padding-bottom: 3px;">
-                                                                                <strong>Your Virtual Ticket</strong>
-                                                                                <p><strong>Valid from:
-                                                                                        {{ $valid_from }}</strong></p>
-                                                                                <p><strong>Valid to:
-                                                                                        {{ $valid_to }}</strong></p>
-
+                                                                                style="color: #333333;padding-top: 20px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <strong>Your Virtual Ticket:</strong>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td
-                                                                                style="color:#555555;padding-top: 3px;padding-bottom: 20px;">
-                                                                                {!! QrCode::size(250)->generate($code) !!}
+                                                                                style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                <img
+                                                                                    src="data:image/png;base64, {!! base64_encode($code) !!} ">
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>

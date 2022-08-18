@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Contact;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use DateTime;
 
 class SendEmailController extends Controller
 {
@@ -48,12 +49,15 @@ class SendEmailController extends Controller
       'email'  =>  'required|email',
      ]);
 
+    // $qrCodeReady = QrCode::format('png')->color(255, 165, 0)->backgroundColor(255,255,255)->size(250)->generate($request->get('code'));
+    $qrCodeReady = QrCode::format('png')->size(250)->generate($request->get('code'));
+
      Mail::send('qrcode',
         array(
             'team_name' => $request->get('team_name'),
-            'code' => $request->get('code'),
-            'valid_from' => $request->get('valid_from'),
-            'valid_to' => $request->get('valid_to'),
+            'code' => $qrCodeReady,
+            'valid_from' => str(date('Y-m-d', strtotime($request->get('valid_from')))),
+            'valid_to' => str(date('Y-m-d', strtotime($request->get('valid_to')))),
             'label' => $request->get('label'),
         ), function($message) use ($request)
         {
