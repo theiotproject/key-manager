@@ -94,7 +94,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                   :key="virtualKey.id"
                 >
                   <td
-                    v-if="index <= 2"
+                    v-if="index <= 3"
                     class="
                       lg:px-3
                       md:px-0
@@ -120,7 +120,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                   </td>
                   <td
-                    v-if="index <= 2"
+                    v-if="index <= 3"
                     class="
                       lg:px-3
                       md:px-0
@@ -134,12 +134,12 @@ import MakeToast from "../../Services/MakeToast.vue";
                   </td>
                 </tr>
                 <tr
-                  class="bg-white border-b"
+                  class="bg-white border-b whiteBackground"
                   v-for="(virtualKey, index) in notUsersVirtualKeys"
                   :key="virtualKey.id"
                 >
                   <td
-                    v-if="usersVirtualkeys.length + index < 3"
+                    v-if="usersVirtualkeys.length + index < 4"
                     class="
                       lg:px-3
                       md:px-0
@@ -165,7 +165,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                   </td>
                   <td
-                    v-if="usersVirtualkeys.length + index < 3"
+                    v-if="usersVirtualkeys.length + index < 4"
                     class="
                       lg:px-3
                       md:px-0
@@ -183,15 +183,18 @@ import MakeToast from "../../Services/MakeToast.vue";
           </div>
         </div>
         <div
-          class="mt-5 w-full flex justify-center"
-          v-if="virtualKeys.length > 3"
+          class="w-full flex justify-center"
+          v-if="usersVirtualkeys.length + notUsersVirtualKeys.length > 4"
         >
-          <Link
-            :href="route('virtualKeys.index')"
-            class="text-gray-600 hover:text-black py-2 px-4 rounded"
+          <p
+            v-if="showAllVK === false"
+            @click="showAllVK = !showAllVK"
+            class="text-gray-600 hover:text-black pt-4 rounded cursor-pointer"
           >
-            Show more
-          </Link>
+            Show
+            {{ usersVirtualkeys.length + notUsersVirtualKeys.length - 4 }} More
+            Virtual Keys
+          </p>
         </div>
       </div>
     </div>
@@ -208,6 +211,7 @@ export default {
       virtualKeys: this.virtualKeys,
       permission: 0,
       localAttrs: this.attrs,
+      showAllVK: false,
     };
   },
   methods: {

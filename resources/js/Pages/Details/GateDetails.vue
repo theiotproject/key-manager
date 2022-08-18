@@ -94,7 +94,7 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
         </button>
       </div>
     </div>
-    <section class="mb-72 flex space-x-20 mt-10 p-10 parent">
+    <section class="mb-72 flex space-x-20 mt-2 p-10 parent">
       <gate-virtual-keys
         class="div1 secondColor stagger"
         :attrs="attrs"
