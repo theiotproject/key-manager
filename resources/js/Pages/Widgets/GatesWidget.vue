@@ -161,7 +161,8 @@ const openGate = () => {
                                         class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
                                         <button
-                                            class="text-xs text-orange-500 hover:text-orange-700 flex items-center"
+                                            style="color: #ff9900"
+                                            class="text-xs flex items-center"
                                             @click="confirmOpenRemotely(gate)"
                                         >
                                             <p>Remote Open</p>
