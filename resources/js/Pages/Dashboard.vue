@@ -6,6 +6,7 @@ import GatesWidget from "./Widgets/GatesWidget.vue";
 import VirtualKeysWidget from "./Widgets/VirtualKeysWidget.vue";
 import UsersWidget from "./Widgets/UsersWidget.vue";
 import EventsWidget from "./Widgets/EventsWidget.vue";
+import GateDetails from "./Details/GateDetails.vue";
 import HomeHeader from "../Components/Home/HomeHeader.vue";
 import VirtualTicketsWidget from "./Widgets/VirtualTicketsWidget.vue";
 import introJs from "intro.js";
@@ -45,7 +46,7 @@ onMounted(() => {
       {
         title: `Virtual Tickets! 🎫`,
         intro: `If you want to give access to your gates by sharing time limited qr code via e-mail you can also create Virtual Ticket available here or in "Virtual Tickets" card`,
-          element: document.querySelector("#secondStepTour"),
+        element: document.querySelector("#secondStepTour"),
       },
     ],
   });
@@ -66,70 +67,108 @@ onMounted(() => {
     </template>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="parent gap-x-5 gap-y-5">
+        <div v-if="details === null" class="parent gap-x-5 gap-y-5">
           <GatesWidget
             class="max-h-100 area1"
             v-bind:attrs="attrs"
             id="firstStepTour"
+            @showGateDetails="showGateDetails"
           />
           <UsersWidget class="max-h-100 area2" v-bind:attrs="attrs" />
           <transition name="slide" mode="out-in">
-                        <VirtualKeysWidget
-                            v-if="showKeyList"
-                            class="max-h-100 area3"
-                            v-bind:attrs="attrs"
-                            v-on:switch="switchKeyList"
-                            id="secondStepTour"
-                        />
-                    </transition>
+            <VirtualKeysWidget
+              v-if="showKeyList"
+              class="max-h-100 area3"
+              v-bind:attrs="attrs"
+              v-on:switch="switchKeyList"
+              id="secondStepTour"
+            />
+          </transition>
 
-                    <transition name="slide" mode="out-in">
-                        <VirtualTicketsWidget
-                            v-if="!showKeyList"
-                            class="max-h-100 area3"
-                            v-bind:attrs="attrs"
-                            v-on:switch="switchKeyList"
-                        />
-                    </transition>
+          <transition name="slide" mode="out-in">
+            <VirtualTicketsWidget
+              v-if="!showKeyList"
+              class="max-h-100 area3"
+              v-bind:attrs="attrs"
+              v-on:switch="switchKeyList"
+            />
+          </transition>
           <EventsWidget
             id="thirdStepTour"
             class="max-h-200 area4"
             v-bind:attrs="attrs"
           />
         </div>
+        <!-- <transition
+          appear
+          @before-enter="beforeEnter"
+          @enter="enter"
+          :css="false"
+        > -->
+        <div
+          v-if="details !== null"
+          class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
+        >
+          <GateDetails :gate="details" v-bind:attrs="attrs" />
+        </div>
+        <!-- </transition> -->
       </div>
     </div>
   </AppLayout>
 </template>
 
 <script>
+import gsap from "gsap";
+import { Flip } from "gsap/dist/Flip";
 import GateShow from "./Gates/Show.vue";
 import CreateGateForm from "./Gates/Partials/CreateGateForm.vue";
 
 export default {
-    components: {
-        GateShow,
-        CreateGateForm,
+  components: {
+    GateShow,
+    CreateGateForm,
+  },
+  data() {
+    return {
+      showKeyList: true,
+      component: "GateShow",
+      attrs: this.$attrs,
+      details: null,
+      size: {},
+    };
+  },
+  methods: {
+    switchKeyList() {
+      this.showKeyList = !this.showKeyList;
     },
-    data() {
-        return {
-            showKeyList: true,
-            component: "GateShow",
-            attrs: this.$attrs,
-        };
+    toggle() {
+      if (this.component === "GateShow") {
+        this.component = "CreateGateForm";
+      } else {
+        this.component = "GateShow";
+      }
     },
-    methods: {
-        switchKeyList() {
-            this.showKeyList = !this.showKeyList;
-        },
-        toggle() {
-            if (this.component === "GateShow") {
-                this.component = "CreateGateForm";
-            } else {
-                this.component = "GateShow";
-            }
-        },
+    beforeEnter(el) {
+      el.style.height = this.size.height + "px";
+      el.style.width = this.size.width + "px";
     },
+    enter(el, done) {
+      gsap.to(el, {
+        duration: 0.7,
+        height: "auto",
+        width: "100%",
+        onComplete: done,
+      });
+    },
+    showGateDetails(gate) {
+      const gatesWidget = document.querySelector(".area1");
+      this.size = {
+        width: gatesWidget.offsetWidth,
+        height: gatesWidget.offsetHeight,
+      };
+      this.details = gate;
+    },
+  },
 };
 </script>
 
@@ -198,12 +237,12 @@ export default {
 }
 .slide-enter-active,
 .slide-leave-active {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .slide-enter-from,
 .slide-leave-to {
-    transform: translate(-10px, 10px);
-    opacity: 0;
+  transform: translate(-10px, 10px);
+  opacity: 0;
 }
 </style>
