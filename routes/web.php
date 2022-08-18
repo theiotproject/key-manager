@@ -94,10 +94,13 @@ Route::middleware([
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
     Route::get('/events/teamId/{teamId}/limit/{limit}', [EventController::class, 'indexEventsByTeamId']);
     Route::get('/events/teamId/{teamId}/limit/{limit}/rejected', [EventController::class, 'indexRejectedEventsByTeamId']);
+    Route::get('/events/teamId/{teamId}/gateId/{gateId}/limit/{limit}', [EventController::class, 'indexEventsByGate']);
+    Route::get('/events/gateSN/{gateSerialNumber}/count', [EventController::class, 'countAccessForGateLast7Days']);
     Route::delete('/gates/{gate}', [GateController::class, 'destroy'])->name('gates.destroy');
     Route::get('/gates/{gate}/edit', [GateController::class, 'edit'])->name('gates.edit');
     Route::put('/gates/{gate}', [GateController::class, 'update']);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
+    Route::get('/virtualKeys/gate/{gateId}', [VirtualKeyController::class, 'indexVirtualKeysByGate']);
     Route::put('/tours', [ToursController::class, 'update']);
 });
 

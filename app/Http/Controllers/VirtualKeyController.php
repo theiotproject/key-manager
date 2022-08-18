@@ -141,6 +141,17 @@ class VirtualKeyController extends Controller
         return $virtualKeys;
     }
 
+    public function indexVirtualKeysByGate($gateId)
+    {
+        $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
+            $q->where('gate_id', $gateId);
+        })->get();
+        foreach ($virtualKeys as $virtualKey) {
+            $virtualKey->user;
+        }
+        return $virtualKeys;
+    }
+
     public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
     {
         //check user permission
@@ -150,8 +161,8 @@ class VirtualKeyController extends Controller
 
         //check if user is the admin\owner in order to get all data, else get data of user only
         if ($user_role == 'owner' || $user_role == 'admin') {
-             $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
             })->get();
 
             foreach ($virtualKeys as $virtualKey) {
@@ -161,9 +172,9 @@ class VirtualKeyController extends Controller
 
             return $virtualKeys;
         } else {
-            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId,$userId) {
-            $query->where('team_id', $teamId);
-            $query->where('user_id', $userId);
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
+                $query->where('team_id', $teamId);
+                $query->where('user_id', $userId);
             })->get();
 
             foreach ($virtualKeys as $virtualKey) {
@@ -184,5 +195,35 @@ class VirtualKeyController extends Controller
         return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
+    public function openGateRemotely(Request $request)
+    {
+        $userId = $request->user()->id;
+        $guid = $request->id;
+        $validFrom = $request->valid_from;
+        $validTo = $request->valid_to;
+        $gateSerialNumber = $request->gate;
+        $teamId = $request->team_id;
 
+        //check if user has access to key, then give team code
+        try {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $gateSerialNumber, $userId) {
+                $query->where('team_id', $teamId);
+                $query->where("serial_number", $gateSerialNumber);
+                $query->where('user_id', $userId);
+            })->firstOrFail();
+
+            $team = Team::findOrFail($teamId);
+            $teamCode = $team->team_code;
+            $qrcode = "OPEN:ID:{$guid};VF:{$validFrom};VT:{$validTo};L:{$gateSerialNumber};;";
+            $hashQrcode = hash('sha256', $qrcode . $teamCode);
+            $finalQrcode = $qrcode . "S:" . $hashQrcode;
+
+            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+            return response()
+                ->json(['message' => 'Sent request to open the Gate'])
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            abort(404, $e->getMessage());
+        }
+    }
 }

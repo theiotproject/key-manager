@@ -383,7 +383,7 @@ export default {
 
                     var qrCode = `OPEN:ID:${virtualTicket.guid};VF:${virtualTicket.validFrom};VT:${virtualTicket.validTo};L:${gateSerialNumbers};;`;
                     var hashQrCode = sha256(qrCode + teamCode);
-                    var finalQrCode = qrCode + "S:" + hashQrCode;
+                    var finalQrCode = qrCode + "S:" + hashQrCode + ";";
                     this.qrCode.value = finalQrCode;
                     this.qrCodeValid = true;
                 })
