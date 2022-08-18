@@ -110,8 +110,11 @@
                                                                         <tr>
                                                                             <td
                                                                                 style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                                                                                {{-- <img
+                                                                                    src="data:image/png;base64, {!! base64_encode($code) !!} "> --}}
+                                                                                {{-- {!! QrCode::size(250)->generate('Welcome to Makitweb') !!} --}}
                                                                                 <img
-                                                                                    src="data:image/png;base64, {!! base64_encode($code) !!} ">
+                                                                                    src="{{ asset('qrcodes/' . $guid . '.png') }}" />
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
