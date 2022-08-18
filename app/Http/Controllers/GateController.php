@@ -308,7 +308,7 @@ class GateController extends Controller
             $teamCode = $team->team_code;
             $qrcode = "OPEN:ID:{$guid};VF:{$validFrom};VT:{$validTo};L:{$gateSerialNumber};;";
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
-            $finalQrcode = $qrcode . "S:" . $hashQrcode;
+            $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
             MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
             return back(303);
