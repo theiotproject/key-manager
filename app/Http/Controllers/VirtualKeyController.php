@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\GateResource;
 use App\Http\Resources\VirtualKeyResource;
 use PhpMqtt\Client\Facades\MQTT;
+use App\Http\Controllers\TeamController;
 
 
 class VirtualKeyController extends Controller
@@ -153,16 +154,36 @@ class VirtualKeyController extends Controller
 
     public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
     {
-        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-        })->get();
+        //check user permission
+        $userId = auth()->user()->id;
 
-        foreach ($virtualKeys as $virtualKey) {
-            $virtualKey->user;
-            $virtualKey->gates;
+        $user_role = app(TeamController::class)->getUserRole($teamId, $userId);
+
+        //check if user is the admin\owner in order to get all data, else get data of user only
+        if ($user_role == 'owner' || $user_role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+
+            foreach ($virtualKeys as $virtualKey) {
+                $virtualKey->user;
+                $virtualKey->gates;
+            }
+
+            return $virtualKeys;
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
+                $query->where('team_id', $teamId);
+                $query->where('user_id', $userId);
+            })->get();
+
+            foreach ($virtualKeys as $virtualKey) {
+                $virtualKey->user;
+                $virtualKey->gates;
+            }
+
+            return $virtualKeys;
         }
-
-        return $virtualKeys;
     }
 
     public function indexByTeamIdForLoggedUser(Request $request, $teamId)

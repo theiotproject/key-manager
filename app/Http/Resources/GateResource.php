@@ -15,12 +15,12 @@ class GateResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'serial_number' => $this->serial_number,
-            'name' => $this->name,
-            'team_id' => $this->team_id,
-            'updated_at' =>$this->updated_at,
-            'created_at' => $this->created_at
+            'id' => $this['id'],
+            'serial_number' => $this['serial_number'],
+            'name' => $this['name'],
+            'team_id' => $this['team_id'],
+            'updated_at' =>$this['updated_at'],
+            'created_at' => $this['created_at']
         ];
     }
 }

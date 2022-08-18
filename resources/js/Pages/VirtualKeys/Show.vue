@@ -318,30 +318,6 @@ const removeVirtualKey = () => {
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 mt-2 text-right font-medium text-gray-900 whitespace-nowrap flex items-center justify-end"
                                                 >
-                                                    <button
-                                                        class="ml-6 text-sm text-blue-500 hover:text-blue-700 flex items-center"
-                                                        @click="
-                                                            generateQrCode(
-                                                                virtualKey
-                                                            )
-                                                        "
-                                                    >
-                                                        <p>Generate QR Code</p>
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            class="h-5 w-5 mx-1"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                            stroke-width="2"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                                                            />
-                                                        </svg>
-                                                    </button>
                                                     <Link
                                                         v-if="
                                                             role === 'owner' ||
@@ -446,11 +422,17 @@ const removeVirtualKey = () => {
             >
                 <template #title> {{ usedVirtualKey }} </template>
 
-                <template #content v-if="qrCodeReady && validDay">
+                <template
+                    #content
+                    v-if="qrCodeReady && validDay && qrCodeValid"
+                >
                     <p class="py-5">
                         This code will expire in: {{ countDown.toFixed(1) }}
                     </p>
                     <qrcode-vue :value="qrCode.value" :size="300" level="H" />
+                </template>
+                <template #content v-else-if="!qrCodeValid">
+                    <p class="py-5">Cannot generate QR Code</p>
                 </template>
                 <template #content v-else-if="!validDay">
                     <p class="py-5">Day is not valid</p>
@@ -477,6 +459,8 @@ const removeVirtualKey = () => {
 
 <script>
 import QrcodeVue from "qrcode.vue";
+import sha256 from "js-sha256";
+
 export default {
     name: "VirtualKeyShow",
     data() {
@@ -488,6 +472,7 @@ export default {
             validDay: false,
             qrCodeReady: false,
             showQrCode: false,
+            qrCodeValid: false,
             timer: false,
             countDown: 60,
             usedVirtualKey: "",
@@ -580,7 +565,7 @@ export default {
                 .map((gate) => gate.serial_number)
                 .toString();
             const guid = this.generateGuid();
-            this.qrCode.value =
+            var qrCode =
                 "OPEN:ID:" +
                 guid +
                 ";VF:" +
@@ -606,6 +591,26 @@ export default {
                 .catch((err) => {
                     MakeToast.create("Cannot create key usage", "error");
                 });
+
+            var teamCode = "";
+            await axios
+                .get(
+                    `/api/teams/code/${this.attrs.user.current_team_id}/${virtualKey.id}`
+                )
+                .then((response) => {
+                    teamCode = response.data;
+
+                    var hashQrCode = sha256(qrCode + teamCode);
+                    var finalQrCode = qrCode + "S:" + hashQrCode;
+                    this.qrCode.value = finalQrCode;
+                    this.qrCodeValid = true;
+                })
+                .catch((err) => {
+                    MakeToast.create("Failed to access Code", "error");
+                    this.qrCodeValid = false;
+                    return;
+                });
+            console.log(this.qrCode.value);
         },
         generateGuid() {
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
