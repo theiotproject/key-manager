@@ -105,12 +105,12 @@ onMounted(() => {
           @enter="enter"
           :css="false"
         > -->
-          <div
-            v-if="details !== null"
-            class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
-          >
-            <GateDetails :gate="details" v-bind:attrs="attrs" />
-          </div>
+        <div
+          v-if="details !== null"
+          class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
+        >
+          <GateDetails :gate="details" v-bind:attrs="attrs" />
+        </div>
         <!-- </transition> -->
       </div>
     </div>

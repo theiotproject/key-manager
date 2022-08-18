@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Gate;
 use App\Models\KeyUsage;
 use App\Models\VirtualKey;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -191,4 +192,60 @@ class EventController extends Controller
         }
         return $result;
     }
+
+    public function countAccessForGateLast7Days($gateSerialNumber)
+    {
+        $last7Days = getLastNDays(7, 'Y-m-d');
+
+        $labels = [$last7Days[0], $last7Days[1], $last7Days[2], $last7Days[3], $last7Days[4], $last7Days[5], $last7Days[6]];
+
+        $last7DaysAccessGranted = array();
+
+        $last7DaysAccessDenied = array();
+
+        // $last7DaysAccessGranted = [
+        //     $last7Days[0] => '',
+        //     $last7Days[1] => '',
+        //     $last7Days[2] => '',
+        //     $last7Days[3] => '',
+        //     $last7Days[4] => '',
+        //     $last7Days[5] => '',
+        //     $last7Days[6] => '',
+        // ];
+
+        // $last7DaysAccessDenied = [
+        //     $last7Days[0] => '',
+        //     $last7Days[1] => '',
+        //     $last7Days[2] => '',
+        //     $last7Days[3] => '',
+        //     $last7Days[4] => '',
+        //     $last7Days[5] => '',
+        //     $last7Days[6] => '',
+        // ];
+
+
+        foreach ($last7Days as $day) {
+            array_push($last7DaysAccessGranted, Event::whereDate('scan_time', $day)->where('serial_number', $gateSerialNumber)->where('status', 1)->count());
+            array_push($last7DaysAccessDenied, Event::whereDate('scan_time', $day)->where('serial_number', $gateSerialNumber)->where('status', 0)->count());
+        }
+
+        $last7DaysData = [
+            'labels' => $labels,
+            'accessGranted' => $last7DaysAccessGranted,
+            'accessDenied' => $last7DaysAccessDenied
+        ];
+        return $last7DaysData;
+    }
+}
+
+function getLastNDays($days, $format)
+{
+    $m = date("m");
+    $de = date("d");
+    $y = date("Y");
+    $dateArray = array();
+    for ($i = 0; $i <= $days - 1; $i++) {
+        $dateArray[] = date($format, mktime(0, 0, 0, $m, ($de - $i), $y));
+    }
+    return array_reverse($dateArray);
 }

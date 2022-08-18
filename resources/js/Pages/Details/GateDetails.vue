@@ -37,7 +37,15 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
       <div class="flex items-center mr-5">
         <Link
           v-if="role === 'owner' || role === 'admin'"
-          class="cursor-pointer ml-6 text-sm text-blue-500 hover:text-blue-700"
+          class="
+            cursor-pointer
+            ml-6
+            text-sm text-blue-500
+            hover:text-blue-700
+            bg-sky-100
+            rounded-full
+            p-1
+          "
           :href="route('gates.edit', [gate])"
         >
           <svg
@@ -57,7 +65,16 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
         </Link>
         <button
           v-if="role === 'owner' || role === 'admin'"
-          class="cursor-pointer ml-6 text-sm text-red-500 hover:text-red-700"
+          class="
+            cursor-pointer
+            ml-6
+            text-sm text-red-500
+            hover:text-red-700
+            bg-sky-100
+            rounded-full
+            p-1
+            mr-8
+          "
           @click="confirmGateRemoval(gate)"
         >
           <svg
@@ -89,7 +106,10 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
         :gate="gate"
       />
       <multi-axis-line-chart
+        v-if="chartLoaded"
         class="div3 secondColor shadow-xl rounded-lg stagger"
+        :chartData="chartData"
+        :gate="gate"
       />
     </section>
   </div>
@@ -103,6 +123,8 @@ export default {
       gate: this.gate,
       virtualKeys: {},
       localAttrs: this.attrs,
+      chartLoaded: false,
+      chartData: {},
       role: "",
     };
   },
@@ -122,10 +144,33 @@ export default {
         this.virtualKeys = response.data;
       });
     },
+    getChartData() {
+      axios
+        .get(`/events/gateSN/${this.gate.serial_number}/count`)
+        .then((response) => {
+          this.chartData = {
+            labels: response.data.labels,
+            datasets: [
+              {
+                label: "Access Granted",
+                backgroundColor: "green",
+                data: response.data.accessGranted,
+              },
+              {
+                label: "Access Denied",
+                backgroundColor: "red",
+                data: response.data.accessDenied,
+              },
+            ],
+          };
+          this.chartLoaded = true;
+        });
+    },
   },
   created() {
     this.getRole();
     this.getVirtualKeys();
+    this.getChartData();
   },
   mounted() {
     gsap.from(".stagger", {

@@ -1,4 +1,4 @@
-import { defineComponent, h, PropType } from 'vue'
+import { defineComponent, h, PropType, defineProps } from 'vue'
 
 import { Line } from 'vue-chartjs'
 import {
@@ -29,6 +29,7 @@ export default defineComponent({
         Line
     },
     props: {
+        chartData: Object,
         chartId: {
             type: String,
             default: 'line-chart'
@@ -54,28 +55,9 @@ export default defineComponent({
             default: () => []
         }
     },
+
     setup(props) {
-        const chartData = {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            datasets: [
-                {
-                    label: 'Access Granted',
-                    backgroundColor: 'green',
-                    data: [40, 39, 10, 40, 39, 80, 40]
-                },
-                {
-                    label: 'Access Denied',
-                    backgroundColor: 'red',
-                    data: [20, 10, 5, 10, 2, 12, 20]
-                }
-            ]
-        }
-
-        let start = new Date(),
-            end = new Date();
-
-        start.setDate(start.getDate() - 7); // set to 'now' minus 7 days.
-        start.setHours(0, 0, 0, 0); // set to midnight.
+        const chartData = props.chartData;
 
         const chartOptions = {
             responsive: true,
@@ -87,17 +69,6 @@ export default defineComponent({
                 }
             }
         }
-        //     scales: {
-        //         xAxes: [{
-        //             type: "time",
-        //             time: {
-        //                 min: start,
-        //                 max: end,
-        //                 unit: "day"
-        //             }
-        //         }]
-        //     }
-        // }
 
         return () =>
             h(Line, {
