@@ -102,6 +102,7 @@ Route::middleware([
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
     Route::get('/virtualKeys/gate/{gateId}', [VirtualKeyController::class, 'indexVirtualKeysByGate']);
     Route::put('/tours', [ToursController::class, 'update']);
+    Route::delete('/teams/delete/{teamId}', [TeamController::class, 'destroy'])->name('teams.delete');
 });
 
 

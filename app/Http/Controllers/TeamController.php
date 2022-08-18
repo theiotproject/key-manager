@@ -63,6 +63,27 @@ class TeamController extends Controller
         return $team;
     }
 
+    public function destroy(Request $request, $teamId)
+    {
+        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+
+        $teamModel = Team::find($teamId);
+
+        $gates = $teamModel->gates;
+
+        foreach ($gates as $gate) {
+            app(ControllersGateController::class)->destroy($gate->id);
+        }
+
+        app(ValidateTeamDeletion::class)->validate($request->user(), $team);
+
+        $deleter = app(DeletesTeams::class);
+
+        $deleter->delete($team);
+
+        return $this->redirectPath($deleter);
+    }
+
     public function getRoles()
     {
         return array_values(Jetstream::$roles);
@@ -80,8 +101,7 @@ class TeamController extends Controller
         $userVirtualTickets = VirtualTicket::where("email", $userEmail)->get();
 
         //check if user has the key in order to get team_code
-        foreach($userVirtualTickets as $userVirtualTicket)
-        {
+        foreach ($userVirtualTickets as $userVirtualTicket) {
             if ($virtualTicketId == $userVirtualTicket->id) {
                 $team = Team::findOrFail($teamId);
                 return $team->team_code;
@@ -98,8 +118,7 @@ class TeamController extends Controller
         $userVirtualKeys = VirtualKey::where("user_id", $userId)->get();
 
         //check if user has the key in order to get team_code
-          foreach($userVirtualKeys as $userVirtualKey)
-        {
+        foreach ($userVirtualKeys as $userVirtualKey) {
             if ($virtualKeyId == $userVirtualKey->id) {
                 $team = Team::findOrFail($teamId);
                 return $team->team_code;
