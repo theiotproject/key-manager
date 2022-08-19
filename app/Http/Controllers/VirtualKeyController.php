@@ -141,11 +141,11 @@ class VirtualKeyController extends Controller
         return $virtualKeys;
     }
 
-    public function indexVirtualKeysByGate($gateId)
+    public function indexVirtualKeysByGate($gateId, $limit)
     {
         $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
             $q->where('gate_id', $gateId);
-        })->get();
+        })->simplePaginate($limit);
         foreach ($virtualKeys as $virtualKey) {
             $virtualKey->user;
         }

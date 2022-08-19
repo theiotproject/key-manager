@@ -98,7 +98,7 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
       <gate-virtual-keys
         class="div1 secondColor stagger"
         :attrs="attrs"
-        :virtualKeys="virtualKeys"
+        :gate="gate"
       />
       <events-widget
         class="max-h-200 div2 secondColor stagger"
@@ -139,11 +139,6 @@ export default {
           MakeToast.create("Cannot load role", "error");
         });
     },
-    getVirtualKeys() {
-      axios.get(`/virtualKeys/gate/${this.gate.id}`).then((response) => {
-        this.virtualKeys = response.data;
-      });
-    },
     getChartData() {
       axios
         .get(`/events/gateSN/${this.gate.serial_number}/count`)
@@ -169,7 +164,6 @@ export default {
   },
   created() {
     this.getRole();
-    this.getVirtualKeys();
     this.getChartData();
   },
   mounted() {
