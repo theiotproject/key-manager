@@ -8,6 +8,7 @@ use App\Mail\SendMail;
 use App\Models\Contact;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DateTime;
+use File;
 
 class SendEmailController extends Controller
 {
@@ -53,6 +54,8 @@ class SendEmailController extends Controller
     $qrCodeReady = QrCode::format('png')->size(250)->generate($request->get('code'));
     QrCode::format('png')->size(250)->generate($request->get('code'), public_path('qrcodes/' . $request->get('guid') . '.png' ));
 
+    
+
      Mail::send('qrcode',
         array(
             'guid' => $request->get('guid'),
@@ -66,5 +69,11 @@ class SendEmailController extends Controller
             $message->subject("Key Manager - Virtual Ticket");
             $message->to($request->get('email'));
         });
+        // delete();
     }
+    
+    // function delete() {
+    //     sleep(5);
+    // unlink(public_path('qrcodes/' . $request->get('guid') . '.png'));
+    // }
 }
