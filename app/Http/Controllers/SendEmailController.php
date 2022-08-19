@@ -51,27 +51,33 @@ class SendEmailController extends Controller
      ]);
 
     // $qrCodeReady = QrCode::format('png')->color(255, 165, 0)->backgroundColor(255,255,255)->size(250)->generate($request->get('code'));
+    $filePath = public_path('qrcodes/' . $request->get('guid') . '.png');
     $qrCodeReady = QrCode::format('png')->size(250)->generate($request->get('code'));
-    QrCode::format('png')->size(250)->generate($request->get('code'), public_path('qrcodes/' . $request->get('guid') . '.png' ));
+    QrCode::format('png')->size(250)->generate($request->get('code'), $filePath);
 
-    
+    $qrCodeAsPng = QrCode::format('png')->size(500)->generate("my text for the QR code");
 
      Mail::send('qrcode',
         array(
             'guid' => $request->get('guid'),
             'team_name' => $request->get('team_name'),
             'code' => $qrCodeReady,
+            'test'=>$qrCodeAsPng,
+            'codeRaw'=>$request->get('code'),
             'valid_from' => str(date('Y-m-d', strtotime($request->get('valid_from')))),
             'valid_to' => str(date('Y-m-d', strtotime($request->get('valid_to')))),
             'label' => $request->get('label'),
-        ), function($message) use ($request)
+            'path'=> $filePath,
+        ), function($message) use ($request, $filePath, $qrCodeAsPng)
         {
             $message->subject("Key Manager - Virtual Ticket");
             $message->to($request->get('email'));
+            // $message->attach($qrCodeAsPng);
+            $message->embedData(base64_encode(QrCode::format('png')->size(250)->generate($request->get('code'))), 'qrcode.png');
         });
         // delete();
     }
-    
+
     // function delete() {
     //     sleep(5);
     // unlink(public_path('qrcodes/' . $request->get('guid') . '.png'));

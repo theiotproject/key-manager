@@ -110,23 +110,50 @@
                                                                         <tr>
                                                                             <td
                                                                                 style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-                                                                                {{-- <img
-                                                                                    src="data:image/png;base64, {!! base64_encode($code) !!} "> --}}
-                                                                                {{-- {!! QrCode::size(250)->generate('Welcome to Makitweb') !!} --}}
-                                                                                <img
-                                                                                    src="{{ asset('qrcodes/' . $guid . '.png') }}" />
+                                                                                BASE64:
+                                                                                <div
+                                                                                    style="padding:30px;background-color:#FFFFFF">
+                                                                                    <img src="data:image/png;base64, {!! base64_encode($code) !!} "
+                                                                                        style="display:block;width=100%;max-width:250px;">
+                                                                                </div>
+                                                                                </br>
+                                                                                </br>
+                                                                                </br>
+                                                                                SVG:
+                                                                                <div
+                                                                                    style="padding:30px;background-color:#FFFFFF;text-align:center;">
+                                                                                    {!! QrCode::size(250)->generate($codeRaw) !!}
+                                                                                </div>
+                                                                                </br>
+                                                                                </br>
+                                                                                </br>
+                                                                                IMG FROM ASSETS:
+                                                                                <div
+                                                                                    style="padding:30px;background-color:#FFFFFF">
+                                                                                    <img src="{{ asset('qrcodes/' . $guid . '.png') }}"
+                                                                                        style="display:block;width=100%;max-width:250px;" />
+                                                                                </div>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td
-                                                                                style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-                                                                                <strong>
-                                                                                    <a href="{{ asset('qrcodes/' . $guid . '.png') }}"
-                                                                                        download>Download your QR
-                                                                                        Code</a>
-                                                                                </strong>
-                                                                            </td>
-
+                                                                            {{-- <td <img alt=3D"kod QR" border=3D"0"
+                                                                                class=3D"qr-code"
+                                                                                src==3D"cid:73a1856c-d4fb-39ef-9e32-6f8ae84da3cf"
+                                                                                style=3D"display: block; widt=h: 100%;
+                                                                                max-width: 202px;">
+                                                                            </td> --}}
+                                                                            TEST
+                                                                            {{-- <img src="{!! $message->embedData(
+                                                                                QrCode::format('png')->size(500)->generate('my text for the QR code'),
+                                                                                'QrCode.png',
+                                                                                'image/png',
+                                                                            ) !!}"> --}}
+                                                                            <div
+                                                                                style="padding:30px;background-color:#FFFFFF">
+                                                                                <img src="data:image/png;base64, qrcode.png
+                                                                                   "
+                                                                                    style="display:block;width=100%;max-width:250px;" />
+                                                                            </div>
                                                                         </tr>
 
                                                                     </tbody>
