@@ -73,8 +73,8 @@ class SendEmailController extends Controller
             $message->subject("Key Manager - Virtual Ticket");
             $message->to($request->get('email'));
             // $message->attach($qrCodeAsPng);
-            $message->embedData(base64_encode(QrCode::format('png')->size(250)->generate($request->get('code'))), 'qrcode.png');
-            $message->embed($filePath);
+            // $message->embedData(base64_encode(QrCode::format('png')->size(250)->generate($request->get('code'))), 'qrcode.png');
+            // $message->embed($filePath);
         });
         // delete();
     }
