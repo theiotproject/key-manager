@@ -55,25 +55,26 @@ class SendEmailController extends Controller
     $qrCodeReady = QrCode::format('png')->size(250)->generate($request->get('code'));
     QrCode::format('png')->size(250)->generate($request->get('code'), $filePath);
 
-    $qrCodeAsPng = QrCode::format('png')->size(500)->generate("my text for the QR code");
+    $svgFile = QrCode::size(250)->generate($request->get('code'));
 
      Mail::send('qrcode',
         array(
             'guid' => $request->get('guid'),
             'team_name' => $request->get('team_name'),
             'code' => $qrCodeReady,
-            'test'=>$qrCodeAsPng,
+            'svg'=>$svgFile,
             'codeRaw'=>$request->get('code'),
             'valid_from' => str(date('Y-m-d', strtotime($request->get('valid_from')))),
             'valid_to' => str(date('Y-m-d', strtotime($request->get('valid_to')))),
             'label' => $request->get('label'),
             'path'=> $filePath,
-        ), function($message) use ($request, $filePath, $qrCodeAsPng)
+        ), function($message) use ($request, $filePath, $qrCodeReady)
         {
             $message->subject("Key Manager - Virtual Ticket");
             $message->to($request->get('email'));
             // $message->attach($qrCodeAsPng);
             $message->embedData(base64_encode(QrCode::format('png')->size(250)->generate($request->get('code'))), 'qrcode.png');
+            $message->embed($filePath);
         });
         // delete();
     }
