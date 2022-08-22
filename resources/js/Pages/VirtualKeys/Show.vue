@@ -198,7 +198,7 @@ const removeVirtualKey = () => {
                                                     {{ virtualKey.label }}
                                                 </td>
                                                 <td
-                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-900 whitespace-nowrap"
+                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-600 whitespace-nowrap"
                                                 >
                                                     <span
                                                         v-for="(
@@ -339,7 +339,7 @@ const removeVirtualKey = () => {
                                                     {{ virtualKey.label }}
                                                 </td>
                                                 <td
-                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-900 whitespace-nowrap"
+                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-600 whitespace-nowrap"
                                                 >
                                                     <span
                                                         v-for="(
