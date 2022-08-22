@@ -135,7 +135,7 @@
                                                                                 </div> --}}
                                                                                 {{-- ASSETS --}}
                                                                                 <div
-                                                                                    style="padding:40px;background-color:white;">
+                                                                                    style="height:280px;width:280px;display:block;padding:40px;background-color:white;">
                                                                                     <div
                                                                                         style="height:250px;width:250px;background-image:url('{{ asset('qrcodes/' . $guid . '.png') }}');">
                                                                                     </div>
