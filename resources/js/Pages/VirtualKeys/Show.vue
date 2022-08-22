@@ -111,6 +111,12 @@ const removeVirtualKey = () => {
                                                 </th>
                                                 <th
                                                     scope="col"
+                                                    class="lg:px-3 md:px-0"
+                                                >
+                                                    Valid days
+                                                </th>
+                                                <th
+                                                    scope="col"
                                                     class="lg:px-3 md:px-0 sm:rounded-r-lg rounded-none"
                                                 ></th>
                                             </tr>
@@ -131,6 +137,12 @@ const removeVirtualKey = () => {
                                                     class="lg:px-3 md:px-0 border-none"
                                                 >
                                                     Label
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    class="lg:px-3 md:px-0"
+                                                >
+                                                    Valid days
                                                 </th>
                                                 <th
                                                     scope="col"
@@ -184,6 +196,17 @@ const removeVirtualKey = () => {
                                                     class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                 >
                                                     {{ virtualKey.label }}
+                                                </td>
+                                                <td
+                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-600 whitespace-nowrap"
+                                                >
+                                                    <span
+                                                        v-for="(
+                                                            keyDay, i
+                                                        ) in keyDays[index]"
+                                                        :key="i"
+                                                        >{{ keyDay }}&nbsp;
+                                                    </span>
                                                 </td>
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 mt-2 text-right font-medium text-gray-900 whitespace-nowrap flex items-center justify-end"
@@ -314,6 +337,17 @@ const removeVirtualKey = () => {
                                                     class="lg:px-3 md:px-0 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                 >
                                                     {{ virtualKey.label }}
+                                                </td>
+                                                <td
+                                                    class="lg:px-3 md:px-0 py-4 font-medium text-sm text-gray-600 whitespace-nowrap"
+                                                >
+                                                    <span
+                                                        v-for="(
+                                                            keyDay, i
+                                                        ) in keyDays[index]"
+                                                        :key="i"
+                                                        >{{ keyDay }}&nbsp;
+                                                    </span>
                                                 </td>
                                                 <td
                                                     class="lg:px-3 md:px-0 py-4 mt-2 text-right font-medium text-gray-900 whitespace-nowrap flex items-center justify-end"
@@ -481,6 +515,7 @@ export default {
             virtualKeys: {},
             role: "",
             attrs: this.$attrs,
+            keyDays: [],
         };
     },
     methods: {
@@ -491,6 +526,32 @@ export default {
                 )
                 .then((response) => {
                     this.virtualKeys = response.data;
+                    this.virtualKeys.forEach((virtualKey) => {
+                        let days = [];
+                        [...virtualKey.valid_days].forEach((day) => {
+                            day === "U" ? days.push("Sun.") : "";
+                            day === "M" ? days.push("Mon.") : "";
+                            day === "T" ? days.push("Tue.") : "";
+                            day === "W" ? days.push("Wed.") : "";
+                            day === "R" ? days.push("Thu.") : "";
+                            day === "F" ? days.push("Fri.") : "";
+                            day === "S" ? days.push("Sat.") : "";
+                        });
+                        this.keyDays.push(days);
+
+                        // const weekdayMap = new Map();
+                        // weekdayMap.set("Sun.", "U");
+                        // weekdayMap.set("Mon.", "M");
+                        // weekdayMap.set("Tue.", "T");
+                        // weekdayMap.set("Wed.", "W");
+                        // weekdayMap.set("Thu.", "R");
+                        // weekdayMap.set("Fri.", "F");
+                        // weekdayMap.set("Sat.", "S");
+                        // this.validDay = virtualKey.valid_days.includes(
+                        //     weekdayMap.get(weekday)
+                        // );
+                    });
+                    console.log(this.keyDays);
                 })
                 .catch((err) => {
                     // MakeToast.create("Cannot load Virtual Keys", "error");

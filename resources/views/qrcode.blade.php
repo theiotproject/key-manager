@@ -103,16 +103,17 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td
-                                                                                style="color: #333333;padding-top: 20px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-                                                                                <strong>Your Virtual Ticket:</strong>
+                                                                                style="color: #333333;padding-top: 20px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%; ">
+                                                                                <strong>Your
+                                                                                    Virtual Ticket:</strong>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td
                                                                                 style="color: #555555;padding-top: 3px;padding-bottom: 20px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-                                                                                BASE64:
+                                                                                {{-- BASE64:
                                                                                 <div
-                                                                                    style="padding:30px;background-color:#FFFFFF">
+                                                                                    style="width:300px;height:300px;padding:30px;background-color:#FFFFFF">
                                                                                     <img src="data:image/png;base64, {!! base64_encode($code) !!} "
                                                                                         style="display:block;width=100%;max-width:250px;">
                                                                                 </div>
@@ -121,40 +122,62 @@
                                                                                 </br>
                                                                                 SVG:
                                                                                 <div
-                                                                                    style="padding:30px;background-color:#FFFFFF;text-align:center;">
+                                                                                    style="width:300px;height:300px;padding:30px;background-color:#FFFFFF;text-align:center;">
                                                                                     {!! QrCode::size(250)->generate($codeRaw) !!}
                                                                                 </div>
                                                                                 </br>
                                                                                 </br>
-                                                                                </br>
-                                                                                IMG FROM ASSETS:
+                                                                                </br> --}}
+                                                                                {{-- IMG FROM ASSETS: --}}
+                                                                                {{-- <div
+                                                                                    style="width:300px;height:300px;padding:30px;background-color:black;text-align:center;">
+                                                                                    {!! QrCode::size(250)->generate($codeRaw) !!}
+                                                                                </div> --}}
+                                                                                {{-- ASSETS --}}
                                                                                 <div
-                                                                                    style="padding:30px;background-color:#FFFFFF">
-                                                                                    <img src="{{ asset('qrcodes/' . $guid . '.png') }}"
-                                                                                        style="display:block;width=100%;max-width:250px;" />
+                                                                                    style="padding:40px;background-color:white;">
+                                                                                    <div
+                                                                                        style="height:250px;width:250px;background-image:url('{{ asset('qrcodes/' . $guid . '.png') }}');">
+                                                                                    </div>
                                                                                 </div>
+                                                                                {{-- SVG
+                                                                                <div
+                                                                                    style="padding:40px;background-color:black;">
+                                                                                    <div
+                                                                                        style="height:100px;width:100px;background-image:url( 'data:image/svg+xml,{{ $svg }} ');">
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        {{ $svg }}
+                                                                                    </div>
+                                                                                </div> --}}
                                                                             </td>
                                                                         </tr>
-                                                                        <tr>
-                                                                            {{-- <td <img alt=3D"kod QR" border=3D"0"
+                                                                        {{-- <tr> --}}
+                                                                        {{-- <td <img alt=3D"kod QR" border=3D"0"
                                                                                 class=3D"qr-code"
                                                                                 src==3D"cid:73a1856c-d4fb-39ef-9e32-6f8ae84da3cf"
                                                                                 style=3D"display: block; widt=h: 100%;
                                                                                 max-width: 202px;">
                                                                             </td> --}}
-                                                                            TEST
-                                                                            {{-- <img src="{!! $message->embedData(
+                                                                        {{-- TEST --}}
+                                                                        {{-- <img src="{!! $message->embedData(
                                                                                 QrCode::format('png')->size(500)->generate('my text for the QR code'),
                                                                                 'QrCode.png',
                                                                                 'image/png',
                                                                             ) !!}"> --}}
-                                                                            <div
-                                                                                style="padding:30px;background-color:#FFFFFF">
+                                                                        {{-- <div
+                                                                                style="width:300px;height:300px;padding:30px;background-color:#FFFFFF">
                                                                                 <img src="data:image/png;base64, qrcode.png
                                                                                    "
                                                                                     style="display:block;width=100%;max-width:250px;" />
-                                                                            </div>
-                                                                        </tr>
+                                                                            </div> --}}
+                                                                        {{-- </tr> --}}
+                                                                        {{-- <tr>
+                                                                            <td>
+                                                                                <img src="{{ $message->embed(public_path() . '/qrcodes/' . $guid . '.png') }}"
+                                                                                    style="padding:0px; margin:0px" />
+                                                                            </td>
+                                                                        </tr> --}}
 
                                                                     </tbody>
                                                                 </table>
