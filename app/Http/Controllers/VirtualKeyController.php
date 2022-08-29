@@ -13,7 +13,12 @@ use App\Http\Resources\GateResource;
 use App\Http\Resources\VirtualKeyResource;
 use PhpMqtt\Client\Facades\MQTT;
 use App\Http\Controllers\TeamController;
-
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator as PaginationPaginator;
+use Illuminate\Support\Facades\DB;
 
 class VirtualKeyController extends Controller
 {
@@ -152,7 +157,7 @@ class VirtualKeyController extends Controller
         return $virtualKeys;
     }
 
-    public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId)
+    public function indexVirtualKeysByTeamIdWithUsersAndGatesData($teamId, $limit)
     {
         //check user permission
         $userId = auth()->user()->id;
@@ -160,22 +165,39 @@ class VirtualKeyController extends Controller
         $user_role = app(TeamController::class)->getUserRole($teamId, $userId);
 
         //check if user is the admin\owner in order to get all data, else get data of user only
+
         if ($user_role == 'owner' || $user_role == 'admin') {
-            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+
+            $userVirtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
                 $query->where('team_id', $teamId);
+                $query->where('user_id', $userId);
             })->get();
 
-            foreach ($virtualKeys as $virtualKey) {
+            $notUserVirtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
+                $query->where('team_id', $teamId);
+                $query->where('user_id', '<>', $userId);
+            })->get();
+
+            $virtualKeys = array();
+
+            foreach ($userVirtualKeys as $virtualKey) {
                 $virtualKey->user;
                 $virtualKey->gates;
+                array_push($virtualKeys, $virtualKey);
             }
 
-            return $virtualKeys;
+            foreach ($notUserVirtualKeys as $virtualKey) {
+                $virtualKey->user;
+                $virtualKey->gates;
+                array_push($virtualKeys, $virtualKey);
+            }
+
+            return $this->paginate($virtualKeys, $limit);
         } else {
             $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
                 $query->where('team_id', $teamId);
                 $query->where('user_id', $userId);
-            })->get();
+            })->simplePaginate($limit);
 
             foreach ($virtualKeys as $virtualKey) {
                 $virtualKey->user;
@@ -184,6 +206,13 @@ class VirtualKeyController extends Controller
 
             return $virtualKeys;
         }
+    }
+
+    public function paginate($items, $perPage, $page = null, $options = [])
+    {
+        $page = $page ?: (PaginationPaginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     public function indexByTeamIdForLoggedUser(Request $request, $teamId)

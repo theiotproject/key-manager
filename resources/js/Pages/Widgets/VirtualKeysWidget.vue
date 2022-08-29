@@ -58,7 +58,7 @@ import MakeToast from "../../Services/MakeToast.vue";
         Create New Virtual Key
       </Link>
     </div>
-    <div class="pb-5">
+    <div class="pb-5 relative min-h-full">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -114,13 +114,11 @@ import MakeToast from "../../Services/MakeToast.vue";
               </thead>
               <tbody>
                 <tr
-                  v-if="virtualKeys.length > 0"
                   class="bg-white border-b"
-                  v-for="(virtualKey, index) in usersVirtualkeys"
+                  v-for="(virtualKey, index) in virtualKeys"
                   :key="virtualKey.id"
                 >
                   <td
-                    v-if="index <= 2"
                     class="
                       lg:px-3
                       md:px-0
@@ -146,7 +144,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                   </td>
                   <td
-                    v-if="index <= 2"
                     class="
                       lg:px-3
                       md:px-0
@@ -159,7 +156,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     {{ virtualKey.label }}
                   </td>
                   <td
-                    v-if="index <= 2"
                     class="
                       lg:px-3
                       md:px-0
@@ -170,6 +166,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     "
                   >
                     <button
+                      v-if="virtualKey.user.id === attrs.user.id"
                       class="
                         ml-6
                         text-sm text-blue-500
@@ -197,51 +194,6 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </button>
                   </td>
                 </tr>
-                <tr
-                  class="bg-white border-b"
-                  v-for="(virtualKey, index) in notUsersVirtualKeys"
-                  :key="virtualKey.id"
-                >
-                  <td
-                    v-if="usersVirtualkeys.length + index < 3"
-                    class="
-                      lg:px-3
-                      md:px-0
-                      px-5
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    <div class="flex items-center">
-                      <img
-                        class="h-8 w-8 rounded-full object-cover mr-3"
-                        :src="virtualKey.user.profile_photo_url"
-                        :alt="virtualKey.user.name"
-                      />
-                      <div>
-                        {{ virtualKey.user.name }}
-                        <p class="text-gray-400 text-xs">
-                          {{ virtualKey.user.email }}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td
-                    v-if="usersVirtualkeys.length + index < 3"
-                    class="
-                      lg:px-3
-                      md:px-0
-                      py-4
-                      font-medium
-                      text-gray-900
-                      whitespace-nowrap
-                    "
-                  >
-                    {{ virtualKey.label }}
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -252,17 +204,76 @@ import MakeToast from "../../Services/MakeToast.vue";
         >
           <p class="text-xl text-gray-600">You don't have any Virtual Keys</p>
         </div>
-        <div
-          class="mt-5 w-full flex justify-center"
-          v-if="virtualKeys.length > 3"
+      </div>
+      <div class="mt-5 w-full flex justify-center">
+        <p
+          class="
+            mt-2
+            flex
+            items-center
+            justify-left
+            absolute
+            left-10
+            cursor-pointer
+            text-xs text-gray-500
+            hover:text-black
+          "
+          v-if="pagination.page > 1"
+          @click="pagination.page--"
         >
-          <Link
-            :href="route('virtualKeys.index')"
-            class="text-gray-600 hover:text-black py-2 px-4 rounded"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            Show more
-          </Link>
-        </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Previous Page
+        </p>
+        <Link
+          :href="route('virtualKeys.index')"
+          class="text-gray-600 hover:text-black py-2 px-4 rounded"
+        >
+          Show all
+        </Link>
+        <p
+          class="
+            mt-2
+            flex
+            items-center
+            justify-right
+            absolute
+            right-10
+            cursor-pointer
+            text-xs text-gray-500
+            hover:text-black
+          "
+          v-if="pagination.nextPageAvailable"
+          @click="pagination.page++"
+        >
+          Next Page
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </p>
       </div>
     </div>
     <JetModal
@@ -326,19 +337,34 @@ export default {
       virtualKeys: {},
       permission: 0,
       localAttrs: this.attrs,
+      pagination: { page: 1, nextPageAvailable: false },
     };
+  },
+  watch: {
+    pagination: {
+      handler(page) {
+        this.getVirtualKeys(this.pagination.page);
+      },
+      deep: true,
+    },
   },
   methods: {
     switchList() {
       this.$emit("switch", false);
     },
-    getVirtualKeys() {
+    getVirtualKeys(page) {
       axios
         .get(
-          `/virtualKeys/teamId/${this.localAttrs.user.current_team_id}/users/gates`
+          `/virtualKeys/teamId/${this.localAttrs.user.current_team_id}/users/gates/limit/3?page=${page}`
         )
         .then((response) => {
-          this.virtualKeys = response.data;
+          this.virtualKeys = response.data.data;
+          this.pagination.page = response.data.current_page;
+          if (response.data.next_page_url !== null) {
+            this.pagination.nextPageAvailable = true;
+          } else {
+            this.pagination.nextPageAvailable = false;
+          }
         });
     },
     getPermission() {
@@ -483,7 +509,7 @@ export default {
   },
   created() {
     this.isSafari();
-    this.getVirtualKeys();
+    this.getVirtualKeys(this.pagination.page);
     this.getPermission();
   },
 };
