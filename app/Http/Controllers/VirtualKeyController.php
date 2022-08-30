@@ -9,10 +9,11 @@ use Inertia\Inertia;
 use App\Models\VirtualKey;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Resources\GateResource;
-use App\Http\Resources\VirtualKeyResource;
 use PhpMqtt\Client\Facades\MQTT;
+use App\Http\Resources\GateResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TeamController;
+use App\Http\Resources\VirtualKeyResource;
 
 
 class VirtualKeyController extends Controller
@@ -143,9 +144,19 @@ class VirtualKeyController extends Controller
 
     public function indexVirtualKeysByGate($gateId, $limit)
     {
-        $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
-            $q->where('gate_id', $gateId);
-        })->simplePaginate($limit);
+        $user = Auth::user();
+        $role = app('App\Http\Controllers\AuthController')->getAuthUserRoleByTeamId($user->currentTeam->id);
+
+        if ($role == 'owner' || $role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
+                $q->where('gate_id', $gateId);
+            })->simplePaginate($limit);
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($q) use ($gateId) {
+                $q->where('gate_id', $gateId);
+            })->where('user_id', $user->id)->simplePaginate($limit);
+        }
+
         foreach ($virtualKeys as $virtualKey) {
             $virtualKey->user;
         }

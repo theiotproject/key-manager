@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\EventResource;
-use App\Models\Event;
-use App\Models\Gate;
-use App\Models\KeyUsage;
-use App\Models\VirtualKey;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-
+use App\Models\Gate;
+use App\Models\Team;
 use Inertia\Inertia;
+use App\Models\Event;
 use function Psy\debug;
+use App\Models\KeyUsage;
+
+use App\Models\VirtualKey;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\EventResource;
 
 class EventController extends Controller
 {
@@ -112,10 +114,18 @@ class EventController extends Controller
 
     public function indexEventsByTeamId($teamId, $limit)
     {
+        $user = Auth::user();
+        $role = app('App\Http\Controllers\AuthController')->getAuthUserRoleByTeamId($teamId);
 
-        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-        })->get();
+        if ($role == 'owner' || $role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->where('user_id', $user->id)->get();
+        }
 
         $virtualKeyIds = array();
         foreach ($virtualKeys as $virtualKey) {
@@ -161,9 +171,18 @@ class EventController extends Controller
 
     public function indexEventsByGate($teamId, $gateId, $limit)
     {
-        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-        })->get();
+        $user = Auth::user();
+        $role = app('App\Http\Controllers\AuthController')->getAuthUserRoleByTeamId($teamId);
+
+        if ($role == 'owner' || $role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->where('user_id', $user->id)->get();
+        }
 
         $virtualKeyIds = array();
         foreach ($virtualKeys as $virtualKey) {
@@ -202,27 +221,6 @@ class EventController extends Controller
         $last7DaysAccessGranted = array();
 
         $last7DaysAccessDenied = array();
-
-        // $last7DaysAccessGranted = [
-        //     $last7Days[0] => '',
-        //     $last7Days[1] => '',
-        //     $last7Days[2] => '',
-        //     $last7Days[3] => '',
-        //     $last7Days[4] => '',
-        //     $last7Days[5] => '',
-        //     $last7Days[6] => '',
-        // ];
-
-        // $last7DaysAccessDenied = [
-        //     $last7Days[0] => '',
-        //     $last7Days[1] => '',
-        //     $last7Days[2] => '',
-        //     $last7Days[3] => '',
-        //     $last7Days[4] => '',
-        //     $last7Days[5] => '',
-        //     $last7Days[6] => '',
-        // ];
-
 
         foreach ($last7Days as $day) {
             array_push($last7DaysAccessGranted, Event::whereDate('scan_time', $day)->where('serial_number', $gateSerialNumber)->where('status', 1)->count());
