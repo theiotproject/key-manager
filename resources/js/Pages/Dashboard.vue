@@ -120,19 +120,16 @@ onMounted(() => {
             v-bind:attrs="attrs"
           />
         </div>
-        <!-- <transition
-          appear
-          @before-enter="beforeEnter"
-          @enter="enter"
-          :css="false"
-        > -->
         <div
           v-if="details !== null"
           class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
         >
-          <GateDetails :gate="details" v-bind:attrs="attrs" />
+          <GateDetails
+            :gate="details"
+            v-bind:attrs="attrs"
+            :routeName="'dashboard'"
+          />
         </div>
-        <!-- </transition> -->
       </div>
     </div>
   </AppLayout>

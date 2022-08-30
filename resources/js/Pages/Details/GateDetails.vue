@@ -23,7 +23,7 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
         <!-- <p class="ml-3">{{ gate.name }}</p> -->
 
         <Link
-          :href="route('dashboard')"
+          :href="route(`${routeName}`)"
           class="flex items-center hover:text-gray-200"
         >
           <svg
@@ -41,7 +41,9 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
             />
           </svg>
 
-          <p>Go back to dashboard</p>
+          <p>
+            Go back to {{ routeName == "gates.index" ? "gates" : routeName }}
+          </p>
         </Link>
       </h2>
     </div>
@@ -68,12 +70,14 @@ import GateVirtualKeys from "./GateVirtualKeys.vue";
 <script>
 import gsap from "gsap";
 export default {
-  props: ["attrs", "gate"],
+  props: ["attrs", "gate", "title", "routeName"],
   data() {
     return {
       gate: this.gate,
       virtualKeys: {},
+      routeName: this.routeName,
       localAttrs: this.attrs,
+      title: this.title,
       chartLoaded: false,
       chartData: {},
       role: "",
