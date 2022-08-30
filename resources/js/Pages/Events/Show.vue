@@ -109,9 +109,7 @@ const removeGate = () => {
               <div class="pb-5">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                   <div class="bg-white overflow-hidden sm:rounded-lg">
-                    <div
-                      class="relative overflow-x-auto shadow-md sm:rounded-lg"
-                    >
+                    <div class="relative pb-10 shadow-md sm:rounded-lg">
                       <table class="w-full text-sm text-left text-gray-500">
                         <thead
                           class="
@@ -200,6 +198,70 @@ const removeGate = () => {
                           </tr>
                         </tbody>
                       </table>
+                      <div class="mt-5 w-full flex justify-center">
+                        <p
+                          class="
+                            mt-2
+                            flex
+                            items-center
+                            justify-left
+                            absolute
+                            left-10
+                            cursor-pointer
+                            text-xs text-gray-500
+                            hover:text-black
+                          "
+                          v-if="pagination.page > 1"
+                          @click="pagination.page--"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15 19l-7-7 7-7"
+                            />
+                          </svg>
+                          Previous Page
+                        </p>
+                        <p
+                          class="
+                            mt-2
+                            flex
+                            items-center
+                            justify-right
+                            absolute
+                            right-10
+                            cursor-pointer
+                            text-xs text-gray-500
+                            hover:text-black
+                          "
+                          v-if="pagination.nextPageAvailable"
+                          @click="pagination.page++"
+                        >
+                          Next Page
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -365,15 +427,33 @@ export default {
       events: {},
       scanAttempts: {},
       permission: 0,
+      pagination: { page: 1, nextPageAvailable: false },
       attrs: this.$attrs,
     };
   },
+  watch: {
+    pagination: {
+      handler(page) {
+        this.getEvents(this.pagination.page);
+      },
+      deep: true,
+    },
+  },
   methods: {
-    getEvents() {
+    getEvents(page) {
       axios
-        .get(`/events/teamId/${this.attrs.user.current_team_id}/limit/100`)
+        .get(
+          `/events/teamId/${this.attrs.user.current_team_id}/limit/10/pagination/1?page=${page}`
+        )
         .then((response) => {
-          this.events = response.data;
+          this.events = response.data.data;
+
+          this.pagination.page = response.data.current_page;
+          if (response.data.next_page_url !== null) {
+            this.pagination.nextPageAvailable = true;
+          } else {
+            this.pagination.nextPageAvailable = false;
+          }
 
           if (this.lastEventTime === null && this.events.length > 0) {
             this.lastEventTime = this.events[0].scan_time;
@@ -410,7 +490,7 @@ export default {
   },
   created() {
     this.isSafari();
-    this.getEvents();
+    this.getEvents(1);
     this.getScanAttempts();
   },
 };

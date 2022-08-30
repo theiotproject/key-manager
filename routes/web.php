@@ -92,7 +92,7 @@ Route::middleware([
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);
     Route::get('virtualTickets/teamId/{team_id}/users/gates', [VirtualTicketController::class, 'indexVirtualTicketsByTeamIdWithUsersAndGatesData']);
     Route::get('/auth/users/{team_id}', [AuthController::class, 'indexUsersByTeamId']);
-    Route::get('/events/teamId/{teamId}/limit/{limit}', [EventController::class, 'indexEventsByTeamId']);
+    Route::get('/events/teamId/{teamId}/limit/{limit}/pagination/{pagination}', [EventController::class, 'indexEventsByTeamId']);
     Route::get('/events/teamId/{teamId}/limit/{limit}/rejected', [EventController::class, 'indexRejectedEventsByTeamId']);
     Route::get('/events/teamId/{teamId}/gateId/{gateId}/limit/{limit}', [EventController::class, 'indexEventsByGate']);
     Route::get('/events/gateSN/{gateSerialNumber}/count', [EventController::class, 'countAccessForGateLast7Days']);

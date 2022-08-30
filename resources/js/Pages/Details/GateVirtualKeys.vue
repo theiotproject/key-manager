@@ -279,7 +279,6 @@ export default {
       this.$emit("switch", false);
     },
     getVirtualKeys(page) {
-      console.log(page);
       axios
         .get(`/virtualKeys/gate/${this.gate.id}/limit/4?page=${page}`)
         .then((response) => {
