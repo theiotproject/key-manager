@@ -109,7 +109,7 @@ const removeGate = () => {
               <div class="pb-5">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                   <div class="bg-white overflow-hidden sm:rounded-lg">
-                    <div class="relative pb-10 shadow-md sm:rounded-lg">
+                    <div class="relative pb-9 shadow-md sm:rounded-lg">
                       <table class="w-full text-sm text-left text-gray-500">
                         <thead
                           class="
@@ -198,7 +198,7 @@ const removeGate = () => {
                           </tr>
                         </tbody>
                       </table>
-                      <div class="mt-5 w-full flex justify-center">
+                      <div class="mt-4 w-full flex justify-center">
                         <p
                           class="
                             mt-2
@@ -211,8 +211,8 @@ const removeGate = () => {
                             text-xs text-gray-500
                             hover:text-black
                           "
-                          v-if="pagination.page > 1"
-                          @click="pagination.page--"
+                          v-if="eventPagination.page > 1"
+                          @click="eventPagination.page--"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -242,8 +242,8 @@ const removeGate = () => {
                             text-xs text-gray-500
                             hover:text-black
                           "
-                          v-if="pagination.nextPageAvailable"
-                          @click="pagination.page++"
+                          v-if="eventPagination.nextPageAvailable"
+                          @click="eventPagination.page++"
                         >
                           Next Page
                           <svg
@@ -333,7 +333,8 @@ const removeGate = () => {
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                   <div class="bg-white overflow-hidden sm:rounded-lg">
                     <div
-                      class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                      class="relative shadow-md sm:rounded-lg"
+                      style="padding-bottom: 39px"
                     >
                       <table class="w-full text-sm text-left text-gray-500">
                         <thead
@@ -404,6 +405,70 @@ const removeGate = () => {
                           </tr>
                         </tbody>
                       </table>
+                      <div class="mt-7 w-full flex justify-center">
+                        <p
+                          class="
+                            mt-2
+                            flex
+                            items-center
+                            justify-left
+                            absolute
+                            left-10
+                            cursor-pointer
+                            text-xs text-gray-500
+                            hover:text-black
+                          "
+                          v-if="scanAttemptsPagination.page > 1"
+                          @click="scanAttemptsPagination.page--"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15 19l-7-7 7-7"
+                            />
+                          </svg>
+                          Previous Page
+                        </p>
+                        <p
+                          class="
+                            mt-2
+                            flex
+                            items-center
+                            justify-right
+                            absolute
+                            right-10
+                            cursor-pointer
+                            text-xs text-gray-500
+                            hover:text-black
+                          "
+                          v-if="scanAttemptsPagination.nextPageAvailable"
+                          @click="scanAttemptsPagination.page++"
+                        >
+                          Next Page
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -427,14 +492,21 @@ export default {
       events: {},
       scanAttempts: {},
       permission: 0,
-      pagination: { page: 1, nextPageAvailable: false },
+      eventPagination: { page: 1, nextPageAvailable: false },
+      scanAttemptsPagination: { page: 1, nextPageAvailable: false },
       attrs: this.$attrs,
     };
   },
   watch: {
-    pagination: {
+    eventPagination: {
       handler(page) {
-        this.getEvents(this.pagination.page);
+        this.getEvents(this.eventPagination.page);
+      },
+      deep: true,
+    },
+    scanAttemptsPagination: {
+      handler(page) {
+        this.getScanAttempts(this.scanAttemptsPagination.page);
       },
       deep: true,
     },
@@ -448,11 +520,11 @@ export default {
         .then((response) => {
           this.events = response.data.data;
 
-          this.pagination.page = response.data.current_page;
+          this.eventPagination.page = response.data.current_page;
           if (response.data.next_page_url !== null) {
-            this.pagination.nextPageAvailable = true;
+            this.eventPagination.nextPageAvailable = true;
           } else {
-            this.pagination.nextPageAvailable = false;
+            this.eventPagination.nextPageAvailable = false;
           }
 
           if (this.lastEventTime === null && this.events.length > 0) {
@@ -472,13 +544,19 @@ export default {
           // MakeToast.create("Cannot load Events", "error");
         });
     },
-    getScanAttempts() {
+    getScanAttempts(page) {
       axios
         .get(
-          `/events/teamId/${this.attrs.user.current_team_id}/limit/100/rejected`
+          `/events/teamId/${this.attrs.user.current_team_id}/limit/12/rejected?page=${page}`
         )
         .then((response) => {
-          this.scanAttempts = response.data;
+          this.scanAttempts = response.data.data;
+          this.scanAttemptsPagination.page = response.data.current_page;
+          if (response.data.next_page_url !== null) {
+            this.scanAttemptsPagination.nextPageAvailable = true;
+          } else {
+            this.scanAttemptsPagination.nextPageAvailable = false;
+          }
         })
         .catch((err) => {
           MakeToast.create("Cannot load Scan attempts", "error");
@@ -491,7 +569,7 @@ export default {
   created() {
     this.isSafari();
     this.getEvents(1);
-    this.getScanAttempts();
+    this.getScanAttempts(1);
   },
 };
 </script>

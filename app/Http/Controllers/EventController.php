@@ -165,7 +165,7 @@ class EventController extends Controller
 
         $events = Event::whereHas('gate', function ($q) use ($teamId) {
             $q->where('team_id', $teamId);
-        })->orderBy('scan_time', 'DESC')->get();
+        })->orderBy('scan_time', 'DESC')->take(1000)->get();
 
         $result = array();
         foreach ($events as $event) {
@@ -173,7 +173,7 @@ class EventController extends Controller
             $merge = array_merge($event->toArray(), $gate->toArray());
             array_push($result, $merge);
         }
-        return $result;
+        return paginate($result, $limit);
     }
 
     public function indexEventsByGate($teamId, $gateId, $limit)
