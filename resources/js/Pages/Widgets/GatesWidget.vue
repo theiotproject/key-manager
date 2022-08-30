@@ -161,17 +161,21 @@ const openGate = () => {
                 <tr>
                   <th
                     scope="col"
-                    class="
-                      px-6
-                      py-3
-                      sm:rounded
-                      l-lg
-                      sm:rounded-r-lg
-                      rounded-none
-                    "
+                    class="px-6 py-3 sm:rounded-l-lg rounded-none"
                   >
                     Name
                   </th>
+                  <th
+                    scope="col"
+                    class="
+                      lg:px-3
+                      md:px-0
+                      py-3
+                      px-5
+                      sm:rounded-r-lg
+                      rounded-none
+                    "
+                  ></th>
                 </tr>
               </thead>
               <tbody>
