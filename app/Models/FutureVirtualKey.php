@@ -12,4 +12,9 @@ class FutureVirtualKey extends Model
     protected $fillable = [
         'label', 'user_email', 'valid_days'
     ];
+
+    public function gates()
+    {
+        return $this->belongsToMany(Gate::class);
+    }
 }

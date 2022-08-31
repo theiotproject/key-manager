@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FutureVirtualKey;
+use App\Models\Gate;
+use App\Models\VirtualKey;
 use Illuminate\Http\Request;
 
 class FutureVirtualKeyController extends Controller
@@ -34,7 +37,18 @@ class FutureVirtualKeyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+            $futureVirtualKey = new FutureVirtualKey();
+            $futureVirtualKey->label = $request->label;
+            $futureVirtualKey->user_email = $request->email;
+            $futureVirtualKey->valid_days = $request->validDays;
+            $futureVirtualKey->save();
+
+            $gateIds = array();
+            foreach ($request->gates as $gateId) {
+                $gate = Gate::find($gateId);
+                array_push($gateIds, $gate->id);
+            }
+            $futureVirtualKey->gates()->sync($gateIds);
     }
 
     /**
