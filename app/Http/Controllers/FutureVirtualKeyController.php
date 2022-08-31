@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FutureVirtualKey;
 use App\Models\Gate;
 use App\Models\VirtualKey;
+use Cassandra\Future;
 use Illuminate\Http\Request;
 
 class FutureVirtualKeyController extends Controller
@@ -93,6 +94,6 @@ class FutureVirtualKeyController extends Controller
      */
     public function destroy($id)
     {
-        //
+
     }
 }

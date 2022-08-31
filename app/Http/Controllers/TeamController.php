@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FutureVirtualKey;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -51,6 +52,29 @@ class TeamController extends Controller
         );
         Auth::user()->switchTeam($invitation->team);
         $invitation->delete();
+
+        $futureVirtualKey = FutureVirtualKey::where('user_email', $invitation->email)->first();
+        $user = User::where('email', $invitation->email)->first();
+        $virtualKey = new VirtualKey();
+        $virtualKey->label = $futureVirtualKey->label;
+        $virtualKey->user_id = $user->id;
+        $virtualKey->valid_days = $futureVirtualKey->valid_days;
+        $virtualKey->save();
+
+        $gates = $futureVirtualKey->gates;
+
+        $gateIds = array();
+        foreach ($gates as $gate) {
+            array_push($gateIds, $gate->id);
+        }
+        $virtualKey->gates()->sync($gateIds);
+
+        if ($gates != null) {
+            foreach ($gates as $gate) {
+                $futureVirtualKey->gates()->detach($gate->id);
+            }
+        }
+        $futureVirtualKey->delete();
     }
 
     public function store(Request $request)
