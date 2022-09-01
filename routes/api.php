@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('/virtualTickets', VirtualTicketController::class);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
-    Route::post('/teams/join', [TeamController::class, 'joinTeam']);
+    Route::post('/teams/join/switch/{switch}', [TeamController::class, 'joinTeam']);
     Route::post('teams/create', [TeamController::class, 'store']);
     Route::post('/remoteOpen', [GateController::class, 'openGateRemotely']);
     Route::post('/remoteOpen/web', [GateController::class, 'openGateRemotelyByWebsite'])->name('gates.open');

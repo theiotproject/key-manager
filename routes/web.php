@@ -79,6 +79,9 @@ Route::middleware([
     Route::get('/onboarding/landing', function () {
         return Inertia::render('Onboarding/Landing');
     })->name('onboarding.landing');
+    Route::get('/team/create', function () {
+        return Inertia::render('Onboarding/Landing', ['instant'=> true]);
+    })->name('team.create');
     Route::get('/setup/teamName', function () {
         return Inertia::render('Onboarding/Setup/TeamName');
     });
@@ -104,6 +107,7 @@ Route::middleware([
     Route::get('/virtualKeys/gate/{gateId}/limit/{limit}', [VirtualKeyController::class, 'indexVirtualKeysByGate']);
     Route::put('/tours', [ToursController::class, 'update']);
     Route::delete('/teams/delete/{teamId}', [TeamController::class, 'destroy'])->name('teams.delete');
+    Route::delete('/teams/invitation/{invitationId}', [TeamController::class, 'destroyInvitation']);
 });
 
 
