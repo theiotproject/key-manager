@@ -14,6 +14,7 @@ import JetInputError from "@/Jetstream/InputError.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import JetSectionBorder from "@/Jetstream/SectionBorder.vue";
+import MakeToast from "../../../Services/MakeToast.vue";
 
 const props = defineProps({
   team: Object,
@@ -24,6 +25,20 @@ const props = defineProps({
 const addTeamMemberForm = useForm({
   email: "",
   role: null,
+    gates: {},
+    checkedGates: [],
+    showAllGates: false,
+    checkedDays: [0, 1, 2, 3, 4],
+    days: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ],
+    daysLetter: ["M", "T", "W", "R", "F", "S", "U"],
 });
 
 const updateRoleForm = useForm({
@@ -38,12 +53,97 @@ const managingRoleFor = ref(null);
 const confirmingLeavingTeam = ref(false);
 const teamMemberBeingRemoved = ref(null);
 
+const getGates = () => {
+    axios.get(`/gates/teamId/${props.team.id}/resource`).then((response) => {
+        addTeamMemberForm.gates = response.data.data;
+    })
+}
+
+getGates();
+
+const checkGate = (index) => {
+    let canCheck = true;
+    addTeamMemberForm.checkedGates.find((checkedGate, id) => {
+        if (checkedGate === addTeamMemberForm.gates[index]) {
+            addTeamMemberForm.checkedGates.splice(id, 1);
+            canCheck = false;
+            return;
+        }
+    });
+
+    if (canCheck) {
+        addTeamMemberForm.checkedGates.push(addTeamMemberForm.gates[index]);
+    }
+};
+
+const checkDay= (index) => {
+    let canCheck = true;
+    addTeamMemberForm.checkedDays.find((checkedDay, id) => {
+        if (checkedDay === index) {
+            addTeamMemberForm.checkedDays.splice(id, 1);
+            canCheck = false;
+            return;
+        }
+    });
+    if (canCheck) {
+        addTeamMemberForm.checkedDays.push(index);
+    }
+};
+
 const addTeamMember = () => {
   addTeamMemberForm.post(route("team-members.store", props.team), {
     errorBag: "addTeamMember",
     preserveScroll: true,
-    onSuccess: () => addTeamMemberForm.reset(),
   });
+  if(addTeamMemberForm.checkedGates.length > 0){
+      addFutureVirtualKey();
+  }
+};
+
+const addFutureVirtualKey = () => {
+    if (addTeamMemberForm.checkedDays <= 0 && addTeamMemberForm.checkedGates > 0) {
+        MakeToast.create("Choose at least 1 Day", "warning");
+        return;
+    }
+    if (addTeamMemberForm.checkedGates <= 0) {
+        MakeToast.create("Choose at least 1 Gate", "warning");
+        return;
+    }
+
+    let str = "";
+    addTeamMemberForm.checkedDays.forEach((day) => {
+        str += addTeamMemberForm.daysLetter[day];
+    });
+
+    let gates = [];
+
+    let label = "Key opens ";
+    addTeamMemberForm.checkedGates.forEach((gate, index) => {
+        gates.push(gate.id);
+        if (addTeamMemberForm.checkedGates.length - 1 === index) {
+            label += gate.name;
+        } else {
+            label += gate.name + ", ";
+        }
+    });
+
+    const data = {
+        label: label,
+        email: addTeamMemberForm.email,
+        gates: gates,
+        validDays: str,
+    };
+    axios
+        .post("/api/futureVirtualKeys", data)
+        .then((result) => {
+            MakeToast.create("Added Future Virtual Key", "info");
+            const gates = addTeamMemberForm.gates;
+            addTeamMemberForm.reset();
+            addTeamMemberForm.gates = gates;
+        })
+        .catch((err) => {
+            MakeToast.create("Failed to add Virtual Key", "error");
+        });
 };
 
 const cancelTeamInvitation = (invitation) => {
@@ -220,6 +320,80 @@ const displayableRole = (role) => {
               </button>
             </div>
           </div>
+            <!-- Future Virtual Key -->
+            <div
+                v-if="addTeamMemberForm.role === 'user'"
+                class="col-span-6 lg:col-span-4"
+            >
+                <JetLabel for="futureVirtualKeys" value="You can give access to gates by creating future virtual key for new user" />
+                <JetInputError
+                    :message="addTeamMemberForm.errors.role"
+                    class="mt-2"
+                />
+
+                <ul
+                    class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
+                    aria-labelledby="dropdownSearchButton"
+                >
+                    <li
+                        v-for="(gate, index) in addTeamMemberForm.gates"
+                        :key="index"
+                        class="cursor-pointer"
+                    >
+                        <div
+                            v-if="index < 3 || addTeamMemberForm.showAllGates"
+                            class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+                            @click="checkGate(index)"
+                        >
+                            <input
+                                v-model="addTeamMemberForm.checkedGates"
+                                v-bind:id="index"
+                                type="checkbox"
+                                :value="gate"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                            />
+                            <label
+                                for="{{index}}"
+                                class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
+                            >{{ gate.name }}</label
+                            >
+                        </div>
+                    </li>
+                    <p class="cursor-pointer" @click="addTeamMemberForm.showAllGates = !addTeamMemberForm.showAllGates">{{addTeamMemberForm.showAllGates ? 'Show less gates' : `Show ${addTeamMemberForm.gates.length - 3} more gates`}}</p>
+                </ul>
+                <div v-if="addTeamMemberForm.checkedGates.length > 0">
+                    <hr class="mt-5 mb-5" />
+                    <JetLabel value="On which days of the week should the user have access to the selected gates?" class="mb-3" />
+                    <ul
+                        class="items-center w-full font-medium text-gray-900 bg-white rounded-lg sm:flex-wrap sm:flex"
+                    >
+                        <li
+                            v-for="(day, index) in addTeamMemberForm.days"
+                            :key="index"
+                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r cursor-pointer hover:bg-gray-100"
+                        >
+                            <div
+                                @click="checkDay(index)"
+                                class="flex items-center pl-3 cursor-pointer"
+                            >
+                                <input
+                                    v-model="addTeamMemberForm.checkedDays"
+                                    v-bind:id="index"
+                                    type="checkbox"
+                                    :value="index"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                                />
+                                <label
+                                    v-bind:id="index"
+                                    class="py-2 ml-2 w-full text-xs font-medium text-gray-900 cursor-pointer"
+                                >
+                                    {{ day }}
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </template>
 
         <template #actions>

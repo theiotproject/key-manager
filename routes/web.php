@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Http\Controllers\FutureVirtualKeyController;
 use App\Http\Controllers\TeamMemberController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
