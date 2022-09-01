@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FutureVirtualKey;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -51,6 +52,29 @@ class TeamController extends Controller
         );
         Auth::user()->switchTeam($invitation->team);
         $invitation->delete();
+
+        $futureVirtualKey = FutureVirtualKey::where('user_email', $invitation->email)->first();
+        $user = User::where('email', $invitation->email)->first();
+        $virtualKey = new VirtualKey();
+        $virtualKey->label = $futureVirtualKey->label;
+        $virtualKey->user_id = $user->id;
+        $virtualKey->valid_days = $futureVirtualKey->valid_days;
+        $virtualKey->save();
+
+        $gates = $futureVirtualKey->gates;
+
+        $gateIds = array();
+        foreach ($gates as $gate) {
+            array_push($gateIds, $gate->id);
+        }
+        $virtualKey->gates()->sync($gateIds);
+
+        if ($gates != null) {
+            foreach ($gates as $gate) {
+                $futureVirtualKey->gates()->detach($gate->id);
+            }
+        }
+        $futureVirtualKey->delete();
     }
 
     public function store(Request $request)
@@ -61,6 +85,27 @@ class TeamController extends Controller
         $team->save();
         Auth::user()->switchTeam($team);
         return $team;
+    }
+
+    public function destroy(Request $request, $teamId)
+    {
+        $team = Jetstream::newTeamModel()->findOrFail($teamId);
+
+        $teamModel = Team::find($teamId);
+
+        $gates = $teamModel->gates;
+
+        foreach ($gates as $gate) {
+            app(GateController::class)->destroy($gate->id);
+        }
+
+        app(ValidateTeamDeletion::class)->validate($request->user(), $team);
+
+        $deleter = app(DeletesTeams::class);
+
+        $deleter->delete($team);
+
+        return redirect('/');
     }
 
     public function getRoles()
@@ -80,8 +125,7 @@ class TeamController extends Controller
         $userVirtualTickets = VirtualTicket::where("email", $userEmail)->get();
 
         //check if user has the key in order to get team_code
-        foreach($userVirtualTickets as $userVirtualTicket)
-        {
+        foreach ($userVirtualTickets as $userVirtualTicket) {
             if ($virtualTicketId == $userVirtualTicket->id) {
                 $team = Team::findOrFail($teamId);
                 return $team->team_code;
@@ -98,8 +142,7 @@ class TeamController extends Controller
         $userVirtualKeys = VirtualKey::where("user_id", $userId)->get();
 
         //check if user has the key in order to get team_code
-          foreach($userVirtualKeys as $userVirtualKey)
-        {
+        foreach ($userVirtualKeys as $userVirtualKey) {
             if ($virtualKeyId == $userVirtualKey->id) {
                 $team = Team::findOrFail($teamId);
                 return $team->team_code;

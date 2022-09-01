@@ -61,8 +61,29 @@ onMounted(() => {
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Dashboard
+      <h2
+        class="
+          font-semibold
+          text-xl text-gray-800
+          leading-tight
+          flex
+          items-centers
+        "
+      >
+        <svg
+          v-if="details !== null"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mt-0.5 mr-2"
+          viewBox="0 0 20 20"
+          fill="#FFA500"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <p>{{ title }}</p>
       </h2>
     </template>
     <div class="py-12">
@@ -99,19 +120,16 @@ onMounted(() => {
             v-bind:attrs="attrs"
           />
         </div>
-        <!-- <transition
-          appear
-          @before-enter="beforeEnter"
-          @enter="enter"
-          :css="false"
-        > -->
         <div
           v-if="details !== null"
           class="bg-white overflow-hidden shadow-xl sm:rounded-lg"
         >
-          <GateDetails :gate="details" v-bind:attrs="attrs" />
+          <GateDetails
+            :gate="details"
+            v-bind:attrs="attrs"
+            :routeName="'dashboard'"
+          />
         </div>
-        <!-- </transition> -->
       </div>
     </div>
   </AppLayout>
@@ -131,6 +149,7 @@ export default {
   data() {
     return {
       showKeyList: true,
+      title: "Dashboard",
       component: "GateShow",
       attrs: this.$attrs,
       details: null,
@@ -167,6 +186,7 @@ export default {
         height: gatesWidget.offsetHeight,
       };
       this.details = gate;
+      this.title = gate.name;
     },
   },
 };

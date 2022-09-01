@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Http\Controllers\FutureVirtualKeyController;
 use App\Http\Controllers\KeyUsageController;
 use App\Http\Controllers\MagicCodeUsageController;
 use App\Http\Controllers\TeamMemberController;
@@ -47,6 +48,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/remoteOpen/web', [GateController::class, 'openGateRemotelyByWebsite'])->name('gates.open');
     Route::get('/teams/roles', [TeamController::class, 'getRoles']);
     Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
+    Route::post('/futureVirtualKeys', [FutureVirtualKeyController::class, 'store']);
 });
 //Public routes
 Route::post('/auth/token', [AuthController::class, 'getToken']);

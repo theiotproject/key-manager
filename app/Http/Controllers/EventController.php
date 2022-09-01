@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\EventResource;
-use App\Models\Event;
-use App\Models\Gate;
-use App\Models\KeyUsage;
-use App\Models\VirtualKey;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-
+use App\Models\Gate;
+use App\Models\Team;
 use Inertia\Inertia;
+use App\Models\Event;
 use function Psy\debug;
+use App\Models\KeyUsage;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator as PaginationPaginator;
+use Illuminate\Support\Facades\DB;
+use App\Models\VirtualKey;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\EventResource;
 
 class EventController extends Controller
 {
@@ -110,12 +117,20 @@ class EventController extends Controller
         //
     }
 
-    public function indexEventsByTeamId($teamId, $limit)
+    public function indexEventsByTeamId($teamId, $limit, $pagination)
     {
+        $user = Auth::user();
+        $role = app('App\Http\Controllers\AuthController')->getAuthUserRoleByTeamId($teamId);
 
-        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-        })->get();
+        if ($role == 'owner' || $role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->where('user_id', $user->id)->get();
+        }
 
         $virtualKeyIds = array();
         foreach ($virtualKeys as $virtualKey) {
@@ -129,7 +144,8 @@ class EventController extends Controller
             array_push($keyUsageIds, $keyUsage->id);
         }
 
-        $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take($limit)->values();
+        $pagination == 1 ? $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take(1000)->values() : $events = Event::all()->whereIn('GUID', $keyUsageIds)->sortByDesc('scan_time')->take($limit)->values();
+
 
         $result = array();
         foreach ($events as $event) {
@@ -140,6 +156,7 @@ class EventController extends Controller
             $merge = array_merge($event->toArray(), $user->toArray(), $gate->toArray());
             array_push($result, new EventResource($merge));
         }
+        if ($pagination == 1) return paginate($result, $limit);
         return $result;
     }
 
@@ -148,7 +165,7 @@ class EventController extends Controller
 
         $events = Event::whereHas('gate', function ($q) use ($teamId) {
             $q->where('team_id', $teamId);
-        })->orderBy('scan_time', 'DESC')->get();
+        })->orderBy('scan_time', 'DESC')->take(1000)->get();
 
         $result = array();
         foreach ($events as $event) {
@@ -156,14 +173,23 @@ class EventController extends Controller
             $merge = array_merge($event->toArray(), $gate->toArray());
             array_push($result, $merge);
         }
-        return $result;
+        return paginate($result, $limit);
     }
 
     public function indexEventsByGate($teamId, $gateId, $limit)
     {
-        $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
-            $query->where('team_id', $teamId);
-        })->get();
+        $user = Auth::user();
+        $role = app('App\Http\Controllers\AuthController')->getAuthUserRoleByTeamId($teamId);
+
+        if ($role == 'owner' || $role == 'admin') {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+        } else {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->where('user_id', $user->id)->get();
+        }
 
         $virtualKeyIds = array();
         foreach ($virtualKeys as $virtualKey) {
@@ -203,27 +229,6 @@ class EventController extends Controller
 
         $last7DaysAccessDenied = array();
 
-        // $last7DaysAccessGranted = [
-        //     $last7Days[0] => '',
-        //     $last7Days[1] => '',
-        //     $last7Days[2] => '',
-        //     $last7Days[3] => '',
-        //     $last7Days[4] => '',
-        //     $last7Days[5] => '',
-        //     $last7Days[6] => '',
-        // ];
-
-        // $last7DaysAccessDenied = [
-        //     $last7Days[0] => '',
-        //     $last7Days[1] => '',
-        //     $last7Days[2] => '',
-        //     $last7Days[3] => '',
-        //     $last7Days[4] => '',
-        //     $last7Days[5] => '',
-        //     $last7Days[6] => '',
-        // ];
-
-
         foreach ($last7Days as $day) {
             array_push($last7DaysAccessGranted, Event::whereDate('scan_time', $day)->where('serial_number', $gateSerialNumber)->where('status', 1)->count());
             array_push($last7DaysAccessDenied, Event::whereDate('scan_time', $day)->where('serial_number', $gateSerialNumber)->where('status', 0)->count());
@@ -248,4 +253,12 @@ function getLastNDays($days, $format)
         $dateArray[] = date($format, mktime(0, 0, 0, $m, ($de - $i), $y));
     }
     return array_reverse($dateArray);
+}
+
+
+function paginate($items, $perPage, $page = null, $options = [])
+{
+    $page = $page ?: (PaginationPaginator::resolveCurrentPage() ?: 1);
+    $items = $items instanceof Collection ? $items : Collection::make($items);
+    return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
 }

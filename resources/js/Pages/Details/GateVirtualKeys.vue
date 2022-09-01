@@ -31,7 +31,7 @@ import MakeToast from "../../Services/MakeToast.vue";
         </button>
       </h2>
     </div>
-    <div class="pb-5">
+    <div class="pb-5 min-h-full relative">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden sm:rounded-lg">
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -94,7 +94,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                   :key="virtualKey.id"
                 >
                   <td
-                    v-if="index <= 2"
+                    v-if="index <= 3"
                     class="
                       lg:px-3
                       md:px-0
@@ -120,7 +120,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                   </td>
                   <td
-                    v-if="index <= 2"
+                    v-if="index <= 3"
                     class="
                       lg:px-3
                       md:px-0
@@ -134,12 +134,12 @@ import MakeToast from "../../Services/MakeToast.vue";
                   </td>
                 </tr>
                 <tr
-                  class="bg-white border-b"
+                  class="bg-white border-b whiteBackground"
                   v-for="(virtualKey, index) in notUsersVirtualKeys"
                   :key="virtualKey.id"
                 >
                   <td
-                    v-if="usersVirtualkeys.length + index < 3"
+                    v-if="usersVirtualkeys.length + index < 4"
                     class="
                       lg:px-3
                       md:px-0
@@ -165,7 +165,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     </div>
                   </td>
                   <td
-                    v-if="usersVirtualkeys.length + index < 3"
+                    v-if="usersVirtualkeys.length + index < 4"
                     class="
                       lg:px-3
                       md:px-0
@@ -182,17 +182,79 @@ import MakeToast from "../../Services/MakeToast.vue";
             </table>
           </div>
         </div>
-        <div
-          class="mt-5 w-full flex justify-center"
-          v-if="virtualKeys.length > 3"
+      </div>
+      <div
+        class="
+          flex
+          content-between
+          h-full
+          w-full
+          items-end
+          bottom-12
+          p-12
+          absolute
+        "
+      >
+        <p
+          class="
+            flex
+            items-center
+            justify-left
+            absolute
+            left-10
+            cursor-pointer
+            text-xs text-gray-500
+            hover:text-black
+          "
+          v-if="currentPage > 1"
+          @click="getVirtualKeys(currentPage - 1)"
         >
-          <Link
-            :href="route('virtualKeys.index')"
-            class="text-gray-600 hover:text-black py-2 px-4 rounded"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            Show more
-          </Link>
-        </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Previous Page
+        </p>
+        <p
+          class="
+            flex
+            items-center
+            justify-right
+            absolute
+            right-10
+            cursor-pointer
+            text-xs text-gray-500
+            hover:text-black
+          "
+          v-if="nextPageAvailable"
+          @click="getVirtualKeys(currentPage + 1)"
+        >
+          Next Page
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </p>
       </div>
     </div>
   </div>
@@ -200,19 +262,34 @@ import MakeToast from "../../Services/MakeToast.vue";
 <script>
 export default {
   name: "VirtualKeyWidget",
-  props: ["attrs", "virtualKeys"],
+  props: ["attrs", "gate"],
   data() {
-    console.log(this.virtualKeys);
     return {
-      gates: {},
-      virtualKeys: this.virtualKeys,
+      gate: this.gate,
+      virtualKeys: {},
       permission: 0,
       localAttrs: this.attrs,
+      showAllVK: false,
+      nextPageAvailable: false,
+      currentPage: 1,
     };
   },
   methods: {
     switchList() {
       this.$emit("switch", false);
+    },
+    getVirtualKeys(page) {
+      axios
+        .get(`/virtualKeys/gate/${this.gate.id}/limit/4?page=${page}`)
+        .then((response) => {
+          this.virtualKeys = response.data.data;
+          this.currentPage = response.data.current_page;
+          if (response.data.next_page_url !== null) {
+            this.nextPageAvailable = true;
+          } else {
+            this.nextPageAvailable = false;
+          }
+        });
     },
     getPermission() {
       axios
@@ -240,6 +317,7 @@ export default {
   created() {
     this.isSafari();
     this.getPermission();
+    this.getVirtualKeys(1);
   },
 };
 </script>
