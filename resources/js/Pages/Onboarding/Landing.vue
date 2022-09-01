@@ -27,7 +27,7 @@ const switchToTeam = (team) => {
       <p class="text-2xl font-bold py-10 mb-2">Key Manager</p>
     </div>
     <transition name="smooth" mode="out-in">
-      <div v-if="!setup">
+      <div v-if="!setup && instant !== true">
         <div
           class="
             absolute
@@ -86,7 +86,7 @@ const switchToTeam = (team) => {
         </div>
       </div>
       <div
-        v-else
+        v-else-if="setup"
         class="flex justify-center h-screen p-0 m-0 w-screen teamNameContainer"
       >
         <Setup :attrs="attrs" :team="createdTeam"></Setup>
@@ -94,10 +94,10 @@ const switchToTeam = (team) => {
     </transition>
   </section>
 
-  <div v-if="!setup" class="flex justify-center">
+  <div v-if="!setup && instant !== true" class="flex justify-center">
     <div class="circle">OR</div>
   </div>
-  <section v-if="!setup" class="second flex flex-col items-center pb-32">
+  <section v-if="!setup && instant !== true" class="second flex flex-col items-center pb-32">
     <div class="w-128">
       <div v-if="$page.props.user.all_teams.length > 0">
         <p class="font-semibold my-5">Open a team</p>
@@ -322,8 +322,10 @@ const switchToTeam = (team) => {
 
 <script>
 export default {
+    props: ['instant'],
   data() {
     return {
+        instant: this.instant,
       attrs: this.$attrs,
       invitations: {},
       invitationHover: null,
@@ -368,6 +370,7 @@ export default {
   },
   created() {
     this.getInvitations();
+      if(this.instant === true) this.createTeam();
   },
 };
 </script>

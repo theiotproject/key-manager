@@ -40,7 +40,7 @@ class TeamController extends Controller
         return $userInvitations;
     }
 
-    public function joinTeam(Request $request)
+    public function joinTeam(Request $request, $switch)
     {
         $invitation = TeamInvitation::find($request->invitationId);
 
@@ -50,7 +50,8 @@ class TeamController extends Controller
             $invitation->email,
             $invitation->role
         );
-        Auth::user()->switchTeam($invitation->team);
+        if($switch === 1)Auth::user()->switchTeam($invitation->team);
+
         $invitation->delete();
 
         $futureVirtualKey = FutureVirtualKey::where('user_email', $invitation->email)->first();
@@ -106,6 +107,12 @@ class TeamController extends Controller
         $deleter->delete($team);
 
         return redirect('/');
+    }
+
+    public function destroyInvitation($invitationId)
+    {
+        $invitation = TeamInvitation::find($invitationId);
+        $invitation->delete();
     }
 
     public function getRoles()
