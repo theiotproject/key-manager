@@ -362,7 +362,7 @@ const enter2 = (el, done) => {
             <!-- Future Virtual Key -->
             <transition @before-enter="beforeEnter" @enter="enter">
             <div
-                v-if="addTeamMemberForm.role === 'user'"
+                v-if="addTeamMemberForm.role === 'user' && addTeamMemberForm.gates.length > 0"
                 class="col-span-6 lg:col-span-4"
             >
                 <JetLabel for="futureVirtualKeys" value="You can give access to gates by creating future virtual key for new user" />
@@ -399,7 +399,7 @@ const enter2 = (el, done) => {
                             >
                         </div>
                     </li>
-                    <p class="cursor-pointer" @click="addTeamMemberForm.showAllGates = !addTeamMemberForm.showAllGates">{{addTeamMemberForm.showAllGates ? 'Show less gates' : `Show ${addTeamMemberForm.gates.length - 3} more gates`}}</p>
+                    <p class="cursor-pointer" v-if="addTeamMemberForm.gates.length > 3" @click="addTeamMemberForm.showAllGates = !addTeamMemberForm.showAllGates">{{addTeamMemberForm.showAllGates ? 'Show less gates' : `Show ${addTeamMemberForm.gates.length - 3} more gates`}}</p>
                 </ul>
                 <transition @before-enter="beforeEnter2" @enter="enter2">
                 <div v-if="addTeamMemberForm.checkedGates.length > 0">
