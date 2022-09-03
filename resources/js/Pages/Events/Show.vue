@@ -208,11 +208,11 @@ const removeGate = () => {
                             absolute
                             left-10
                             cursor-pointer
-                            text-xs text-gray-500
-                            hover:text-black
+                            text-xs
                           "
+                          :class="eventPagination.loading ? 'text-gray-200' : 'text-gray-500 hover:text-black'"
                           v-if="eventPagination.page > 1"
-                          @click="eventPagination.page--"
+                          @click="eventPagination.loading ? eventPagination.page : eventPagination.page--; eventPagination.loading = true"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -239,11 +239,11 @@ const removeGate = () => {
                             absolute
                             right-10
                             cursor-pointer
-                            text-xs text-gray-500
-                            hover:text-black
+                            text-xs
                           "
+                          :class="eventPagination.loading ? 'text-gray-200' : 'text-gray-500 hover:text-black'"
                           v-if="eventPagination.nextPageAvailable"
-                          @click="eventPagination.page++"
+                          @click="eventPagination.loading ? eventPagination.page : eventPagination.page++; eventPagination.loading = true"
                         >
                           Next Page
                           <svg
@@ -415,11 +415,11 @@ const removeGate = () => {
                             absolute
                             left-10
                             cursor-pointer
-                            text-xs text-gray-500
-                            hover:text-black
+                            text-xs
                           "
+                          :class="scanAttemptsPagination.loading ? 'text-gray-200' : 'text-gray-500 hover:text-black'"
                           v-if="scanAttemptsPagination.page > 1"
-                          @click="scanAttemptsPagination.page--"
+                          @click="scanAttemptsPagination.loading ? scanAttemptsPagination.page : scanAttemptsPagination.page--; scanAttemptsPagination.loading = true"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -446,11 +446,11 @@ const removeGate = () => {
                             absolute
                             right-10
                             cursor-pointer
-                            text-xs text-gray-500
-                            hover:text-black
+                            text-xs
                           "
+                          :class="scanAttemptsPagination.loading ? 'text-gray-200' : 'text-gray-500 hover:text-black'"
                           v-if="scanAttemptsPagination.nextPageAvailable"
-                          @click="scanAttemptsPagination.page++"
+                          @click="scanAttemptsPagination.loading ? scanAttemptsPagination.page : scanAttemptsPagination.page++; scanAttemptsPagination.loading = true"
                         >
                           Next Page
                           <svg
@@ -492,21 +492,25 @@ export default {
       events: {},
       scanAttempts: {},
       permission: 0,
-      eventPagination: { page: 1, nextPageAvailable: false },
-      scanAttemptsPagination: { page: 1, nextPageAvailable: false },
+      eventPagination: { page: 1, nextPageAvailable: false, loading: false },
+      scanAttemptsPagination: { page: 1, nextPageAvailable: false, loading: false },
       attrs: this.$attrs,
     };
   },
   watch: {
     eventPagination: {
       handler(page) {
-        this.getEvents(this.eventPagination.page);
+          if(this.eventPagination.loading === true){
+              this.getEvents(this.eventPagination.page);
+          }
       },
       deep: true,
     },
     scanAttemptsPagination: {
       handler(page) {
-        this.getScanAttempts(this.scanAttemptsPagination.page);
+          if(this.scanAttemptsPagination.loading === true){
+              this.getScanAttempts(this.scanAttemptsPagination.page);
+          }
       },
       deep: true,
     },
@@ -519,6 +523,7 @@ export default {
         )
         .then((response) => {
           this.events = response.data.data;
+            this.eventPagination.loading = false;
 
           this.eventPagination.page = response.data.current_page;
           if (response.data.next_page_url !== null) {
@@ -537,8 +542,8 @@ export default {
           } else {
             this.isEventNew = false;
           }
-          console.log(this.isEventNew);
           this.lastEventTime = this.events[0].scan_time;
+
         })
         .catch((err) => {
           // MakeToast.create("Cannot load Events", "error");
@@ -551,6 +556,7 @@ export default {
         )
         .then((response) => {
           this.scanAttempts = response.data.data;
+          this.scanAttemptsPagination.loading = false;
           this.scanAttemptsPagination.page = response.data.current_page;
           if (response.data.next_page_url !== null) {
             this.scanAttemptsPagination.nextPageAvailable = true;
