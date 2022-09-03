@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
@@ -15,6 +15,7 @@ defineProps({
 });
 
 const showingNavigationDropdown = ref(false);
+const invitationsQuantity = ref(0);
 
 const switchToTeam = (team) => {
     Inertia.put(
@@ -38,6 +39,16 @@ const logout = () => {
         },
     });
 };
+
+const getInvitationsQuantity = () => {
+    axios.get(`/api/teams/invitations/quantity`).then((response) => {
+        invitationsQuantity.value = response.data;
+    });
+}
+
+onMounted(() => {
+   getInvitationsQuantity();
+});
 </script>
 
 <template>
@@ -302,8 +313,10 @@ const logout = () => {
                                                 "
                                                 :alt="$page.props.user.name"
                                             />
+                                            <div v-if="invitationsQuantity > 0" class="text-gray-700 rounded-full bg-red-300 flex items-center justify-center w-4 h-4 absolute -bottom-0.5 -right-0.5 text-xs">
+                                                <p>{{invitationsQuantity}}</p>
+                                            </div>
                                         </button>
-
                                         <span
                                             v-else
                                             class="inline-flex rounded-md"

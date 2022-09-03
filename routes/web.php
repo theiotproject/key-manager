@@ -108,10 +108,9 @@ Route::middleware([
     Route::put('/tours', [ToursController::class, 'update']);
     Route::delete('/teams/delete/{teamId}', [TeamController::class, 'destroy'])->name('teams.delete');
     Route::delete('/teams/invitation/{invitationId}', [TeamController::class, 'destroyInvitation']);
+    Route::get('/teams/invitations/{userId}', [TeamController::class, 'getUserInvitations']);
 });
 
-
-Route::get('/teams/invitations/{userId}', [TeamController::class, 'getUserInvitations']);
 
 
 // Routes with administrator permission

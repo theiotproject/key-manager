@@ -8,6 +8,7 @@ use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\ToursController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GateController;
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/teams/roles', [TeamController::class, 'getRoles']);
     Route::get('/teams/data/{teamId}', [TeamController::class, 'getTeamInvitations']);
     Route::post('/futureVirtualKeys', [FutureVirtualKeyController::class, 'store']);
+    Route::get('/teams/invitations/quantity', [TeamController::class, 'getUserInvitationsQuantity']);
 });
 //Public routes
 Route::post('/auth/token', [AuthController::class, 'getToken']);

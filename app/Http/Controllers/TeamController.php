@@ -40,6 +40,13 @@ class TeamController extends Controller
         return $userInvitations;
     }
 
+    public function getUserInvitationsQuantity()
+    {
+        $user = User::find(Auth::user()->id);
+        $userInvitations = TeamInvitation::where('email', $user->email)->count();
+        return $userInvitations;
+    }
+
     public function joinTeam(Request $request, $switch)
     {
         $invitation = TeamInvitation::find($request->invitationId);
