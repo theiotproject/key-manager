@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-vue3";
 import JetActionMessage from "@/Jetstream/ActionMessage.vue";
@@ -15,6 +15,7 @@ import JetLabel from "@/Jetstream/Label.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import JetSectionBorder from "@/Jetstream/SectionBorder.vue";
 import MakeToast from "../../../Services/MakeToast.vue";
+import gsap from "gsap";
 
 const props = defineProps({
   team: Object,
@@ -197,6 +198,44 @@ const removeTeamMember = () => {
 const displayableRole = (role) => {
   return props.availableRoles.find((r) => r.key === role).name;
 };
+
+const beforeEnter = (el) => {
+    el.style.opacity = 0;
+}
+
+const enter = (el, done) => {
+    gsap.to(el, {
+        duration: 0.8,
+        opacity: 1,
+        onComplete: done,
+    });
+    gsap.from(".stagger", {
+        duration: 0.2,
+        opacity: 0,
+        transform: "translateX(40px)",
+        ease: "power1",
+        stagger: 0.15,
+    });
+}
+
+const beforeEnter2 = (el) => {
+    el.style.opacity = 0;
+}
+
+const enter2 = (el, done) => {
+    gsap.to(el, {
+        duration: 0.8,
+        opacity: 1,
+        onComplete: done,
+    });
+    gsap.from(".stagger2", {
+        duration: 0.2,
+        opacity: 0,
+        transform: "translateX(40px)",
+        ease: "power1",
+        stagger: 0.125,
+    });
+}
 </script>
 
 <template>
@@ -321,8 +360,9 @@ const displayableRole = (role) => {
             </div>
           </div>
             <!-- Future Virtual Key -->
+            <transition @before-enter="beforeEnter" @enter="enter">
             <div
-                v-if="addTeamMemberForm.role === 'user'"
+                v-if="addTeamMemberForm.role === 'user' && addTeamMemberForm.gates.length > 0"
                 class="col-span-6 lg:col-span-4"
             >
                 <JetLabel for="futureVirtualKeys" value="You can give access to gates by creating future virtual key for new user" />
@@ -332,7 +372,7 @@ const displayableRole = (role) => {
                 />
 
                 <ul
-                    class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
+                    class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700 overflow-x-hidden"
                     aria-labelledby="dropdownSearchButton"
                 >
                     <li
@@ -342,7 +382,7 @@ const displayableRole = (role) => {
                     >
                         <div
                             v-if="index < 3 || addTeamMemberForm.showAllGates"
-                            class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+                            class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer stagger overflow-x-hidden"
                             @click="checkGate(index)"
                         >
                             <input
@@ -359,8 +399,9 @@ const displayableRole = (role) => {
                             >
                         </div>
                     </li>
-                    <p class="cursor-pointer" @click="addTeamMemberForm.showAllGates = !addTeamMemberForm.showAllGates">{{addTeamMemberForm.showAllGates ? 'Show less gates' : `Show ${addTeamMemberForm.gates.length - 3} more gates`}}</p>
+                    <p class="cursor-pointer" v-if="addTeamMemberForm.gates.length > 3" @click="addTeamMemberForm.showAllGates = !addTeamMemberForm.showAllGates">{{addTeamMemberForm.showAllGates ? 'Show less gates' : `Show ${addTeamMemberForm.gates.length - 3} more gates`}}</p>
                 </ul>
+                <transition @before-enter="beforeEnter2" @enter="enter2">
                 <div v-if="addTeamMemberForm.checkedGates.length > 0">
                     <hr class="mt-5 mb-5" />
                     <JetLabel value="On which days of the week should the user have access to the selected gates?" class="mb-3" />
@@ -370,7 +411,7 @@ const displayableRole = (role) => {
                         <li
                             v-for="(day, index) in addTeamMemberForm.days"
                             :key="index"
-                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r cursor-pointer hover:bg-gray-100"
+                            class="w-auto sm:w-28 border rounded-lg m-0.5 border-gray-200 sm:border-r cursor-pointer hover:bg-gray-100 stagger2"
                         >
                             <div
                                 @click="checkDay(index)"
@@ -393,7 +434,9 @@ const displayableRole = (role) => {
                         </li>
                     </ul>
                 </div>
+                </transition>
             </div>
+            </transition>
         </template>
 
         <template #actions>

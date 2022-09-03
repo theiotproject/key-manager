@@ -220,17 +220,17 @@ onMounted(() => {
                                                 >
                                                     Create New Team
                                                 </JetDropdownLink> -->
-                                                                                                <JetDropdownLink
-                                                    v-if="
-                                                        $page.props.jetstream
-                                                            .canCreateTeams
-                                                    "
-                                                    :href="
-                                                        route('onboarding.landing')
-                                                    "
-                                                >
-                                                    Create Or Join new Team
-                                                </JetDropdownLink>
+<!--                                                                                                <JetDropdownLink-->
+<!--                                                    v-if="-->
+<!--                                                        $page.props.jetstream-->
+<!--                                                            .canCreateTeams-->
+<!--                                                    "-->
+<!--                                                    :href="-->
+<!--                                                        route('onboarding.landing')-->
+<!--                                                    "-->
+<!--                                                >-->
+<!--                                                    Create Or Join new Team-->
+<!--                                                </JetDropdownLink>-->
 
                                                 <div
                                                     class="border-t border-gray-100"
