@@ -40,6 +40,13 @@ class TeamController extends Controller
         return $userInvitations;
     }
 
+    public function getUserInvitationsQuantity()
+    {
+        $user = User::find(Auth::user()->id);
+        $userInvitations = TeamInvitation::where('email', $user->email)->count();
+        return $userInvitations;
+    }
+
     public function joinTeam(Request $request, $switch)
     {
         $invitation = TeamInvitation::find($request->invitationId);
@@ -50,7 +57,9 @@ class TeamController extends Controller
             $invitation->email,
             $invitation->role
         );
-        if($switch === 1)Auth::user()->switchTeam($invitation->team);
+        if($switch === 1){
+            Auth::user()->switchTeam($invitation->team);
+        }
 
         $invitation->delete();
 

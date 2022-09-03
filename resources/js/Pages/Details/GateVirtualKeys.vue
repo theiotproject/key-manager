@@ -23,12 +23,12 @@ import MakeToast from "../../Services/MakeToast.vue";
           />
         </svg>
         <p class="ml-3">Virtual Keys</p>
-        <button
-          @click="switchList"
-          class="ml-2 text-gray-500 text-xs hover:text-gray-700"
-        >
-          / Virtual Tickets
-        </button>
+<!--        <button-->
+<!--          @click="switchList"-->
+<!--          class="ml-2 text-gray-500 text-xs hover:text-gray-700"-->
+<!--        >-->
+<!--          / Virtual Tickets-->
+<!--        </button>-->
       </h2>
     </div>
     <div class="pb-5 min-h-full relative">

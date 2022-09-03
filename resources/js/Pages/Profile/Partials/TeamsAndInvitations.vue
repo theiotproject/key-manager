@@ -31,7 +31,7 @@ const switchToTeam = (team) => {
 
         <!-- Team Member Invitations -->
         <JetActionSection class="mt-10 sm:mt-0">
-            <template #title> Pending Team Invitations ({{invitations.length}})</template>
+            <template #title> Pending Team Invitations <span class="text-red-500">({{invitations.length}})</span></template>
 
             <template #description>
                 These people have been invited to your team and have been sent an
