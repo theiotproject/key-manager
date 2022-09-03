@@ -48,6 +48,10 @@ onMounted(() => {
         intro: `If you want to give access to your gates by sharing time limited qr code via e-mail you can also create Virtual Ticket available here or in "Virtual Tickets" card`,
         element: document.querySelector("#secondStepTour"),
       },
+        {
+            title: `Download Mobile App! 📱`,
+            intro: `Now you can download our application from Google Play and open gates via your mobile phone!`
+        },
     ],
   });
   tour.onexit(() => {

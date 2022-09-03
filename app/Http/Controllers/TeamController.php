@@ -57,7 +57,9 @@ class TeamController extends Controller
             $invitation->email,
             $invitation->role
         );
-        if($switch === 1)Auth::user()->switchTeam($invitation->team);
+        if($switch === 1){
+            Auth::user()->switchTeam($invitation->team);
+        }
 
         $invitation->delete();
 

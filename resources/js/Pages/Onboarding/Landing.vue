@@ -2,6 +2,14 @@
 import Link from "@inertiajs/inertia-vue3";
 import Setup from "./Setup/Setup.vue";
 import { Inertia } from "@inertiajs/inertia";
+import introJs from "intro.js";
+import {onMounted, ref} from "vue";
+
+const props = defineProps({
+    instant: Boolean,
+})
+
+const invitationsQuantity = ref(0);
 
 const switchToTeam = (team) => {
   Inertia.put(
@@ -14,6 +22,42 @@ const switchToTeam = (team) => {
     }
   );
 };
+
+const getInvitationsQuantity = async () => {
+    await axios.get(`/api/teams/invitations/quantity`).then((response) => {
+        invitationsQuantity.value = response.data;
+    });
+}
+
+const showTour = (tour, element) => {
+    setTimeout(() => {
+        element.scrollIntoView({behavior: 'smooth'});
+        setTimeout(()=> {
+            tour.start();
+        }, 650);
+    }, 800);
+}
+
+onMounted(async () =>{
+    if(props.instant !== true){
+        await getInvitationsQuantity();
+        const element = document.querySelector("#invitations")
+        let tour = introJs();
+        tour.setOptions({
+            steps: [
+                {
+                    title: `You have ${invitationsQuantity.value} pending invitation${invitationsQuantity.value === 1 ? '' : 's'} 🎉`,
+                    intro: `You can accept invitation to join team and start using Key Manager!`,
+                    element: element
+                },
+            ]
+        });
+        if(invitationsQuantity.value > 0) {
+            showTour(tour, element);
+        }
+    }
+});
+
 </script>
 <template>
   <Head title="Welcome - Key Manager" />
@@ -252,7 +296,7 @@ const switchToTeam = (team) => {
         </div>
       </div>
       <p class="font-semibold my-5 mt-10">Accept an invitation</p>
-      <div class="w-full h-96 border border-gray-200 shadow-lg rounded">
+      <div class="w-full h-96 border border-gray-200 shadow-lg rounded" id="invitations">
         <div class="p-5 text-sm border-b border-gray-200">
           Invitations for <b>{{ attrs.user.email }}</b>
         </div>
@@ -263,7 +307,7 @@ const switchToTeam = (team) => {
           <div
             v-for="invitation in invitations"
             :key="invitation.id"
-            @click="joinTeam(invitation.id)"
+            @click="joinTeam(invitation)"
             class="
               z-20
               p-7
@@ -358,11 +402,13 @@ export default {
     getInvitations() {
       axios.get(`/teams/invitations/${this.attrs.user.id}`).then((response) => {
         this.invitations = response.data;
+        console.log(this.invitations);
       });
     },
-    joinTeam(invitationId) {
-      axios.post(`/api/teams/join`, { invitationId: invitationId });
+    joinTeam(invitation) {
+      axios.post(`/api/teams/join/switch/1`, { invitationId: invitation.id });
       this.$inertia.get(this.route("dashboard"));
+      this.switchToTeam(invitation.team);
     },
     logout() {
       this.$inertia.post(route("logout"));
