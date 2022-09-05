@@ -106,12 +106,12 @@ import MakeToast from "../../Services/MakeToast.vue";
                   </th>
                   <th scope="col" class="px-6 py-3">Gate</th>
                   <th scope="col" class="px-2 py-3">Message</th>
-                  <th
-                    scope="col"
-                    class="px-2 py-3 sm:rounded-r-lg rounded-none"
-                  >
-                    Time
-                  </th>
+<!--                  <th-->
+<!--                    scope="col"-->
+<!--                    class="px-2 py-3 sm:rounded-r-lg rounded-none"-->
+<!--                  >-->
+<!--                    Time-->
+<!--                  </th>-->
                 </tr>
               </thead>
               <tbody>
@@ -150,7 +150,7 @@ import MakeToast from "../../Services/MakeToast.vue";
                     <!-- {{ event.message }} -->
                     {{ event.status ? "Approved" : "Access Denied" }}
                   </td>
-                  <td class="px-2 py-4 font-medium whitespace-nowrap">
+                  <td class="px-2 py-4 font-medium whitespace-nowrap" v-if="!isSafari()">
                     {{
                       timeAgo.format(
                         new Date(event.scan_time),

@@ -368,18 +368,19 @@ const removeGate = () => {
                           v-if="isSafari()"
                         >
                           <tr>
-                            <th
-                              scope="col"
-                              class="px-6 py-3 sm:rounded-l-lg rounded-none"
-                            >
-                              Gate
-                            </th>
-                            <th
-                              scope="col"
-                              class="px-2 py-3 sm:rounded-r-lg rounded-none"
-                            >
-                              Message
-                            </th>
+                              <th
+                                  scope="col"
+                                  class="px-3 py-3 sm:rounded-l-lg rounded-none"
+                              >
+                                  Date
+                              </th>
+                              <th scope="col" class="px-2 py-3">Gate</th>
+                              <th
+                                  scope="col"
+                                  class="px-2 py-3 sm:rounded-r-lg rounded-none"
+                              >
+                                  Message
+                              </th>
                           </tr>
                         </thead>
                         <tbody>
