@@ -39,7 +39,7 @@ const removeGate = () => {
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="parent2 gap-x-5 gap-y-5">
-          <div class="area-2-1">
+          <div :class="role === 'user' ? 'area-2-3' : 'area-2-1'">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
               <div class="flex justify-between">
                 <h2
@@ -268,7 +268,7 @@ const removeGate = () => {
               </div>
             </div>
           </div>
-          <div class="area-2-2">
+          <div class="area-2-2" v-if="role === 'owner' || role === 'admin'">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
               <div class="flex justify-between">
                 <h2
@@ -368,18 +368,19 @@ const removeGate = () => {
                           v-if="isSafari()"
                         >
                           <tr>
-                            <th
-                              scope="col"
-                              class="px-6 py-3 sm:rounded-l-lg rounded-none"
-                            >
-                              Gate
-                            </th>
-                            <th
-                              scope="col"
-                              class="px-2 py-3 sm:rounded-r-lg rounded-none"
-                            >
-                              Message
-                            </th>
+                              <th
+                                  scope="col"
+                                  class="px-3 py-3 sm:rounded-l-lg rounded-none"
+                              >
+                                  Date
+                              </th>
+                              <th scope="col" class="px-2 py-3">Gate</th>
+                              <th
+                                  scope="col"
+                                  class="px-2 py-3 sm:rounded-r-lg rounded-none"
+                              >
+                                  Message
+                              </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -489,6 +490,7 @@ export default {
       isEventNew: true,
       showHello: true,
       showHello2: true,
+        role: '',
       events: {},
       scanAttempts: {},
       permission: 0,
@@ -568,11 +570,23 @@ export default {
           MakeToast.create("Cannot load Scan attempts", "error");
         });
     },
+      getRole() {
+          axios
+              .get(`/auth/role/teamId/${this.attrs.user.current_team_id}`)
+              .then((response) => {
+                  this.role = response.data;
+                  console.log(this.role);
+              })
+              .catch((err) => {
+                  MakeToast.create("Cannot load role", "error");
+              });
+      },
     isSafari() {
       return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     },
   },
-  created() {
+    created() {
+      this.getRole();
     this.isSafari();
     this.getEvents(1);
     this.getScanAttempts(1);
@@ -592,6 +606,9 @@ export default {
 }
 .area-2-2 {
   grid-area: 1 / 4 / 2 / 6;
+}
+.area-2-3 {
+    grid-area: 1 / 1 / 2 / 6;
 }
 
 .rotation-enter {
