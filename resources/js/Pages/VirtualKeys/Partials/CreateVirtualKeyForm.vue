@@ -261,7 +261,7 @@ export default {
             axios
                 .post("/virtualKeys", data)
                 .then((result) => {
-                    MakeToast.create("Added Virtual Key", "info");
+                    MakeToast.create('Added ' + (users.length > 1 ? `${users.length}` : '') + ' Virtual Key' + (users.length > 1 ? 's' : ''), "info");
                     this.$inertia.get("../dashboard");
                 })
                 .catch((err) => {
