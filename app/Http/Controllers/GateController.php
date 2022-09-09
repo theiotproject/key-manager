@@ -41,6 +41,11 @@ class GateController extends Controller
         return Inertia::render('Gates/Create');
     }
 
+    public function createWithVirtualKey()
+    {
+        return Inertia::render('Gates/Create', ['createVirtualKey' => true]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

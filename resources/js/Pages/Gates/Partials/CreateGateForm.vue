@@ -128,9 +128,10 @@ import MakeToast from "../../../Services/MakeToast.vue";
 <script>
 export default {
     name: "CreateGateForm",
-    props: ["attrs"],
+    props: ["attrs", "createVirtualKey"],
     data: function () {
         return {
+            createVirtualKey: this.createVirtualKey,
             hint: false,
             form: {
                 passwordFieldType: "password",
@@ -187,7 +188,11 @@ export default {
                 axios
                     .post("/gates", data)
                     .then((response) => {
-                        this.$inertia.get("../dashboard");
+                        if(this.createVirtualKey === true){
+                            this.$inertia.get('../../virtualKeys/create');
+                        } else {
+                            this.$inertia.get("../../dashboard");
+                        }
                         this.dataId = response.data.id;
                         MakeToast.create("Gate successfully added", "info");
                     })

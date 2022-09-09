@@ -61,7 +61,7 @@ const displayableRole = (role) => {
 </script>
 
 <template>
-  <div class="w-200 mt-24">
+  <div class="w-200 mt-24" v-if="pathSelector === false">
     <!-- Add Team Member -->
     <FormSection
       @submitted="
@@ -274,21 +274,43 @@ const displayableRole = (role) => {
       </JetActionSection>
     </div>
   </div>
+    <div class="w-250 mt-24" v-else>
+        <div class="flex items-center w-full justify-between">
+            <div class="bg-white shadow-xl p-6 rounded-xl flex flex-col items-center mx-5 transition-all hover:scale-105 cursor-pointer" style="height: 520px; background-color: white !important" @click="goToCreateGateForm">
+                <img src="../../../../../public/images/whitebg/aboutlogo.jpg" class="w-96">
+                <h1 class="font-bold text-xl">ADD FIRST GATE</h1>
+                <h3 class="text-gray-500 text-center">Then you can give your teammates access<br>
+                    to gate by creating virtual keys</h3>
+            </div>
+                <div class="bg-white shadow-xl p-6 rounded-xl flex flex-col items-center mx-5 transition-all hover:scale-105 cursor-pointer" style="height: 520px; background-color: white !important" @click="goToDashboard">
+                    <img src="../../../../../public/images/whitebg/dashboard.jpg" class="h-96">
+                    <h1 class="font-bold text-xl">GO TO DASHBOARD</h1>
+                    <h3 class="text-gray-500 text-center">You can add gates and virtual keys later</h3>
+                </div>
+            </div>
+    </div>
 </template>
 <script>
 export default {
   props: ["attrs", "team", "newTeamName"],
   data() {
     return {
+        pathSelector: false,
       availableRoles: Object,
         newTeamName: this.newTeamName
     };
   },
   methods: {
     goToDashboard() {
-        console.log('funkcja ladujaca dashboard');
-      this.$inertia.get(this.route("dashboard"));
+        if(this.pathSelector === false){
+            this.pathSelector = true;
+        } else {
+            this.$inertia.get(this.route("dashboard"));
+        }
     },
+      goToCreateGateForm() {
+          this.$inertia.get(this.route("gates.create.vk"));
+      },
     getRoles() {
       axios.get(`/api/teams/roles`).then((response) => {
         this.availableRoles = response.data;
