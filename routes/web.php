@@ -110,6 +110,7 @@ Route::middleware([
     Route::delete('/teams/delete/{teamId}', [TeamController::class, 'destroy'])->name('teams.delete');
     Route::delete('/teams/invitation/{invitationId}', [TeamController::class, 'destroyInvitation']);
     Route::get('/teams/invitations/{userId}', [TeamController::class, 'getUserInvitations']);
+    Route::delete('/user', [AuthController::class, 'destroyUser'])->name('auth-user.destroy');
 });
 
 
