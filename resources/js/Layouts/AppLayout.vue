@@ -313,7 +313,7 @@ onMounted(() => {
                                                 "
                                                 :alt="$page.props.user.name"
                                             />
-                                            <div v-if="invitationsQuantity > 0" class="text-gray-700 rounded-full bg-red-300 flex items-center justify-center w-4 h-4 absolute -bottom-0.5 -right-0.5 text-xs">
+                                            <div v-if="invitationsQuantity > 0" style="background-color: #dd151f" class="text-white font-bold rounded-full flex items-center justify-center w-4 h-4 absolute -bottom-0.5 -right-0.5 text-xs">
                                                 <p>{{invitationsQuantity}}</p>
                                             </div>
                                         </button>
