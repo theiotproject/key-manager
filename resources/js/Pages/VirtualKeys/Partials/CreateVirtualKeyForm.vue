@@ -3,7 +3,6 @@ import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import SearchBar from "../../../Components/Form/Partials/SearchBar.vue";
-
 import MakeToast from "../../../Services/MakeToast.vue";
 </script>
 
@@ -133,6 +132,43 @@ import MakeToast from "../../../Services/MakeToast.vue";
                         </li>
                     </ul>
                 </div>
+
+                <hr class="mt-5 mb-5" v-if="invitedUsers.length > 0"/>
+
+                <div v-if="invitedUsers.length > 0">
+                    <JetLabel for="invitedUsers" value="Invited Users" />
+                    <!-- <SearchBar /> -->
+                    <ul
+                        class="overflow-y-auto pl-0 px-3 pb-3 max-h-48 text-sm text-gray-700"
+                        aria-labelledby="dropdownSearchButton"
+                    >
+                        <li
+                            v-for="(invitedUser, index) in invitedUsers"
+                            :key="index"
+                            class="cursor-pointer"
+                        >
+                            <div
+                                class="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+                                @click="checkInvitedUser(index)"
+                            >
+                                <input
+                                    v-model="form.checkedInvitedUsers"
+                                    v-bind:id="index"
+                                    type="checkbox"
+                                    :value="invitedUser"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                                />
+                                <div>
+                                    <label
+                                        for="{{index}}"
+                                        class="ml-2 w-full text-sm font-medium text-gray-900 rounded cursor-pointer"
+                                    >{{ invitedUser.email }}</label
+                                    >
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </template>
         <template #actions>
@@ -146,6 +182,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
     </JetFormSection>
 </template>
 <script>
+
 export default {
     props: ["attrs"],
     name: "CreateVirtualKeyForm",
@@ -155,9 +192,11 @@ export default {
                 label: "",
                 checkedDays: [0, 1, 2, 3, 4],
                 checkedUsers: [],
+                checkedInvitedUsers: [],
                 checkedGates: [],
             },
             users: {},
+            invitedUsers: {},
             gates: {},
             days: [
                 "Monday",
@@ -198,6 +237,19 @@ export default {
                 this.form.checkedUsers.push(this.users[index]);
             }
         },
+        checkInvitedUser(index) {
+            let canCheck = true;
+            this.form.checkedInvitedUsers.find((checkedInvitedUser, id) => {
+                if (checkedInvitedUser == this.invitedUsers[index]) {
+                    this.form.checkedInvitedUsers.splice(id, 1);
+                    canCheck = false;
+                    return;
+                }
+            });
+            if (canCheck) {
+                this.form.checkedInvitedUsers.push(this.invitedUsers[index]);
+            }
+        },
         checkGate(index) {
             let canCheck = true;
             this.form.checkedGates.find((checkedGate, id) => {
@@ -217,7 +269,7 @@ export default {
                 MakeToast.create("Choose at least 1 Day", "warning");
                 return;
             }
-            if (this.form.checkedUsers.length <= 0) {
+            if (this.form.checkedUsers.length <= 0 && this.form.checkedInvitedUsers.length <= 0) {
                 MakeToast.create("Choose at least 1 User", "warning");
                 return;
             }
@@ -232,20 +284,20 @@ export default {
             });
 
             let users = [];
+            let invitedUsers = [];
             let gates = [];
+            let label = "Key opens ";
+
+            this.form.checkedGates.forEach((gate, index) => {
+                gates.push(gate.id);
+                if (this.form.checkedGates.length - 1 === index) {
+                    label += gate.name;
+                } else {
+                    label += gate.name + ", ";
+                }
+            });
 
             this.form.checkedUsers.forEach((user) => {
-                let label = "Key opens ";
-
-                this.form.checkedGates.forEach((gate, index) => {
-                    gates.push(gate.id);
-                    if (this.form.checkedGates.length - 1 == index) {
-                        label += gate.name;
-                    } else {
-                        label += gate.name + ", ";
-                    }
-                });
-
                 let newUser = {
                     id: user.id,
                     label: label,
@@ -253,19 +305,41 @@ export default {
                 users.push(newUser);
             });
 
+            this.form.checkedInvitedUsers.forEach((user) => {
+                invitedUsers.push(user.email);
+            });
+
             const data = {
                 users: users,
                 gates: gates,
                 validDays: str,
             };
+            if(users.length > 0) {
+                axios
+                    .post("/virtualKeys", data)
+                    .then((result) => {
+                        MakeToast.create('Added ' + (users.length > 1 ? `${users.length}` : '') + ' Virtual Key' + (users.length > 1 ? 's' : ''), "info");
+                        this.$inertia.get("../dashboard");
+                    })
+                    .catch((err) => {
+                        MakeToast.create("Failed to add Virtual Key", "error");
+                    });
+            }
+            const futureVkData = {
+                label: label,
+                email: invitedUsers,
+                gates: gates,
+                validDays: str,
+            };
+            console.log(futureVkData);
             axios
-                .post("/virtualKeys", data)
+                .post("/api/futureVirtualKeys", futureVkData)
                 .then((result) => {
-                    MakeToast.create('Added ' + (users.length > 1 ? `${users.length}` : '') + ' Virtual Key' + (users.length > 1 ? 's' : ''), "info");
+                    MakeToast.create("Added Future Virtual Key", "info");
                     this.$inertia.get("../dashboard");
                 })
                 .catch((err) => {
-                    MakeToast.create("Failed to add Virtual Key", "error");
+                    MakeToast.create("Failed to add Future Virtual Key", "error");
                 });
         },
         getUsers() {
@@ -277,6 +351,11 @@ export default {
                 .catch((err) => {
                     MakeToast.create("Cannot load users", "error");
                 });
+        },
+        getInvitedUsers() {
+            axios.get(`../api/teams/data/${this.attrs.user.current_team.id}`).then((response) => {
+                this.invitedUsers = response.data;
+            });
         },
         getGates() {
             axios
@@ -294,6 +373,7 @@ export default {
     created() {
         this.getUsers();
         this.getGates();
+        this.getInvitedUsers();
     },
 };
 </script>

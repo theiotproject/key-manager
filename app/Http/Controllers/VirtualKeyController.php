@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FutureVirtualKey;
 use Carbon\Carbon;
 use App\Models\Gate;
 use App\Models\Team;
@@ -181,7 +182,13 @@ class VirtualKeyController extends Controller
                 $virtualKey->gates;
             }
 
-            return $virtualKeys;
+            $futureVirtualKeys = FutureVirtualKey::whereHas('gates', function($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            })->get();
+
+            $response = array_merge($virtualKeys->toArray(), $futureVirtualKeys->toArray());
+
+            return $response;
         } else {
             $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $userId) {
                 $query->where('team_id', $teamId);

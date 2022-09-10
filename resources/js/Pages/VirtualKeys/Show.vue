@@ -308,26 +308,21 @@ const removeVirtualKey = () => {
                                                         <img
                                                             class="h-8 w-8 rounded-full object-cover mr-3"
                                                             :src="
-                                                                virtualKey.user
-                                                                    .profile_photo_url
-                                                            "
-                                                            :alt="
-                                                                virtualKey.user
-                                                                    .name
-                                                            "
+                                                            virtualKey.user ? virtualKey.user.profile_photo_url : 'https://ui-avatars.com/api/?name=?&color=7F9CF5&background=EBF4FF&font-size=0.6'
+                                                        "
+                                                        :alt="
+                                                        virtualKey.user ? virtualKey.user.name : 'unregistered'
+                                                        "
                                                         />
                                                         <div>
                                                             {{
-                                                                virtualKey.user
-                                                                    .name
+                                                                virtualKey.user ? virtualKey.user.name : 'unregistered'
                                                             }}
                                                             <p
                                                                 class="text-gray-400 text-xs"
                                                             >
                                                                 {{
-                                                                    virtualKey
-                                                                        .user
-                                                                        .email
+                                                                    virtualKey.user ? virtualKey.user.email : virtualKey.user_email
                                                                 }}
                                                             </p>
                                                         </div>
@@ -354,8 +349,7 @@ const removeVirtualKey = () => {
                                                 >
                                                     <Link
                                                         v-if="
-                                                            role === 'owner' ||
-                                                            role === 'admin'
+                                                            (role === 'owner' || role === 'admin') && virtualKey.user
                                                         "
                                                         class="cursor-pointer ml-6 text-sm text-blue-500 hover:text-blue-700"
                                                         :href="
@@ -382,8 +376,7 @@ const removeVirtualKey = () => {
                                                     </Link>
                                                     <button
                                                         v-if="
-                                                            role === 'owner' ||
-                                                            role === 'admin'
+                                                            (role === 'owner' || role === 'admin') && virtualKey.user
                                                         "
                                                         class="cursor-pointer ml-6 text-sm text-red-500 hover:text-red-700"
                                                         @click="

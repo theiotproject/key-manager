@@ -214,19 +214,19 @@ import MakeToast from "../../Services/MakeToast.vue";
                       whitespace-nowrap
                     "
                   >
-                    <div class="flex items-center">
-                      <img
-                        class="h-8 w-8 rounded-full object-cover mr-3"
-                        :src="virtualKey.user.profile_photo_url"
-                        :alt="virtualKey.user.name"
-                      />
-                      <div>
-                        {{ virtualKey.user.name }}
-                        <p class="text-gray-400 text-xs">
-                          {{ virtualKey.user.email }}
-                        </p>
+                      <div class="flex items-center">
+                          <img
+                              class="h-8 w-8 rounded-full object-cover mr-3"
+                              :src="virtualKey.user ? virtualKey.user.profile_photo_url : 'https://ui-avatars.com/api/?name=?&color=7F9CF5&background=EBF4FF&font-size=0.6'"
+                              :alt="virtualKey.user ? virtualKey.user.name : 'unregistered'"
+                          />
+                          <div>
+                              {{ virtualKey.user ? virtualKey.user.name : 'unregistered' }}
+                              <p class="text-gray-400 text-xs">
+                                  {{ virtualKey.user ? virtualKey.user.email : virtualKey.user_email }}
+                              </p>
+                          </div>
                       </div>
-                    </div>
                   </td>
                   <td
                     v-if="usersVirtualkeys.length + index < 3"
