@@ -38,18 +38,23 @@ class FutureVirtualKeyController extends Controller
      */
     public function store(Request $request)
     {
+        if(is_array($request->email)){
+            foreach($request->email as $email){
+                $futureVirtualKey = new FutureVirtualKey();
+                $futureVirtualKey->label = $request->label;
+                $futureVirtualKey->user_email = $email;
+                $futureVirtualKey->valid_days = $request->validDays;
+                $futureVirtualKey->save();
+                $futureVirtualKey->gates()->sync($request->gates);
+            }
+        } else {
             $futureVirtualKey = new FutureVirtualKey();
             $futureVirtualKey->label = $request->label;
             $futureVirtualKey->user_email = $request->email;
             $futureVirtualKey->valid_days = $request->validDays;
             $futureVirtualKey->save();
-
-            $gateIds = array();
-            foreach ($request->gates as $gateId) {
-                $gate = Gate::find($gateId);
-                array_push($gateIds, $gate->id);
-            }
-            $futureVirtualKey->gates()->sync($gateIds);
+            $futureVirtualKey->gates()->sync($request->gates);
+        }
     }
 
     /**
