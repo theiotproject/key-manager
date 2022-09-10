@@ -91,6 +91,7 @@ Route::middleware([
     Route::resource('/virtualTickets', VirtualTicketController::class);
     Route::get("/virtualTickets", [VirtualTicketController::class, 'index'])->name('virtualTickets.index');
     Route::resource('/gates', GateController::class);
+    Route::get('/gates/create/vk', [GateController::class, 'createWithVirtualKey'])->name('gates.create.vk');
     Route::resource('/events', EventController::class);
     Route::get('gates/teamId/{team_id}/resource', [GateController::class, 'indexGatesByTeamIdResource']);
     Route::get('virtualKeys/teamId/{team_id}/users/gates', [VirtualKeyController::class, 'indexVirtualKeysByTeamIdWithUsersAndGatesData']);

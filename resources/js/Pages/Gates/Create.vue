@@ -13,7 +13,7 @@ import CreateGateForm from "@/Pages/Gates/Partials/CreateGateForm.vue";
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <CreateGateForm v-bind:attrs="attrs" />
+                <CreateGateForm v-bind:attrs="attrs" :createVirtualKey="createVirtualKey"/>
             </div>
         </div>
     </AppLayout>
@@ -21,9 +21,12 @@ import CreateGateForm from "@/Pages/Gates/Partials/CreateGateForm.vue";
 
 <script>
 export default {
+    props: ['createVirtualKey'],
     data() {
+        console.log(this.createVirtualKey);
         return {
             attrs: this.$attrs,
+            createVirtualKey: this.createVirtualKey
         };
     },
 };
