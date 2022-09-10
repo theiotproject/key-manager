@@ -335,7 +335,7 @@ export default {
                 axios
                     .post("/api/futureVirtualKeys", futureVkData)
                     .then((result) => {
-                        MakeToast.create("Added Future Virtual Key", "info");
+                        MakeToast.create('Added ' + (invitedUsers.length > 1 ? `${invitedUsers.length}` : '') + ' Future Virtual Key' + (invitedUsers.length > 1 ? 's' : ''), "info");
                         this.$inertia.get("../dashboard");
                     })
                     .catch((err) => {
