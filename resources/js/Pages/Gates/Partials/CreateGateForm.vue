@@ -31,11 +31,13 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 </div>
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6 sm:col-span-4" v-for="index in quantity">
+                <hr class="mt-5 mb-5" v-if="index > 1"/>
+                <p v-if="index>1">{{index}}</p>
                 <JetLabel for="name" value="Name" />
                 <JetInput
                     id="name"
-                    v-model="form.name"
+                    v-model="form.name[index -1]"
                     type="text"
                     class="block w-full mt-1"
                     autofocus
@@ -48,19 +50,19 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 />
                 <div class="flex items-center">
                 <JetInput
-                    id="serial_number"
-                    v-model="form.serial_number"
+                    :id="`serial_number${index-1}`"
+                    v-model="form.serial_number[index - 1]"
                     type="text"
                     placeholder="12A4-5AB-C5E"
                     class="block w-full mt-1"
                     autofocus
                     maxlength="12"
-                    v-on:input="sernum"
+                    v-on:input="sernum(index - 1)"
                     oninput="this.value = this.value.toUpperCase()"
                 />
                 <div class="flex flex-col items-center m-5">
-                    <div v-if="hint" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative cursor-help" viewBox="0 0 20 20" fill="#374151" @mouseover="hint = true" @mouseout="hint = false">
+                    <div v-if="hint[index - 1]" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative cursor-help" viewBox="0 0 20 20" fill="#374151" @mouseover="hint[index - 1] = true" @mouseout="hint[index - 1] = false">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
                     </svg>
                 </div>
@@ -73,14 +75,14 @@ import MakeToast from "../../../Services/MakeToast.vue";
                 <div class="flex items-center">
                     <JetInput
                         id="magic_code"
-                        v-model="form.magic_code"
-                        :type="form.passwordFieldType"
+                        v-model="form.magic_code[index - 1]"
+                        :type="form.passwordFieldType[index - 1]"
                         class="block w-full mt-1"
                         autofocus
                     />
-                    <div @click="switchVisibility" class="m-5 cursor-pointer">
+                    <div @click="switchVisibility(index - 1)" class="m-5 cursor-pointer">
                         <svg
-                            v-if="form.passwordFieldType == 'password'"
+                            v-if="form.passwordFieldType[index - 1] == 'password'"
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5"
                             viewBox="0 0 20 20"
@@ -94,7 +96,7 @@ import MakeToast from "../../../Services/MakeToast.vue";
                             />
                         </svg>
                         <svg
-                            v-if="form.passwordFieldType != 'password'"
+                            v-if="form.passwordFieldType[index - 1] != 'password'"
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5"
                             viewBox="0 0 20 20"
@@ -116,12 +118,40 @@ import MakeToast from "../../../Services/MakeToast.vue";
         </template>
 
         <template #actions>
+            <div class="flex justify-between w-full">
+            <div
+                @click="nextGate"
+                class="
+          mr-10
+          cursor-pointer
+          hover:text-black
+          text-gray-600
+          flex
+          items-center
+          gap-2
+        "
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+                Add next gate
+            </div>
             <JetButton
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Create
             </JetButton>
+            </div>
         </template>
     </JetFormSection>
 </template>
@@ -131,13 +161,14 @@ export default {
     props: ["attrs", "createVirtualKey"],
     data: function () {
         return {
+            quantity: 1,
             createVirtualKey: this.createVirtualKey,
-            hint: false,
+            hint: [false],
             form: {
-                passwordFieldType: "password",
-                serial_number: "",
-                magic_code: this.generateGuid(),
-                name: "",
+                passwordFieldType: ["password"],
+                serial_number: [""],
+                magic_code: [this.generateGuid()],
+                name: [""],
                 errors: {
                     name: "",
                 },
@@ -146,8 +177,8 @@ export default {
         };
     },
     methods: {
-        sernum() {
-            var tele = document.querySelector('#serial_number');
+        sernum(index) {
+            var tele = document.querySelector('#serial_number' + index);
             tele.addEventListener('keydown', function(e) {
                 if (event.key != 'Backspace' && (tele.value.length === 4 || tele.value.length === 8)) {
                     tele.value += '-';
@@ -178,12 +209,22 @@ export default {
             );
         },
         submitForm() {
-            if (this.validForm(this.form.serial_number, this.form.magic_code)) {
+            let gates = [];
+            for(let i = 0; i < this.quantity; i++) {
+                if (this.validForm(this.form.serial_number[i], this.form.magic_code[i])) {
+                    let newGate = {
+                        serial_number: this.form.serial_number[i].replaceAll('-', '').toUpperCase(),
+                        magic_code: this.form.magic_code[i],
+                        name: this.form.name[i],
+                        team_id: this.attrs.user.current_team.id,
+                    };
+                    gates.push(newGate);
+                } else {
+                    return;
+                }
+            }
                 const data = {
-                    serial_number: this.form.serial_number.replaceAll('-','').toUpperCase(),
-                    magic_code: this.form.magic_code,
-                    name: this.form.name,
-                    team_id: this.attrs.user.current_team.id,
+                    gates: gates,
                 };
                 axios
                     .post("/gates", data)
@@ -199,15 +240,18 @@ export default {
                     .catch((err) => {
                         MakeToast.create("Cannot create Gate", "error");
                     });
-            } else {
-            }
         },
-        switchVisibility() {
-            this.form.passwordFieldType =
-                this.form.passwordFieldType === "password"
+        switchVisibility(index) {
+            this.form.passwordFieldType[index] =
+                this.form.passwordFieldType[index] === "password"
                     ? "text"
                     : "password";
         },
+        nextGate(){
+            this.form.magic_code[this.quantity] = this.generateGuid();
+            this.form.passwordFieldType[this.quantity] = "password";
+            this.quantity++;
+        }
     },
 };
 </script>
