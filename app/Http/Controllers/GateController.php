@@ -54,11 +54,9 @@ class GateController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-
-        $gate = Gate::create($data);
-
-        return new GateResource($gate);
+        foreach($request->gates as $gateData){
+            Gate::create($gateData);
+        }
     }
 
     /**

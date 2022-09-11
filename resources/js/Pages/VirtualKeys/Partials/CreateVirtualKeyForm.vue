@@ -331,16 +331,17 @@ export default {
                 gates: gates,
                 validDays: str,
             };
-            console.log(futureVkData);
-            axios
-                .post("/api/futureVirtualKeys", futureVkData)
-                .then((result) => {
-                    MakeToast.create("Added Future Virtual Key", "info");
-                    this.$inertia.get("../dashboard");
-                })
-                .catch((err) => {
-                    MakeToast.create("Failed to add Future Virtual Key", "error");
-                });
+            if(invitedUsers.length > 0) {
+                axios
+                    .post("/api/futureVirtualKeys", futureVkData)
+                    .then((result) => {
+                        MakeToast.create('Added ' + (invitedUsers.length > 1 ? `${invitedUsers.length}` : '') + ' Future Virtual Key' + (invitedUsers.length > 1 ? 's' : ''), "info");
+                        this.$inertia.get("../dashboard");
+                    })
+                    .catch((err) => {
+                        MakeToast.create("Failed to add Future Virtual Key", "error");
+                    });
+            }
         },
         getUsers() {
             axios
