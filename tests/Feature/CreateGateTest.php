@@ -16,10 +16,14 @@ class CreateGateTest extends TestCase
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
         $response = $this->post('/gates', [
-            'name'=> 'gate name',
-            'serial_number'=>'12345GHU76',
-            'magic_code'=>'f39d2823-49ef-414a-806f-f855a799f7f8',
-            'team_id'=>$user->fresh()->ownedTeams[0]->id
+            'gates'=>[
+                [
+                    'name'=> 'gate name',
+                    'serial_number'=>'12345GHU76',
+                    'magic_code'=>'f39d2823-49ef-414a-806f-f855a799f7f8',
+                    'team_id'=>$user->fresh()->ownedTeams[0]->id
+                ]
+            ]
         ]);
 
         $this->assertCount(1, $user->fresh()->ownedTeams[0]->gates);
