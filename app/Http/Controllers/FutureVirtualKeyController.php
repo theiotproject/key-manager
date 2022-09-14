@@ -99,6 +99,13 @@ class FutureVirtualKeyController extends Controller
      */
     public function destroy($id)
     {
-
+//        $futureVirtualKey = FutureVirtualKey::find($id);
+//        $gates = $futureVirtualKey->gates;
+//        if ($gates != null) {
+//            foreach ($gates as $gate) {
+//                $futureVirtualKey->gates()->detach($gate->id);
+//            }
+//        }
+//        $futureVirtualKey->delete();
     }
 }

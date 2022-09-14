@@ -23,6 +23,11 @@ class Gate extends Model
         return $this->belongsToMany(VirtualKey::class);
     }
 
+    public function futureVirtualKeys()
+    {
+        return $this->belongsToMany(FutureVirtualKey::class);
+    }
+
     public function virtualTickets()
     {
         return $this->belongsToMany(VirtualTicket::class);
