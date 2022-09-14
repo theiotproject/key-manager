@@ -120,6 +120,7 @@ class GateController extends Controller
     {
         $gate = Gate::find($id);
         $virtualKeys = $gate->virtualKeys;
+        $futureVirtualKeys = $gate->futureVirtualKeys;
         $virtualTickets = $gate->virtualTickets;
 
         if ($virtualKeys != null) {
@@ -134,6 +135,21 @@ class GateController extends Controller
                 }
                 $virtualKey->label = 'Key opens ' . implode(', ', $gatesArray);
                 $virtualKey->save();
+            }
+        }
+
+        if ($futureVirtualKeys != null) {
+            foreach ($futureVirtualKeys as $futureVirtualKey) {
+                $gate->futureVirtualKeys()->detach($futureVirtualKey->id);
+            }
+            foreach ($futureVirtualKeys as $futureVirtualKey) {
+                $gates = $futureVirtualKey->gates;
+                $gatesArray = array();
+                foreach ($gates as $gate2) {
+                    array_push($gatesArray, $gate2->name);
+                }
+                $futureVirtualKey->label = 'Key opens ' . implode(', ', $gatesArray);
+                $futureVirtualKey->save();
             }
         }
 
