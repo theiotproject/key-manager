@@ -364,8 +364,8 @@ export default {
             const data = {
                 users: users,
                 gates: gates,
-                valid_from: parseInt((new Date(validDateStart).getTime() / 1000).toFixed(0)),
-                valid_to: parseInt((new Date(validDateEnd).getTime() / 1000).toFixed(0)),
+                valid_from: validDateStart,
+                valid_to: validDateEnd,
                 team_name: this.attrs.user.current_team.name,
             };
             console.log(data);
