@@ -49,15 +49,17 @@ class VirtualTicketController extends Controller
     {
         foreach($request->users as $user){
             $valid_from = $request->valid_from;
+            $valid_from_unix = strtotime($valid_from);
             $valid_to = $request->valid_to;
+            $valid_to_unix = strtotime($valid_to);
 
             $guid = (string) Str::uuid();
             $virtualTicket = new VirtualTicket();
             $virtualTicket->GUID = $guid;
             $virtualTicket->label = $user['label'];
             $virtualTicket->email = $user['email'];
-            $virtualTicket->valid_from = $valid_from;
-            $virtualTicket->valid_to = $valid_to;
+            $virtualTicket->valid_from = $valid_from_unix;
+            $virtualTicket->valid_to = $valid_to_unix;
             $virtualTicket->save();
 
             $gateSerialNumbers = "";
@@ -75,7 +77,7 @@ class VirtualTicketController extends Controller
             $team = Team::findOrFail($teamId);
             $teamCode = $team->team_code;
 
-            $qrcode = "OPEN:ID:{$guid};VF:{$valid_from};VT:{$valid_to};L:{$gateSerialNumbers};;";
+            $qrcode = "OPEN:ID:{$guid};VF:{$valid_from_unix};VT:{$valid_to_unix};L:{$gateSerialNumbers};;";
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
