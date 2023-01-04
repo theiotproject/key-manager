@@ -409,9 +409,9 @@ export default {
         "OPEN:ID:" +
         guid +
         ";VF:" +
-        validFrom +
+          parseInt((new Date(validFrom).getTime() / 1000).toFixed(0)) +
         ";VT:" +
-        validTo +
+          parseInt((new Date(validTo).getTime() / 1000).toFixed(0)) +
         ";L:" +
         gateSerialNumbers +
         ";;";
