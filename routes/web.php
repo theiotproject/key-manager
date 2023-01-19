@@ -113,7 +113,9 @@ Route::middleware([
     Route::delete('/user', [AuthController::class, 'destroyUser'])->name('auth-user.destroy');
 });
 
-
+Route::get('/privacypolicy', function() {
+    return redirect()->to('privacy-policy');
+});
 
 // Routes with administrator permission
 Route::group(['middleware' => 'isAdmin'], function () {
