@@ -9,6 +9,7 @@ use App\Models\VirtualKey;
 use App\Models\VirtualTicket;
 use App\Models\User;
 use Error;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -253,12 +254,32 @@ class GateController extends Controller
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ';';
 
-            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+            $this->openGateRemotelyForTeamCode("V7JWQE92BS");
+
+
+//            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
              return response()
                 ->json(['message' => 'Sent request to open the Gate'])
                 ->setStatusCode(200);
         } catch (\Exception $e) {
              abort(404, $e->getMessage());
+        }
+    }
+
+    public function openGateRemotelyForTeamCode($teamCode) {
+        $client = new Client();
+        if($teamCode === 'V7JWQE92BS') {
+            $response = $client->post('https://api.golioth.io/v1/projects/key-scanner/devices/6391fb3daf9c3c31ea0afc93/rpc', [
+                'headers' => [
+                    'x-api-key' => 'IjySm47z2FAjHM3YqieO51fQZb7XbCkK',
+                ],
+                'json' => [
+                    'method' => 'open',
+                    'params' => [
+                        1,
+                    ],
+                ],
+            ]);
         }
     }
 
@@ -315,7 +336,8 @@ class GateController extends Controller
 
                     $team = Team::findOrFail($teamId);
                     $teamCode = $team->team_code;
-                    MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
+                        $this->openGateRemotelyForTeamCode("V7JWQE92BS");
+//                    MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
                     return back(303);
                     // MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017;");
                     } else {
@@ -330,10 +352,15 @@ class GateController extends Controller
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
-            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+
+            $this->openGateRemotelyForTeamCode("V7JWQE92BS");
+
+
+//            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
             return back(303);
         } catch (\Exception $e) {
              abort(404, $e->getMessage());
         }
     }
+
 }
