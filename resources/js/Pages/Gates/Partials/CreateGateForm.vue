@@ -53,12 +53,8 @@ import MakeToast from "../../../Services/MakeToast.vue";
                     :id="`serial_number${index-1}`"
                     v-model="form.serial_number[index - 1]"
                     type="text"
-                    placeholder="12A4-5AB-C5E"
                     class="block w-full mt-1"
                     autofocus
-                    maxlength="12"
-                    v-on:input="sernum(index - 1)"
-                    oninput="this.value = this.value.toUpperCase()"
                 />
                 <div class="flex flex-col items-center m-5">
                     <div v-if="hint[index - 1]" class="absolute px-5 border-2 bg-black opacity-60 rounded-2xl text-white p-3 -mt-16 ">Serial number consists of 10 characters (numbers and capital letters) </div>
@@ -177,28 +173,28 @@ export default {
         };
     },
     methods: {
-        sernum(index) {
-            var tele = document.querySelector('#serial_number' + index);
-            tele.addEventListener('keydown', function(e) {
-                if (event.key != 'Backspace' && (tele.value.length === 4 || tele.value.length === 8)) {
-                    tele.value += '-';
-                }
-            });
-        },
-        validForm(serial_number, magic_code) {
-            var serialNumberRegex = /[A-Z0-9]{4}-[A-Z0-9]{3}-[A-Z0-9]{3}/;
-            var guidRegex =
-                /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-            if (!serialNumberRegex.test(serial_number.toUpperCase())) {
-                this.form.errors.name = "Serial Number is not valid";
-                return false;
-            }
-            if (!guidRegex.test(magic_code)) {
-                this.form.errors.name = "Magic Code is not valid";
-                return false;
-            }
-            return true;
-        },
+        // sernum(index) {
+        //     var tele = document.querySelector('#serial_number' + index);
+        //     tele.addEventListener('keydown', function(e) {
+        //         if (event.key != 'Backspace' && (tele.value.length === 4 || tele.value.length === 8)) {
+        //             tele.value += '-';
+        //         }
+        //     });
+        // },
+        // validForm(serial_number, magic_code) {
+        //     var serialNumberRegex = /[A-Z0-9]{4}-[A-Z0-9]{3}-[A-Z0-9]{3}/;
+        //     var guidRegex =
+        //         /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        //     if (!serialNumberRegex.test(serial_number.toUpperCase())) {
+        //         this.form.errors.name = "Serial Number is not valid";
+        //         return false;
+        //     }
+        //     if (!guidRegex.test(magic_code)) {
+        //         this.form.errors.name = "Magic Code is not valid";
+        //         return false;
+        //     }
+        //     return true;
+        // },
         generateGuid() {
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
                 (
@@ -211,17 +207,17 @@ export default {
         submitForm() {
             let gates = [];
             for(let i = 0; i < this.quantity; i++) {
-                if (this.validForm(this.form.serial_number[i], this.form.magic_code[i])) {
+                // if (this.validForm(this.form.serial_number[i], this.form.magic_code[i])) {
                     let newGate = {
-                        serial_number: this.form.serial_number[i].replaceAll('-', '').toUpperCase(),
+                        serial_number: this.form.serial_number[i],
                         magic_code: this.form.magic_code[i],
                         name: this.form.name[i],
                         team_id: this.attrs.user.current_team.id,
                     };
                     gates.push(newGate);
-                } else {
-                    return;
-                }
+                // } else {
+                //     return;
+                // }
             }
                 const data = {
                     gates: gates,
