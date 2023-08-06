@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('/magicCodeUsages', MagicCodeUsageController::class);
     Route::resource('/events', EventController::class);
     Route::resource('/virtualTickets', VirtualTicketController::class);
+    Route::get('/getVirtualKeysByUser/{userId}', [VirtualKeyController::class, 'indexByUser']);
     Route::put('/virtualKeys/{virtualKey}', [VirtualKeyController::class, 'update']);
     Route::post('/sendemail/qrcode', [SendEmailController::class, 'sendQrCode']);
     Route::post('/teams/join/switch/{switch}', [TeamController::class, 'joinTeam']);
