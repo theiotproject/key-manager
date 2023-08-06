@@ -214,17 +214,13 @@ class VirtualKeyController extends Controller
     }
 
     public function indexByUser(Request $request, $userId) {
-        $virtualKeys = VirtualKey::where('user_id', $userId)->get();
-        $teamIds = array();
-        foreach($virtualKeys as $virtualKey) {
-            $gates = $virtualKey->gates;
-            if($gates->isNotEmpty()) {
-                $teamId = $gates->first()->team_id;
-                $virtualKey->teamName = Team::find($teamId)->name;
-                $virtualKey->teamId = $teamId;
-            }
-        }
+        $virtualKeys = VirtualKey::where('user_id', $userId)->has('gates')->get();
 
+        foreach($virtualKeys as $virtualKey) {
+            $teamId = $gates->first()->team_id;
+            $virtualKey->teamName = Team::find($teamId)->name;
+            $virtualKey->teamId = $teamId;
+        }
         return $virtualKeys;
     }
 
