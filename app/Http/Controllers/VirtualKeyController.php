@@ -217,7 +217,7 @@ class VirtualKeyController extends Controller
         $virtualKeys = VirtualKey::where('user_id', $userId)->has('gates')->get();
 
         foreach($virtualKeys as $virtualKey) {
-            $teamId = $gates->first()->team_id;
+            $teamId = $virtualKey->gates->first()->team_id;
             $virtualKey->teamName = Team::find($teamId)->name;
             $virtualKey->teamId = $teamId;
         }
