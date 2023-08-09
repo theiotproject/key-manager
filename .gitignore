@@ -14,3 +14,6 @@ yarn-error.log
 /.idea
 /.vscode
 /public/qrcodes/
+
+# MySQL data directory
+/mysql/
