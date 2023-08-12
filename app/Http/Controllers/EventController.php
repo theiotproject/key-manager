@@ -243,7 +243,7 @@ class EventController extends Controller
     }
 
     public function createEvent(Request $request) {
-        $data = $request->all();
+        $data = $request->json('data');
 
         $qrCode = $data['qrCode'];
         $guidStartPos = strpos($qrCode, 'ID:') + 3;
