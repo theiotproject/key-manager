@@ -270,7 +270,7 @@ class GateController extends Controller
         $client = new Client();
             $response = $client->post("https://api.golioth.io/v1/projects/key-scanner/devices/{$serialNumber}/rpc", [
                 'headers' => [
-                    'x-api-key' => 'IjySm47z2FAjHM3YqieO51fQZb7XbCkK',
+                    'x-api-key' => config('golioth.api_key'),
                 ],
                 'json' => [
                     'method' => 'open',
