@@ -243,20 +243,27 @@ class EventController extends Controller
     }
 
     public function createEvent(Request $request) {
-        $data = $request->json('data');
+        $requestData = $request->json('data');
+        $eventData = $requestData['event'];
 
-        $qrCode = $data['qrCode'];
-        $guidStartPos = strpos($qrCode, 'ID:') + 3;
-        $guidEndPos = strpos($qrCode, ';', $guidStartPos);
-        $guid = substr($qrCode, $guidStartPos, $guidEndPos - $guidStartPos);
+        $eventParts = explode(',', $eventData);
+        $qrCodePart = $eventParts[1];
+        $guidStartPos = strpos($qrCodePart, 'ID:') + 3;
+        $guidEndPos = strpos($qrCodePart, ';', $guidStartPos);
+        $guid = substr($qrCodePart, $guidStartPos, $guidEndPos - $guidStartPos);
+        $status = end($eventParts);
+
+        $serialNumber = $request->json('device_id');
+
+        $message = $status == 1 ? 'Correct code' : 'Not correct code';
 
         $eventData = [
-            'qr_code' => $data['qrCode'],
+            'qr_code' => $qrCodePart,
             'GUID' => $guid,
-            'serial_number' => $data['serialNumber'],
-            'message' => $data['status'] == 1 ? 'Correct code' : 'Not correct code',
+            'serial_number' => $serialNumber,
+            'message' => $message,
             'scan_time' => now(),
-            'status' => $data['status']
+            'status' => $status
         ];
 
         $event = Event::create($eventData);
