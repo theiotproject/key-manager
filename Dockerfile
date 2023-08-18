@@ -35,6 +35,12 @@ COPY . /var/www/html
 # Install Laravel dependencies
 RUN composer install
 
+# Set permissions for Laravel storage and bootstrap cache directories
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Change the working directory
+WORKDIR /var/www/html
+
 # Expose port 9000 to connect with PHP-FPM
 EXPOSE 9000
 
