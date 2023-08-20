@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\GateResource;
 use App\Models\Gate;
 use App\Models\Team;
+use App\Models\Event;
 use App\Models\VirtualKey;
 use App\Models\VirtualTicket;
 use App\Models\User;
@@ -229,6 +230,35 @@ class GateController extends Controller
         return $gates;
     }
 
+    public function openGateRemotelyForTeamCode($data)
+    {
+        $serialNumber = $data['serial_number'];
+
+        $client = new Client();
+
+        try {
+            $response = $client->post("https://api.golioth.io/v1/projects/key-scanner/devices/{$serialNumber}/rpc", [
+                'headers' => [
+                    'x-api-key' => config('golioth.api_key'),
+                ],
+                'json' => [
+                    'method' => 'open',
+                    'params' => [
+                        1,
+                    ],
+                ],
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                $this->createEvent($data);
+            } else {
+                abort(404, 'Failed to open gate - Unexpected status code: ' . $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            abort(404, 'Failed to open gate - ' . $e->getMessage());
+        }
+    }
+
     public function openGateRemotely(Request $request)
     {
         $userId = $request->user()->id;
@@ -252,9 +282,16 @@ class GateController extends Controller
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ';';
 
-            $this->openGateRemotelyForTeamCode($gateSerialNumber);
+            $openData = [
+                'qr_code' => $finalQrcode,
+                'guid' => $guid,
+                'serial_number' => $gateSerialNumber,
+            ];
+
+            $this->openGateRemotelyForTeamCode($openData);
 
             //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+
             return response()
                 ->json(['message' => 'Sent request to open the Gate'])
                 ->setStatusCode(200);
@@ -263,21 +300,6 @@ class GateController extends Controller
         }
     }
 
-    public function openGateRemotelyForTeamCode($serialNumber)
-    {
-        $client = new Client();
-        $response = $client->post("https://api.golioth.io/v1/projects/key-scanner/devices/{$serialNumber}/rpc", [
-            'headers' => [
-                'x-api-key' => config('golioth.api_key'),
-            ],
-            'json' => [
-                'method' => 'open',
-                'params' => [
-                    1,
-                ],
-            ],
-        ]);
-    }
 
     public function openGateRemotelyByWebsite(Request $request)
     {
@@ -331,10 +353,19 @@ class GateController extends Controller
 
                         $team = Team::findOrFail($teamId);
                         $teamCode = $team->team_code;
-                        $this->openGateRemotelyForTeamCode($gateSerialNumber);
+
+                        $openData = [
+                            'qr_code' => $gateMagic,
+                            'guid' => $gateMagic,
+                            'serial_number' => $gateSerialNumber,
+                        ];
+
+                        $this->openGateRemotelyForTeamCode($openData);
+
                         //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
-                        return back(303);
                         //MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017;");
+
+                        return back(303);
                     } else {
                         abort(404, "Cannot access Gate");
                     }
@@ -347,12 +378,38 @@ class GateController extends Controller
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
-            $this->openGateRemotelyForTeamCode($gateSerialNumber);
+            $openData = [
+                'qr_code' => $finalQrcode,
+                'guid' => $guid,
+                'serial_number' => $gateSerialNumber,
+            ];
+
+            $this->openGateRemotelyForTeamCode($openData);
 
             //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+
             return back(303);
         } catch (\Exception $e) {
             abort(404, $e->getMessage());
         }
+    }
+
+    public function createEvent($data)
+    {
+        $status = 1;
+        $message = 'Correct code';
+
+        $eventData = [
+            'qr_code' => $data['qr_code'],
+            'GUID' => $data['guid'],
+            'serial_number' => $data['serial_number'],
+            'message' => $message,
+            'scan_time' => now(),
+            'status' => $status
+        ];
+
+        $event = Event::create($eventData);
+        dd($data);
+        return response()->json(['message' => 'Remote Open Call success']);
     }
 }
