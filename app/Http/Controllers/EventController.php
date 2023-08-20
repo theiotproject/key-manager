@@ -241,6 +241,34 @@ class EventController extends Controller
         ];
         return $last7DaysData;
     }
+
+    public function createEvent(Request $request) {
+        $requestData = $request->json('data');
+        $eventData = $requestData['event'];
+
+        $eventParts = explode(',', $eventData);
+        $qrCodePart = $eventParts[1];
+        $guidStartPos = strpos($qrCodePart, 'ID:') + 3;
+        $guidEndPos = strpos($qrCodePart, ';', $guidStartPos);
+        $guid = substr($qrCodePart, $guidStartPos, $guidEndPos - $guidStartPos);
+        $status = end($eventParts);
+
+        $serialNumber = $request->json('device_id');
+
+        $message = $status == 1 ? 'Correct code' : 'Not correct code';
+
+        $eventData = [
+            'qr_code' => $qrCodePart,
+            'GUID' => $guid,
+            'serial_number' => $serialNumber,
+            'message' => $message,
+            'scan_time' => now(),
+            'status' => $status
+        ];
+
+        $event = Event::create($eventData);
+        return response()->json(['message' => 'Webhook received and processed']);
+    }
 }
 
 function getLastNDays($days, $format)

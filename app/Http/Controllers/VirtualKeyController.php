@@ -213,6 +213,17 @@ class VirtualKeyController extends Controller
         return $virtualKeys->where('user_id', $request->user()->id)->values();
     }
 
+    public function indexByUser(Request $request, $userId) {
+        $virtualKeys = VirtualKey::where('user_id', $userId)->has('gates')->get();
+
+        foreach($virtualKeys as $virtualKey) {
+            $teamId = $virtualKey->gates->first()->team_id;
+            $virtualKey->teamName = Team::find($teamId)->name;
+            $virtualKey->teamId = $teamId;
+        }
+        return $virtualKeys;
+    }
+
     public function openGateRemotely(Request $request)
     {
         $userId = $request->user()->id;

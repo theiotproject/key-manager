@@ -5,10 +5,10 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "inertiajs/inertia-laravel": "^0.6.9",
+        "php": "^7.2|^8.0|^8.1",
         "darkaonline/l5-swagger": "8.1",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.5.2",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.9",
         "laravel/sanctum": "^2.14.1",

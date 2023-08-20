@@ -113,6 +113,8 @@ Route::middleware([
     Route::delete('/user', [AuthController::class, 'destroyUser'])->name('auth-user.destroy');
 });
 
+Route::post('/webhook/createEvent', [EventController::class, 'createEvent']);
+
 Route::get('/privacypolicy', function() {
     return redirect()->to('privacy-policy');
 });
