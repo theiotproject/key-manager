@@ -19,27 +19,16 @@ services:
             - .:/var/www/html
         ports:
             - "3000:3000"
-        environment:
-            DB_CONNECTION: mysql
-            DB_HOST: key-manager-db
-            DB_PORT: 3306
-            DB_DATABASE: key_manager
-            DB_USERNAME: root
-            DB_PASSWORD: bakugan903
-            MAIL_MAILER: smtp
-            MAIL_HOST: mailhog
-            MAIL_PORT: 1025
-            MAIL_USERNAME: null
-            MAIL_PASSWORD: null
-            MAIL_ENCRYPTION: null
-            MAIL_FROM_ADDRESS: "hello@example.com"
-            MAIL_FROM_NAME: "${APP_NAME}"
+        env_file:
+            - .env
     db:
         image: mysql:8.0
         container_name: key-manager-db
+        env_file:
+            - .env
         environment:
-            MYSQL_ROOT_PASSWORD: bakugan903
-            MYSQL_DATABASE: key_manager
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
         ports:
             - "3306:3306"
         volumes:
@@ -49,9 +38,11 @@ services:
         container_name: key-manager-phpmyadmin
         ports:
             - "8080:80"
+        env_file:
+            - .env
         environment:
             PMA_HOST: key-manager-db
-            MYSQL_ROOT_PASSWORD: bakugan903
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     mailhog:
         image: mailhog/mailhog
         container_name: key-manager-mailhog
