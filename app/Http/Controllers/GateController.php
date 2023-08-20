@@ -55,7 +55,7 @@ class GateController extends Controller
      */
     public function store(Request $request)
     {
-        foreach($request->gates as $gateData){
+        foreach ($request->gates as $gateData) {
             Gate::create($gateData);
         }
     }
@@ -180,14 +180,12 @@ class GateController extends Controller
 
     public function indexGatesByTeamId($teamId)
     {
-            return Team::find($teamId)->gates;
-
-
+        return Team::find($teamId)->gates;
     }
 
     public function indexGatesByTeamIdResource($teamId)
     {
-         // check user permission
+        // check user permission
         $userAuth = auth()->user();
         $user_role = app(TeamController::class)->getUserRole($teamId, $userAuth->id);
 
@@ -195,12 +193,12 @@ class GateController extends Controller
             return GateResource::collection(Team::find($teamId)->gates);
         } else {
 
-            $gates = Gate::whereHas('virtualKeys', function($query) use ($userAuth,$teamId){
+            $gates = Gate::whereHas('virtualKeys', function ($query) use ($userAuth, $teamId) {
                 $query->where("team_id", $teamId);
                 $query->where('user_id', $userAuth->id);
             })->get();
 
-            $gatesTickets = Gate::whereHas("virtualTickets", function($query) use ($userAuth, $teamId) {
+            $gatesTickets = Gate::whereHas("virtualTickets", function ($query) use ($userAuth, $teamId) {
                 $query->where("team_id", $teamId);
                 $query->where("email", $userAuth->email);
             })->get();
@@ -231,18 +229,18 @@ class GateController extends Controller
         return $gates;
     }
 
-     public function openGateRemotely(Request $request)
+    public function openGateRemotely(Request $request)
     {
         $userId = $request->user()->id;
         $guid = $request->id;
         $validFrom = $request->valid_from;
-        $validTo= $request->valid_to;
+        $validTo = $request->valid_to;
         $gateSerialNumber = $request->gate;
         $teamId = $request->team_id;
 
         //check if user has access to key, then give team code
         try {
-            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId,$gateSerialNumber,$userId) {
+            $virtualKeys = VirtualKey::whereHas('gates', function ($query) use ($teamId, $gateSerialNumber, $userId) {
                 $query->where('team_id', $teamId);
                 $query->where("serial_number", $gateSerialNumber);
                 $query->where('user_id', $userId);
@@ -256,33 +254,34 @@ class GateController extends Controller
 
             $this->openGateRemotelyForTeamCode($gateSerialNumber);
 
-
-//            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
-             return response()
+            //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+            return response()
                 ->json(['message' => 'Sent request to open the Gate'])
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-             abort(404, $e->getMessage());
+            abort(404, $e->getMessage());
         }
     }
 
-    public function openGateRemotelyForTeamCode($serialNumber) {
+    public function openGateRemotelyForTeamCode($serialNumber)
+    {
         $client = new Client();
-            $response = $client->post("https://api.golioth.io/v1/projects/key-scanner/devices/{$serialNumber}/rpc", [
-                'headers' => [
-                    'x-api-key' => config('golioth.api_key'),
+        $response = $client->post("https://api.golioth.io/v1/projects/key-scanner/devices/{$serialNumber}/rpc", [
+            'headers' => [
+                'x-api-key' => config('golioth.api_key'),
+            ],
+            'json' => [
+                'method' => 'open',
+                'params' => [
+                    1,
                 ],
-                'json' => [
-                    'method' => 'open',
-                    'params' => [
-                        1,
-                    ],
-                ],
-            ]);
+            ],
+        ]);
     }
 
     public function openGateRemotelyByWebsite(Request $request)
     {
+
         $user = $request->user();
         $gateSerialNumber = $request->gate['serial_number'];
         $teamId = $request->gate['team_id'];
@@ -291,13 +290,12 @@ class GateController extends Controller
         $validFrom = "";
         //check validity of all user's Virtual Keys & Tickets that can open {Gate}
         try {
-            $virtualKey = VirtualKey::whereHas('gates', function ($query) use ($teamId,$gateSerialNumber,$user) {
+            $virtualKey = VirtualKey::whereHas('gates', function ($query) use ($teamId, $gateSerialNumber, $user) {
                 $query->where('team_id', $teamId);
                 $query->where("serial_number", $gateSerialNumber);
                 $query->where('user_id', $user->id);
             })->first();
-            if(!empty($virtualKey))
-            {
+            if (!empty($virtualKey)) {
                 //assign values from key
                 $guid = (string) Str::uuid();
                 //check if day is valid
@@ -307,21 +305,20 @@ class GateController extends Controller
 
                 //create KeyUsage instance
                 $data = [
-                    'id'=>$guid,
-                    'virtual_key_id'=> $virtualKey->id,
-                    'access_granted'=> "1",
-                    'message'=>"Access Granted"
+                    'id' => $guid,
+                    'virtual_key_id' => $virtualKey->id,
+                    'access_granted' => "1",
+                    'message' => "Access Granted"
                 ];
                 $req = new Request($data);
                 $keyUsage = app(KeyUsageController::class)->store($req);
-            }
-            else {
-                 $virtualTicket = VirtualTicket::whereHas('gates', function ($query) use ($teamId,$gateSerialNumber,$user) {
-                $query->where('team_id', $teamId);
-                $query->where("serial_number", $gateSerialNumber);
-                $query->where('email', $user->email);
+            } else {
+                $virtualTicket = VirtualTicket::whereHas('gates', function ($query) use ($teamId, $gateSerialNumber, $user) {
+                    $query->where('team_id', $teamId);
+                    $query->where("serial_number", $gateSerialNumber);
+                    $query->where('email', $user->email);
                 })->first();
-                if(!empty($virtualTicket)) {
+                if (!empty($virtualTicket)) {
                     $guid = $virtualTicket->GUID;
                     $validFrom = $virtualTicket->valid_from;
                     $validTo = $virtualTicket->valid_to;
@@ -329,15 +326,15 @@ class GateController extends Controller
                     $user_role = app(TeamController::class)->getUserRole($teamId, $user->id);
 
                     //check if user is the admin\owner in order to get all data, else get data of user only
-                    if($user_role == 'owner' || $user_role == 'admin') {
+                    if ($user_role == 'owner' || $user_role == 'admin') {
                         $gateMagic = Gate::findOrFail($request->gate['id'])->magic_code;
 
-                    $team = Team::findOrFail($teamId);
-                    $teamCode = $team->team_code;
+                        $team = Team::findOrFail($teamId);
+                        $teamCode = $team->team_code;
                         $this->openGateRemotelyForTeamCode($gateSerialNumber);
-//                    MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
-                    return back(303);
-                    // MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017;");
+                        //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", "MAGIC:{$gateMagic};");
+                        return back(303);
+                        //MQTT::publish('iotlock/v1/V7JWQE92BS/control/9238420983',"MAGIC:ab406815-9311-457c-8878-cb4c2e491017;");
                     } else {
                         abort(404, "Cannot access Gate");
                     }
@@ -350,15 +347,12 @@ class GateController extends Controller
             $hashQrcode = hash('sha256', $qrcode . $teamCode);
             $finalQrcode = $qrcode . "S:" . $hashQrcode . ";";
 
-
             $this->openGateRemotelyForTeamCode($gateSerialNumber);
 
-
-//            MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
+            //MQTT::publish("iotlock/v1/{$teamCode}/control/{$gateSerialNumber}", $finalQrcode);
             return back(303);
         } catch (\Exception $e) {
-             abort(404, $e->getMessage());
+            abort(404, $e->getMessage());
         }
     }
-
 }
