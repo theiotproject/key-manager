@@ -409,7 +409,6 @@ class GateController extends Controller
         ];
 
         $event = Event::create($eventData);
-        dd($data);
         return response()->json(['message' => 'Remote Open Call success']);
     }
 }
