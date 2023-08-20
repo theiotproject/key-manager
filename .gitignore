@@ -14,3 +14,8 @@ yarn-error.log
 /.idea
 /.vscode
 /public/qrcodes/
+package-lock.json
+composer.lock
+# MySQL data directory
+/mysql/
+

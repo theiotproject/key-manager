@@ -74,7 +74,33 @@
 ## Setup
 
 ### Docker
-- If you would like to run the project via Docker, follow these steps:
+#### Docker Desktop
+- If you would like to run the project via Docker Desktop, follow these steps:
+
+1. Copy `.env.example` to `.env`
+2. Create Docker Containers
+   - `docker-compose up -d`
+3. Open Container
+   - `docker-compose exec php bash`
+4. Install composer dependencies
+   - `composer install`
+4. Run DB migrations (needed only once or on migration addition)
+   - `php artisan migrate`
+5. Link storage (needed only once)
+   - `php artisan storage:link`
+6. Install NPM dependencies (needed only once or on package changes)
+   - `npm install`
+7. Run the NPM dev build with --host option
+   - `npm run dev -- --host`
+
+#### Known errors:
+##### Linux
+- Fix for possible errors after logging into account:
+    - `chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache`
+
+#### Docker Sail
+
+- If you would like to run the project via Docker Sail, follow these steps:
 
 1. Copy `.env.example` to `.env`
 1. Install composer dependencies (in order to pull the Laravel Sail bash files, needed only once)
